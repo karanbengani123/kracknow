@@ -1,0 +1,33 @@
+service:
+  name: TournamentReminderTriggerEvent
+
+# Add the serverless-webpack plugin
+plugins:
+  - serverless-offline
+  - serverless-webpack
+  
+custom:
+  webpack:
+    includeModules: 
+      packagePath: '../../package.json'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  environment: ${file(../../env/${self:provider.stage}.yml)}
+  stage: ${opt:stage, 'dev'}
+  profile: kracknow
+  region: ap-south-1
+  iamRoleStatements: 
+    - Effect: 'Allow'
+      Action: 
+        - 'execute-api:Invoke'
+        - 'execute-api:ManageConnections'
+        - 'events:DeleteRule'
+        - 'events:RemoveTargets'
+      Resource: 
+        - '*'
+
+functions:
+  TournamentReminderTrigger:
+    handler: lambda.handler

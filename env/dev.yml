@@ -1,0 +1,64 @@
+DB_HOST: localhost
+DB_USERNAME: root
+DB_SCHEMA: kracknow
+DB_PASSWORD: 
+
+SHA256_PASSWORD_SALT: 4ac1af3e9cfedb03cf34e3ccb464a8a93d1b2136
+
+SHA256_REFRESH_PASSWORD_SALT: 8ab1af3e9cfedb03cf34e3ccb464a8a93d1b2131
+REFRESH_TOKEN_LIFE: 2592000 # 30 Days
+TOKEN_LIFE: 86400000 # 1 Day
+
+CLIENT_URI: ""
+SYNC: false
+
+MAILER_ARN: ""
+MAILER_METHOD: SES
+SMTP_HOST: smtp.gmail.com
+SMTP_PORT: 465
+SMTP_USERNAME: noreply@kracknow.com
+SMTP_PASSWORD: ""
+
+MAIL_FROM_ADDRESS: ""
+MAILER_SES_REGION: ""
+
+AWS_S3_REGION: "ap-south-1"
+AWS_S3_UPLOADS_BUCKET_NAME: "kracknow-dev"
+AWS_S3_BUCKET_WEBSITE: ""
+
+SNS_REGION: "ap-south-1"
+
+AWS_ACCOUNT_NUMBER: 295165856122
+
+SYSTEM_USER_DEFAULT_PASSWORD_LENGTH: 8
+
+APP_NAME: "kracknow"
+FONTCONFIG_PATH: /opt/fonts
+
+CASHFREE_ENVIRONMENT: TEST
+CASHFREE_APPID: CF60393CC68F8BIPF4JJ85PSHNG
+CASHFREE_CLIENT_ID: CF60393CC68F8BIPF4JJ85PSHNG
+CASHFREE_CLIENT_SECRET: 3d416438b24130c13fe313b0aa5142a8d1ad3932
+CASHFREE_CLIENT_PG_ID: 603937605df8794c217051d3439306 
+CASHFREE_CLIENT_PG_SECRET: 550bd1ea597830c6ce4e08ce53621903755b1a09
+CASHFREE_CURRENCY_TYPE: INR
+CASHFREE_URL: https://test.cashfree.com/api/v2/cftoken/order
+CASHFREE_WEB_TOKEN_URL: https://sandbox.cashfree.com/pg/orders
+CASHFREE_AUTHORIZE_TOKEN_URL: https://payout-gamma.cashfree.com/payout/v1/authorize
+CASHFREE_DIRECT_TRANSFER_URL: https://payout-gamma.cashfree.com/payout/v1/directTransfer
+CASHFREE_ORDER_VERIFY_URL: https://sandbox.cashfree.com/pg/orders/
+
+
+REMINDER_LAMBDA_ARN: ap-south-1:295165856122:function:KracknowReminderTriggerEvent-Event-dev-ReminderTrigger
+REMINDER_ROLE_ARN: 295165856122:role/reminder-event-invoke-targets
+END_POINT: https://f3bu42augk.execute-api.ap-south-1.amazonaws.com/dev
+REMINDER_EXAM_START_TMP: The exam {exam} is going to start in {time} minutes
+REMINDER_TOURNAMENT_START: The tournament {tournament} is going to start in {time} minutes
+REMINDER_EXAM_COMPLETED_TMP: The exam {exam} is completed and leader board is published
+REMINDER_TOURNAMENT_COMPLETED: The tournament {tournament} is completed and leader board is published
+REMINDER_TIME_BEFORE_START_EXAM: 5 
+
+TOURNAMENT_REMINDER_LAMBDA_ARN: ap-south-1:295165856122:function:TournamentReminderTriggerEvent-dev-TournamentReminderTrigger
+
+DEFAULT_LAMBDA_FUNCTION_TIMEOUT: 30  
+TOURNAMENT_RANK_UPDATE_EVENT: dev_TOURNAMENT_RANK_UPDATE_EVENT

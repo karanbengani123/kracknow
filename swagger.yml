@@ -1,0 +1,456 @@
+openapi: 3.0.2
+info:
+  title: KrackNow
+  version: "1.0"
+servers:
+  - url: https://api.kracknow.com
+paths:
+  /tournaments/addTournament:
+    post:
+      summary: create new tournament
+      tags:
+        - Tournament
+      security: [authBearer: []]
+      requestBody:
+        description: tournament details
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                webBanner:
+                  type: string
+                phoneBanner:
+                  type: string
+                studentLimit:
+                  type: string
+                isFree:
+                  type: boolean
+                  default: false
+                isFeatured:
+                  type: boolean
+                  default: false
+                winningPrice:
+                  type: number
+                joinFee:
+                  type: number
+                tournamentCities:
+                  type: object
+                  example:
+                    - uuid: uuid
+                tournamentKeywords:
+                  type: object
+                  example:
+                    - attribute: string
+                tournamentExams:
+                  type: object
+                  example:
+                    - examUUID: examuuid
+                      serialNo: number
+                tournamentPrize:
+                  type: object
+                  example:
+                    - toValue: value
+                      fromValue: value
+                      amount: number
+              required:
+                - title
+                - description
+                - webBanner
+                - phoneBanner
+                - studentLimit
+                - isFree
+                - joinFee
+                - tournamentCities
+                - routnamentKeywords
+                - tournamentExam
+                - tournamentPrize
+                - winningPrice
+
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: SUCCESSFUL
+  /tournaments/:tournamentUUID:
+    get:
+      summary: get particular tournament
+      tags:
+        - Tournament
+      security:
+        - authBearer: []
+      responses:
+        200:
+          description: get a particular tournament details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: SUCCESSFUL
+                  payload:
+                    properties:
+                      response:
+                        type: object
+
+    put:
+      summary: update a particular tournament
+      tags:
+        - Tournament
+      security: [authBearer: []]
+      parameters:
+        - in: path
+          required: true
+          name: tournamentUUID
+          schema:
+            type: string
+            example: UUID
+          description: tournament uuid
+      requestBody:
+        description: tournament details
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                webBanner:
+                  type: string
+                phoneBanner:
+                  type: string
+                studentLimit:
+                  type: string
+                isFree:
+                  type: boolean
+                  default: false
+                isFeatured:
+                  type: boolean
+                  default: false
+                winningPrice:
+                  type: number
+                joinFee:
+                  type: number
+                tournamentCities:
+                  type: object
+                  example:
+                    - uuid: uuid
+                tournamentKeywords:
+                  type: object
+                  example:
+                    - attribute: string
+                tournamentExams:
+                  type: object
+                  example:
+                    - examUUID: examuuid
+                tournamentPrize:
+                  type: object
+                  example:
+                    - toValue: value
+                      fromValue: value
+                      amount: number
+              required:
+                - title
+                - description
+                - webBanner
+                - phoneBanner
+                - studentLimit
+                - isFree
+                - joinFee
+                - tournamentCities
+                - routnamentKeywords
+                - tournamentExam
+                - tournamentPrize
+                - winningPrice
+
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: SUCCESSFUL
+    delete:
+      tags:
+        - Tournament
+      description: delete the given tournament for particular using tournament uuid
+      responses:
+        200:
+          $ref: "#/components/responses/SuccessAndNotFound"
+
+  /tournaments/all/list:
+    get:
+      summary: get all tournament
+      tags:
+        - Tournament
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: get all tournament and total count
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: SUCCESSFUL
+                  payload:
+                    properties:
+                      response:
+                        $ref: "#/components/schemas/Tournament"
+
+                      count:
+                        type: number
+                        default: 0
+
+  /tournaments/{tournamentUUID}/register:
+    post:
+      tags:
+        - Tournament
+      security:
+        - bearerAuth: []
+      description: to register the particular tournament using tournament uuid
+      parameters:
+        - $ref: "#/components/parameters/uuid"
+      responses:
+        200:
+          $ref: "#/components/responses/Success"
+  /tournaments/{tournamentUUID}/examlist:
+    get:
+      tags:
+        - Tournament
+      security:
+        - bearerAuth: []
+      description: get particular tournament all exam list
+      parameters:
+        - $ref: "#/components/parameters/uuid"
+      responses:
+        200:
+          $ref: "#/components/responses/TournamentExamsResponses"
+
+  /tournaments/scheduled/list:
+    get:
+      tags:
+        - Tournament
+      security:
+        - bearerAuth: []
+      description: get a list of scheduled tournament list
+      responses:
+        200:
+          $ref: "#/components/responses/TournamentParticipationResponses"
+
+  /tournaments/schedule/{tournamentUUID}:
+    post:
+      tags:
+        - Tournament
+      security:
+        - bearerAuth: []
+      description: schedule the tournament
+      parameters:
+        - $ref: "#/components/parameters/uuid"
+      requestBody:
+        description: schedule data object
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startTime:
+                  format: datetime
+                endTime:
+                  format: datetime
+                tournamentTime:
+                  type: string
+                  enum:
+                    - FULL_DAY
+                    - BASED_ON_TIME
+      responses:
+        200:
+          $ref: "#/components/responses/Success"
+  /tournaments/registered/list:
+    get:
+      tags:
+        - Tournament
+      security:
+        - bearerAuth: []
+      description: get a registered tournament list
+      responses:
+        200:
+          $ref: "#/components/responses/TournamentResponses"
+
+components:
+  schemas:
+    Tournament:
+      properties:
+        uuid:
+          type: string
+        title:
+          type: string
+        webBanner:
+          type: string
+        phoneBanner:
+          type: string
+        isFree:
+          type: boolean
+        joinFee:
+          type: number
+        winningPrice:
+          type: number
+        isFeatured:
+          type: boolean
+        studentLimit:
+          type: number
+        description:
+          type: string
+        joined:
+          type: number
+        completed:
+          type: number
+        pending:
+          type: number
+
+    TournamentExams:
+      properties:
+        uuid:
+          type: string
+        tournamentUUID:
+          type: string
+        examUUID:
+          type: string
+        startTime:
+          type: string
+          format: date
+        endTime:
+          type: string
+          format: date
+        projectedTotalWinningPrice:
+          type: number
+        realizedTotalWinningPrice:
+          type: number
+
+    TournamentParticipation:
+      properties:
+        uuid:
+          type: string
+        tournamentUUID:
+          type: string
+        studentUUID:
+          type: string
+        status:
+          type: string
+        marks:
+          type: number
+        completedTime:
+          type: string
+          format: date
+        startedTime:
+          type: string
+          format: date
+
+    TournamentSchedule:
+      properties:
+        uuid:
+          type: string
+        tournamentUUID:
+          type: string
+        startTime:
+          format: date
+        endTime:
+          format: date
+        tournamentTime:
+          type: string
+        joined:
+          format: number
+        completed:
+          format: number
+        status:
+          type: string
+
+  responses:
+    Success:
+      description: OK
+      content:
+        application/json:
+          schema:
+            properties:
+              message:
+                type: object
+                example: SUCCESSFUL
+
+    SuccessAndNotFound:
+      description: OK
+      content:
+        application/json:
+          schema:
+            properties:
+              message:
+                type: string
+                enum:
+                  - SUCCESSFUL
+                  - NOT FOUND
+
+    TournamentParticipationResponses:
+      description: OK
+      content:
+        application/json:
+          schema:
+            properties:
+              message:
+                type: object
+                example: SUCCESSFUL
+              payload:
+                $ref: "#/components/schemas/TournamentParticipation"
+
+    TournamentResponses:
+      description: OK
+      content:
+        application/json:
+          schema:
+            properties:
+              message:
+                type: object
+                example: SUCCESSFUL
+              payload:
+                $ref: "#/components/schemas/Tournament"
+
+    TournamentExamsResponses:
+      description: OK
+      content:
+        application/json:
+          schema:
+            properties:
+              message:
+                type: string
+                example: SUCCESSFUL
+              payload:
+                $ref: "#/components/schemas/TournamentExams"
+
+  parameters:
+    uuid:
+      in: path
+      name: uuid
+      required: true
+      schema:
+        type: string
+        example: uuid
+      description: data manipulation of given uuid

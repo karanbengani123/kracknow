@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "lib": ["es2017", "es2019.array"],
+    "target": "es2017",
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "allowSyntheticDefaultImports": true,
+    "noUnusedParameters": true,
+    "sourceMap": true,
+    "outDir": "lib",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowJs": true,
+    "typeRoots": ["node_modules/@types", "node_modules/**/*.d.ts"]
+  },
+  "exclude": ["node_modules", "frontend"]
+}

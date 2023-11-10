@@ -1,0 +1,11 @@
+#!/bin/node
+// tslint:disable-next-line: no-var-requires
+const path = require("path");
+
+module.exports = {
+  "config":          path.resolve("config", "database.json"),
+  "debug": true,
+  "migrations-path": path.resolve("migrations", "schema"),
+  "models-path": path.resolve("shared", "database", "models"),
+  "seeders-path": path.resolve("migrations", "seeders"),
+};

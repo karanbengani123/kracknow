@@ -1,0 +1,47 @@
+service:
+  name: websocket-service
+
+# Add the serverless-webpack plugin
+plugins:
+  - serverless-webpack
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  environment: ${file(../../env/${self:provider.stage}.yml)}
+  stage: ${opt:stage, 'dev'}
+  profile: kracknow
+  region: ap-south-1
+  logs:
+    websocket: true
+
+  
+  websocketsApiName: ${self:provider.stage}-kracknow-websocket
+  websocketsApiRouteSelectionExpression: $request.body.action
+
+functions:
+  connectionHandler:
+    handler: handler.connectionHandler
+    events:
+      - websocket:
+          route: $connect
+          authorizer:
+            name: authHandler
+            identitySource:
+              - 'route.request.querystring.Auth'
+      - websocket:
+          route: $disconnect
+          
+
+          
+  defaultHandler:
+    handler: handler.defaultHandler
+    events:
+      - websocket:
+          route: $default
+  authHandler:
+    handler: handler.authHandler
+  
+    
+        
+

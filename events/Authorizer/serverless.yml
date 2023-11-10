@@ -1,0 +1,57 @@
+service:
+  name: KracknowAuthorizer
+
+# Add the serverless-webpack plugin
+plugins:
+  - serverless-offline
+  - serverless-webpack
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  environment: ${file(../../env/${self:provider.stage}.yml)}
+  stage: ${opt:stage, 'dev'}
+  profile: kracknow
+  region: ap-south-1
+
+functions:
+  authorizer:
+    handler: lambda.handler
+
+resources:
+  Resources:
+    ApiGatewayAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        AuthorizerResultTtlInSeconds: 300
+        IdentitySource: method.request.header.Authorization
+        IdentityValidationExpression: Bearer .*
+        AuthorizerUri:
+          Fn::Join:
+            - ''
+            - - 'arn:aws:apigateway:'
+              - !Ref AWS::Region
+              - ':lambda:path/2015-03-31/functions/'
+              - !GetAtt AuthorizerLambdaFunction.Arn
+              - '/invocations'
+        Name: Authorizer
+        RestApiId:
+          'Fn::ImportValue': ${self:provider.stage}-kracknow-ApiGatewayRestApiId
+        Type: TOKEN
+
+    ApiGatewayAuthorizerPermission:
+      Type: 'AWS::Lambda::Permission'
+      Properties:
+          Action: lambda:InvokeFunction
+          FunctionName:
+              Fn::GetAtt:
+                  - 'AuthorizerLambdaFunction'
+                  - 'Arn'
+          Principal: apigateway.amazonaws.com
+  Outputs:
+    ApiGatewayAuthorizer:
+        Value:
+            Ref: ApiGatewayAuthorizer
+        Export:
+            Name: ${self:provider.stage}-kracknow-ApiGatewayAuthorizer
+    

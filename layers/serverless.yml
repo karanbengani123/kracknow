@@ -1,0 +1,10 @@
+service: KracknowLayers
+provider:
+  name: aws
+  stage: ${opt:stage, 'dev'}
+  profile: kracknow
+  region: ap-south-1
+layers:
+  Lib:
+    package:
+      artifact: deps.zip # Zip node_modules dir and package.json file together and name it deps.zip 
