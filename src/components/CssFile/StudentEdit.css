@@ -1,0 +1,8 @@
+.button {
+    float: right;
+    padding: 23px;
+}
+
+.form-control {
+    height: calc(2.rem + 2px);
+}

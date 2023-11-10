@@ -1,0 +1,19 @@
+.Sidebarrr {
+    background: #252b3b;
+    font-family: Montserrat, Georgia, 'Times New Roman', Times, serif;
+    color: #8590a5;
+    font-weight: 500;
+    font-size: 13.3px;
+}
+
+
+/* 
+.sidebar nav .nav-item .nav-links li.showMenu i.arrow {
+    transform: rotate(-180deg);
+} */
+
+
+/* li .nav-item :hover {
+    cursor: pointer;
+    color: aqua;
+} */
