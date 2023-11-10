@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>217969435187-9n0v7pk973ivjs0ppehood5q3so73pmf.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.217969435187-9n0v7pk973ivjs0ppehood5q3so73pmf</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>217969435187-bhnb7i9h0trgqnp704pdfohhs89henfm.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyA-poaZS6RLM520SJn1Fge72IoDNPTt8vE</string>
+	<key>GCM_SENDER_ID</key>
+	<string>217969435187</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.kracknow</string>
+	<key>PROJECT_ID</key>
+	<string>kracknow-ae732</string>
+	<key>STORAGE_BUCKET</key>
+	<string>kracknow-ae732.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:217969435187:ios:cc67e9629f0500c506b946</string>
+</dict>
+</plist>

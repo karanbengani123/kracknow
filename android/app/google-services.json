@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "217969435187",
+    "project_id": "kracknow-ae732",
+    "storage_bucket": "kracknow-ae732.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:217969435187:android:a1e854042ddd124506b946",
+        "android_client_info": {
+          "package_name": "com.kracknow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "217969435187-bhnb7i9h0trgqnp704pdfohhs89henfm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kracknow",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "217969435187-26bc4hrqfttpgmjfrsnh4k7stkgcr54i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6OHR-weipQ7rkiRFydwuXXiE9ywtCmks"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "217969435187-26bc4hrqfttpgmjfrsnh4k7stkgcr54i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
