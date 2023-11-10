@@ -1,0 +1,45 @@
+.container-exam{
+    margin: auto;
+    width:100%;
+    max-width: 600px;
+}
+
+.errorMsg{
+    color: red;
+    font-size: 15px;
+    margin: 3px 0 ;
+    top: 171px;
+    left: 3px;
+    font-weight: 600;
+    position: absolute;
+}
+
+.imgPreview{
+    width: 100%;
+    height: 176px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color:rgb(36, 32, 32);
+}
+
+.imgPreview input[type="file"] {
+    display: none;
+}
+.imgPreview .customFileUpload{
+    color: #505d69;
+    font-size: 22px;
+    font-weight: 500;
+    padding: 6px 12px;
+    cursor: pointer;
+
+}
+
+button.btn-exam{
+    border: none;
+    outline: none;
+    width: 100%;
+    margin: 5px 0 0 0;
+}

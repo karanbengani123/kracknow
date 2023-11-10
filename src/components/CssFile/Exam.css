@@ -1,0 +1,8 @@
+.option-section {
+    border: 1px solid #ced4da;
+    padding: 16px;
+}
+.file {
+    visibility: hidden;
+    position: absolute;
+  }

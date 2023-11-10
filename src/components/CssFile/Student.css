@@ -1,0 +1,639 @@
+.admin-body {
+    background: #f5f7fa;
+    font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.admin {
+    background: #ffffff;
+    border-radius: 2px;
+    height: auto;
+}
+
+.tittle {
+    border-bottom: 1px solid #babfc7;
+    text-align: center;
+    align-items: center;
+    height: 50px;
+    font-family: Montserrat, Georgia, "Times New Roman", Times, serif;
+}
+
+.tittle h3 {
+    font-weight: 500;
+    letter-spacing: 0.05rem;
+    font-size: 1.12rem;
+    text-transform: uppercase;
+    color: #404e67;
+    font-family: Montserrat, Georgia, "Times New Roman", Times, serif;
+    line-height: 1.2;
+}
+
+.add {
+    background: #2dcee3;
+    color: #fff;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1;
+    border-radius: 0.21rem;
+    border-color: #2dcee3;
+    text-transform: uppercase;
+}
+
+.add1 {
+    color: #fff;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1;
+    border-radius: 0.21rem;
+    background: #16d39a;
+    border-color: #16d39a;
+}
+
+.search-bar {
+    border-radius: 4px;
+    border: 1px solid #babfc7;
+    color: #4e5154;
+    background-color: #fff;
+    background-clip: padding-box;
+}
+
+.table-bordered {
+    border: 1px solid #98a4b8;
+}
+
+table {
+    vertical-align: top;
+}
+
+.tabledata th {
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.45;
+}
+
+.tablehead th {
+    color: #404e67;
+    font-weight: bold;
+}
+
+.brand-text {
+    color: white;
+    font-weight: 500;
+    font-size: 18px;
+    vertical-align: -webkit-baseline-middle;
+}
+
+.imgsrc {
+    width: 45px;
+}
+
+.addstudent {
+    float: right;
+}
+
+img.rounded-circle.header-img {
+    height: 53px;
+    cursor: pointer;
+}
+
+i.fas.ri-menu-2-line.header-toogle {
+    font-size: 26px;
+}
+
+.demo-wrapper {
+    border: 1px solid #ced4da;
+}
+
+.file {
+    visibility: hidden;
+    position: absolute;
+}
+
+div#collapseOne {
+    text-align: center;
+}
+
+div#collapseTwo {
+    text-align: center;
+}
+
+/* img {
+    border-radius: 26px;
+} */
+
+.cards {
+    /* background: #e5e4e2; */
+    /* box-shadow: 0 4px 4px rgb(0 0 0 / 30%); */
+    transition: all 0.5s ease;
+    border: 1px solid #eeeeea;
+    border-radius: 8px;
+}
+
+.cards:hover {
+    color: #fff;
+    transform: scale(1.025);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 5px 15px;
+}
+
+.cards1 {
+    background: #e5e4e2;
+    box-shadow: 0 4px 4px rgb(0 0 0 / 30%);
+}
+
+.cards2 {
+    background: #e5e4e2;
+    box-shadow: 0 4px 4px rgb(0 0 0 / 30%);
+}
+
+.cards3 {
+    background: #e5e4e2;
+}
+
+.cards:hover {
+    background: border-box;
+    /* border: solid; */
+    /* background-color: #b6b4af; */
+}
+
+.cards2:hover {
+    background: border-box;
+    /* border: solid; */
+    background-color: #b6b4af;
+}
+
+.card-2 {
+    background: #d3d3d3;
+}
+
+.card-3 {
+    background: #c8d6e5;
+}
+
+.card-4 {
+    background: #bbc94d;
+}
+
+.card-5 {
+    background: #bbc94d;
+    box-shadow: 0 4px 4px rgb(0 0 0 / 30%);
+}
+
+.card-6 {
+    background: #ff884d;
+    box-shadow: 0 4px 4px rgb(0 0 0 / 30%);
+}
+
+.card-7 {
+    background: #ee4d4d;
+    box-shadow: 0 4px 4px rgb(0 0 0 / 30%);
+}
+
+.card-8 {
+    background: #5e94ff;
+    box-shadow: 0 4px 4px rgb(0 0 0 / 30%);
+}
+
+.card-10 {
+    margin-bottom: 0rem;
+    background: #e5e4e2;
+}
+
+.colorcard {
+    color: white;
+    font-weight: 600;
+}
+
+.imgbanner {
+    height: 100px;
+}
+
+i.nav-icon.fas.fa-trophy.quizicon.text-warning {
+    font-size: 25px;
+}
+
+i.fas.fa-award.quizicon.text-warning {
+    font-size: 25px;
+    float: right;
+    margin-right: 12px;
+}
+
+.dropdown-menu.dropdown-menu-lg.dropdown-menu-end.p-0.show {
+    position: absolute;
+    left: -222px;
+}
+
+h6.text-truncate.mb-2 {
+    font-size: 11px;
+}
+
+.spantext {
+    font-size: 14px;
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* display: flex; */
+}
+
+.examcardbody {
+    padding: 0.75rem 0.75rem;
+}
+
+.footerright {
+    float: right;
+}
+
+.walleticon {
+    height: 30px;
+}
+
+p.errorText {
+    color: red;
+    /* font-weight: bold; */
+    position: absolute;
+}
+
+.button {
+    float: right;
+    margin-top: 22px;
+}
+
+.savebtn2 {
+    float: right;
+    color: blue;
+}
+
+.savebtn3 {
+    float: right;
+}
+
+.savebtn4 {
+    float: right;
+    margin-top: 16px;
+}
+
+.option-section-1 {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+.row.prize {
+    padding-top: 7px;
+    padding-left: 9px;
+    margin-bottom: -8px;
+}
+
+.prize2 {
+    /* padding-top: 15px; */
+    /* padding-bottom: 0px; */
+    padding: 4px;
+    padding-top: 13px;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.registercol {
+    justify-content: center;
+    display: grid;
+    align-content: center;
+}
+
+i.nav-icon.fa.fa-city.cityicon {
+    color: #5664d2;
+    position: absolute;
+    top: 232px;
+    left: 42px;
+    font-size: 16px;
+}
+
+/* .icons{
+    color: #5664d2;
+    font-size: 23px;
+    padding-top: 6px;
+}
+.css-qc6sy-singleValue{
+padding-right: 134px;
+text-overflow: clip;
+} */
+
+.bannerr {
+    height: 100px;
+}
+
+.bannerr1 {
+    height: 261px;
+}
+
+.validation {
+    position: absolute;
+    top: 300px;
+    color: red;
+}
+
+.validation1 {
+    position: absolute;
+    top: 363px;
+    color: red;
+}
+
+.bellicon {
+    height: 39px;
+}
+
+.savebtnn {
+    float: right;
+    margin-top: 36px;
+}
+
+.moneycol {
+    text-align: end;
+    margin-top: -22px;
+}
+
+@media screen and (max-width: 575px) {
+    .imgageupload {
+        margin-top: 20px;
+    }
+
+    .tournamentimgageupload {
+        margin-bottom: 20px;
+    }
+
+    .css-14el2xx-placeholder {
+        padding-right: 31px;
+    }
+
+    .profileform {
+        margin-bottom: 20px;
+    }
+
+    .footercol {
+        margin-left: -46px;
+        margin-top: 3px;
+    }
+
+    .resp {
+        margin-top: 35px;
+    }
+}
+
+.rupees {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.leaderboard {
+    justify-content: center;
+    display: flex;
+}
+
+.payment {
+    font-size: 11px;
+}
+
+.container-exam {
+    margin: auto;
+    width: 100%;
+    max-width: 600px;
+}
+
+.errorMsg {
+    color: red;
+    font-size: 15px;
+    margin: 3px 0;
+    top: 171px;
+    left: 3px;
+    font-weight: 600;
+    position: absolute;
+}
+
+.viewTournament {
+    height: 282px;
+}
+
+.imgPreview {
+    width: 100%;
+    height: 176px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: rgb(36, 32, 32);
+}
+
+.imgPreview input[type="file"] {
+    display: none;
+}
+
+.imgPreview .customFileUpload {
+    color: #505d69;
+    font-size: 22px;
+    font-weight: 500;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+button.btn-exam {
+    border: none;
+    outline: none;
+    width: 100%;
+    margin: 5px 0 0 0;
+}
+
+.cardbtn {
+    width: inherit;
+}
+
+.savebtn5 {
+    width: 107px;
+    background-color: gray;
+}
+
+.ErrorMessage {
+    /* font-size: 10px; */
+    font-weight: bold;
+    color: #f93154;
+}
+
+.textttt {
+    flex-direction: row;
+    display: flex;
+}
+
+.imageexam {
+    height: 160px;
+}
+
+/* CSS for the Dashboard cards start Here */
+.examSchdeuleImage {
+    height: 90px;
+}
+
+span.spantext {
+    font-size: 13px;
+}
+
+.overlay2 {
+    position: absolute;
+    bottom: 96px;
+    right: 5px;
+    color: #f1f1f1;
+    width: 100%;
+    transition: 0.5s ease;
+    color: white;
+    font-size: 13px;
+    padding: 2px;
+    text-align: end;
+    border-radius: none;
+    /* opacity: 0.8; */
+    /* background: rgb(0, 0, 0);
+    background: rgba(0, 0, 0, 0.5); */
+}
+.overLayss {
+    /* border: 2px solid black; */
+    background: #167278;
+    border-radius: 9px;
+    padding: 4px 10px 4px 10px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 14px;
+    text-align: center;
+    gap: 8px;
+}
+
+/* .card:hover .overlay2 {
+    opacity: 1;
+    cursor: pointer;
+  }
+  .card:hover .overlay3 {
+    opacity: 1;
+    cursor: pointer;
+  } */
+
+.overlay3 {
+    position: absolute;
+    top: 10px;
+    left: 5px;
+    width: 100%;
+    transition: 0.5s ease;
+    border-radius: 0px;
+    text-align: start;
+    /* background: rgb(0, 0, 0);
+    background: rgba(0, 0, 0, 0.5); */
+    /* bottom: 205px; */
+    /* opacity: 1; */
+}
+.overLaysss {
+    background: #f6fb10;
+    border-radius: 9px;
+    padding: 4px 10px 4px 10px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+    text-align: center;
+    color: #0e242c;
+    gap: 8px;
+}
+
+.card-img-overlay {
+    background-color: rgba(#000, 0.4);
+}
+
+.imageHeight {
+    height: 170px;
+}
+
+.card.cards {
+    cursor: pointer;
+}
+
+.link {
+    align-items: center;
+    display: flex;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* .closeBtn {
+    padding: "5px 8px 5px 8px";
+    border-radius: 0px;
+    position: absolute;
+    right: 7px;
+    top: 7px;
+} */
+
+.closeBtn {
+    background: #1cbb8c;
+    padding: 5px 8px 5px 8px;
+    color: white;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+}
+.coloseButton {
+    display: flex;
+    align-content: flex-end;
+    justify-content: space-evenly;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+.rankingCards {
+    display: flex;
+}
+.headingFont {
+    font-size: 24px;
+}
+.tabContent {
+    display: flex;
+}
+.tabContent.tabArea.active {
+    background: #39a2db;
+    border-bottom: 2px solid black;
+}
+.tabArea {
+    text-align: center;
+    /* border-radius: 20px; */
+    margin: 2px;
+    cursor: pointer;
+}
+
+.ExamCardTitle {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: #0e242c;
+}
+.ExamCardContent {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 7px;
+    line-height: 13px;
+    color: #0b0b0b;
+    opacity: 0.5;
+    /* line-height: 13px; */
+}
+ span.active {
+    border-bottom: 2px solid #167278;
+    font-weight: 900;
+    color: #000;
+    /* transition: all 0.2s step-start; */
+  }
+  .notificationBox {
+    border: 2px solid #d6d0d0;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    padding: 10px;
+    align-items: center;
+}
+.notificationText {
+    color: black;
+    font-weight: 500;
+    font-size: 13px;
+}
+.notificationDate{
+    color: black;
+    font-weight: 500;
+    font-size: 13px;
+}
