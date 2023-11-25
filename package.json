@@ -53,6 +53,7 @@
   "dependencies": {
     "aws-sdk": "^2.528.0",
     "body-parser": "^1.19.0",
+    "cardinal": "^2.1.1",
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
     "csv-streamify": "^4.0.0",

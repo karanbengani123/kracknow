@@ -1,31 +1,33 @@
 {
   "development": {
-    "username": "root",
-    "password": "",
-    "database": "kracknow",
-    "host": "localhost",
+    "username": "admin",
+    "password": "krack123",
+    "database": "kracknow-dev",
+    "host": "kracknow-dev-2.ccbejngi3xsz.ap-south-1.rds.amazonaws.com",
     "dialect": "mysql",
     "operatorsAliases": false,
     "migrationStorageTableName": "sequelize_meta",
     "seederStorage": "sequelize",
     "seederStorageTableName": "sequelize_data"
   },
+
   "test": {
-    "username": "root",
+    "username": "admin",
     "password": "",
-    "database": "kracknow",
-    "host": "localhost",
+    "database": "dev",
+    "host": "",
     "dialect": "mysql",
     "operatorsAliases": false,
     "migrationStorageTableName": "sequelize_meta",
     "seederStorage": "sequelize",
     "seederStorageTableName": "sequelize_data"
   },
+  
   "production": {
-   "username": "root",
-    "password": "",
-    "database": "kracknow",
-    "host": "localhost",
+   "username": "admin",
+    "password": "krack123",
+    "database": "kracknow-prod",
+    "host": "kracknow-dev-2.ccbejngi3xsz.ap-south-1.rds.amazonaws.com ",
     "dialect": "mysql",
     "operatorsAliases": false,
     "migrationStorageTableName": "sequelize_meta",

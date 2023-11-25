@@ -1,26 +1,15 @@
 import {
-  ERROR,
   NOT_FOUND,
   NO_PENDING_WITHDRAWAL_FOUND,
-  PUBLIC_KEY_NOT_FOUND,
-  WITHDRAWAL_FOUND_ERROR,
-  TOKEN_AUTH_ERROR,
 } from "../../../../shared/constants/httpErrorMessages";
 import { SUCCESSFUL } from "../../../../shared/constants/httpSuccessMessages";
 import {
-  COMPLETED,
   ONLY_ADMIN_ALLOWED,
-  OUTBOUND,
   PENDING,
-  PUBLIC_KEY,
   SUCCESS,
 } from "../../../../shared/constants/message";
 import {
-  City,
-  KeyValue,
-  Student,
   User,
-  Wallet,
   WalletTransaction,
   WithdrawlRequest,
 } from "../../../../shared/database/models";

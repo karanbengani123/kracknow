@@ -1,4 +1,3 @@
-import { double } from "aws-sdk/clients/lightsail";
 import { DataTypes, Model, Sequelize } from "sequelize";
 import { makeModelOptions } from "../../helpers/makeModelOptions";
 import { text } from "aws-sdk/clients/customerprofiles";

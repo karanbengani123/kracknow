@@ -5,9 +5,6 @@ import {
 } from "../../../../shared/constants/httpErrorMessages";
 import { SUCCESSFUL } from "../../../../shared/constants/httpSuccessMessages";
 import {
-  ADMIN,
-  COMPLETED,
-  INBOUND,
   ONLY_ADMIN_ALLOWED,
   SUCCESS,
 } from "../../../../shared/constants/message";
@@ -20,12 +17,11 @@ import {
 import { HttpNotFound } from "../../../../shared/exceptions/HttpNotFound";
 import { IControllerParams } from "../../../../shared/interfaces/IControllerParams";
 import { IAdminAddMoney } from "../interfaces";
-const uuid = require("uuid");
 
 export const postAdminAddMoney = async (
   params: IControllerParams<IAdminAddMoney>
 ) => {
-  const { input, transaction } = params;
+  const {  transaction } = params;
   console.log(params.args.params.UUID);
 
   const admin = await User.findByPk(params.user.id);

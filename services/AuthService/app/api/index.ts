@@ -13,6 +13,9 @@ import { forgotPasswordSchema } from "../validations/forgotPasswordschema";
 import { studentRegisterSchema } from "../validations/registerStudentSchema";
 import { studentLoginSchema } from "../validations/studentLoginSchema";
 import { addBankAccount } from "../controllers/addBankAdmin";
+import { getBankdetail } from "../controllers/getBankdetail";
+import { updateBankAccount } from "../controllers/updateBankAccountAdmin";
+
 
 const router = Router();
 
@@ -58,6 +61,7 @@ router.get(
   })
 );
 
+
 router.get(
   "/sessions/admin/:adminUUID",
   controllerHandler({
@@ -73,11 +77,24 @@ router.post(
   })
 );
 
+router.get(
+  "/sessions/banklist",
+  controllerHandler({
+    controller: getBankdetail,
+  })
+);
 router.post(
   "/sessions/admin/addBankDetails",
   controllerHandler({
     controller: addBankAccount,
   })
-);
+  );
+
+  router.post(
+    "/sessions/admin/updatebankdetail/:UUID",
+    controllerHandler({
+      controller: updateBankAccount,
+    })
+  );
 
 export default router;

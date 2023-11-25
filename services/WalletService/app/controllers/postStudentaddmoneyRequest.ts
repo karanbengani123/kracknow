@@ -7,8 +7,6 @@ import {
 } from "../../../../shared/database/models";
 import { IStudentaddmoneyRequest } from "../interfaces";
 import { ADMIN, INBOUND, PENDING } from "../../../../shared/constants/message";
-import { HttpNotFound } from "../../../../shared/exceptions/HttpNotFound";
-import { Request } from "express";
 const uuid = require("uuid");
 
 // import {

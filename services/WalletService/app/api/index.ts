@@ -25,12 +25,17 @@ import {
 } from "../controllers/getStudentWithdrawRequest";
 import { approveWithdrawal } from "../controllers/approveWithdrawal";
 import { getStudentAddMoneyRequestforAdmin } from "../controllers/getStudentAddMoneyRequestforAdmin";
-import { getStudentWithdrawRequestaccept } from "../controllers/getStudentWithdrawRequestaccept";
+// import { getStudentWithdrawRequestaccept } from "../controllers/getStudentWithdrawRequestaccept";
 import { getStudentAddMoneyRequestforAdminseperate } from "../controllers/getStudentAddMoneyRequestforAdminseperate";
 import { Wallettransactions } from "../controllers/Wallettransactions";
 import { wallettransactionsforWithdrawal } from "../controllers/wallettransactionsforWithdrawal";
 
 const router = Router();
+
+router.get("/wallet/hello", ( req, res) => {
+  console.log(req.body)
+  return res.send(new Date());
+});
 
 router.post(
   "/wallet/gettoken",
@@ -90,7 +95,6 @@ router.get(
     options: { transaction: false },
   })
 );
-
 
 // wallettransactions for student view
 router.get(
@@ -162,13 +166,13 @@ router.get(
   })
 );
 
-router.get(
-  "/wallet/studentwithdrawalrequestaccept",
-  controllerHandler({
-    controller: getStudentWithdrawRequestaccept,
-    options: { transaction: false },
-  })
-);
+// router.get(
+//   "/wallet/studentwithdrawalrequestaccept",
+//   controllerHandler({
+//     controller: getStudentWithdrawRequestaccept,
+//     options: { transaction: false },
+//   })
+// );
 
 router.get(
   "/wallet/withdrawRequestList",

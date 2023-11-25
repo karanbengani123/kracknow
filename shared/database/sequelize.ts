@@ -21,19 +21,23 @@ import { Options, Sequelize } from "sequelize";
 // };
 
 const options: Options = {
-  database: "kracknow",
+  database: 'kracknow',
   dialect: "mysql",
   dialectModule: mysql,
-  host: "localhost",
-  username: "root",
+  host: 'localhost',
+  username: 'root',
   logging: false,
   pool: {
     max: 2,
     min: 0,
     idle: 0,
     acquire: 3000,
+    evict: process.env.DEFAULT_LAMBDA_FUNCTION_TIMEOUT
+      ? parseInt(process.env.DEFAULT_LAMBDA_FUNCTION_TIMEOUT)
+      : 300,
   },
 };
+
 /**
  * Add password to the options if it is provided
  * This is to prevent mysql throwing errors "PASSWORD=YES" when
@@ -45,7 +49,7 @@ if (process.env.DB_PASSWORD !== "null") {
 
 export const loadDatabase = async () => {
   const sequelize = new Sequelize(options);
-  // console.log('KRISH',Sequelize)
+   console.log(options)
   await sequelize.authenticate();
   return sequelize;
 };

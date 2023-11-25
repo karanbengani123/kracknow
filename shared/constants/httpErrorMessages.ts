@@ -9,6 +9,8 @@ export const PHONE_REGISTERED =
 export const EMAIL_REGISTERED =
   'This email address is associated to an existing user.'
 export const NO_CONTENT = 'No Content.'
+export const BANK_ACCOUNT_NOT_FOUND = 'Bank account not found.'
+
 export const NOT_FOUND = 'not found.'
 export const UN_AUTHORIZED = 'You are not authorized to access.'
 export const INCORRECT_PASSWORD = 'Incorrect old passeord.'

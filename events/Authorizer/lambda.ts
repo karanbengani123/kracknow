@@ -53,6 +53,7 @@ export const handler = async (
       throw new Error("The token is blocked");
     }
   } catch (e) {
+    console.log(e);
     throw new Error("Unauthorized");
   } finally {
     // console.log("Closing connection");

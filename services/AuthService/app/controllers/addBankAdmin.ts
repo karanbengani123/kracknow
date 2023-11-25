@@ -6,7 +6,9 @@ import { HttpNotFound } from "../../../../shared/exceptions/HttpNotFound";
 
 export const addBankAccount = async (params: IControllerParams<null>) => {
   try {
-    const { bankName, upi, qrCodeImage, receiverName }: any = params.input;
+    const transaction = params.transaction;
+    const { bankName, upi, qrCodeImage, account, ifsc }: any = params.input;
+
     const admin = await User.findOne({
       where: {
         uuid: params.user.id,
@@ -15,28 +17,27 @@ export const addBankAccount = async (params: IControllerParams<null>) => {
     if (!admin) {
       throw new HttpNotFound(ONLY_ADMIN_ALLOWED);
     }
-    // Create a new bank account record
-    // const bankAccount = await BankAccount.create({
-    //   bankName,
-    //   qrCodeImage,
-    //   upi,
-    //   receiverName,
-    // });
-    // console.log('bankAccount',bankAccount);
-    await BankAccount.create({
-      bankName,
-      qrCodeImage,
-      upi,
-      receiverName,
-    });
+    console.log(admin);
+    try {
+      let data = await BankAccount.create({
+        bankName: bankName,
+        qrCodeImage: qrCodeImage,
+        upi: upi,
+        account: account,
+        ifsc: ifsc,
+      });
+      console.log("---------", data);
+    } catch (error) {
+      console.log("================", error);
+    }
+    await transaction.commit();
+
     return {
       message: SUCCESSFUL,
-      // payload: bankAccount,
     };
   } catch (error) {
     return {
-      error:
-        error.message || "An error occurred while adding the bank account.",
+      error: "An error occurred while adding the bank account.",
     };
   }
 };

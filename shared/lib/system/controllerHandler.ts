@@ -122,7 +122,8 @@ export const controllerHandler = ({ schema, controller, options }: IControllerHa
       }
       // tslint:disable-next-line: no-console
       // console.error(e); // Log the error for debugging purpose
-      // console.log('----------------------',e)
+      console.log('00000000000000000000000000000',res)
+      console.log('----------------------',e)
       handleError(e, res);
     } finally {
       // console.log("Closing connection ==========>");

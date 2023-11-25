@@ -1,10 +1,7 @@
 import { SUCCESSFUL } from "../../../../shared/constants/httpSuccessMessages";
 import { IControllerParams } from "../../../../shared/interfaces/IControllerParams";
-import { Wallet, student_addmoney_request } from "../../../../shared/database/models";
 import { IStudentWithdrwRequest } from "../interfaces/IStudentWithdrwRequest";
-import { PENDING } from "../../../../shared/constants/message";
-import { HttpNotFound } from "../../../../shared/exceptions/HttpNotFound";
-import { Request } from 'express';
+
 // import {
 //   INSUFFICIENT_BALANCE,
 //   MINIMUM_AMOUNT,

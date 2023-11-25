@@ -2,7 +2,7 @@ import { SUCCESSFUL } from "../../../../shared/constants/httpSuccessMessages";
 import { IControllerParams } from "../../../../shared/interfaces/IControllerParams";
 import { IStudentWithdrawRequest } from "../interfaces";
 import { Wallet, WalletTransaction, WithdrawlRequest } from "../../../../shared/database/models";
-import { INBOUND, INITIALIZED, OUTBOUND, PENDING, WALLET } from "../../../../shared/constants/message";
+import {  OUTBOUND, PENDING, WALLET } from "../../../../shared/constants/message";
 import { HttpNotFound } from "../../../../shared/exceptions/HttpNotFound";
 import {
   INSUFFICIENT_BALANCE,

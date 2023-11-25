@@ -4,9 +4,11 @@ import * as cors from 'cors'
 import * as express from 'express'
 import { Application } from 'express'
 import * as morgan from 'morgan'
+const bodyParser = require('body-parser');
 
 const app: Application = express()
 
+app.use(bodyParser.json({ extended: true, limit: '10mb' }));
 // Log Http requests
 app.use(morgan('combined'))
 
