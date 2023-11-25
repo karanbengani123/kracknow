@@ -5,7 +5,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import SideNav from "./SideNav";
 import Footer from "./Footer";
 import Header from "./Header";
-import Environment from "./Environment";
+import Environment, { students_server_url } from "./Environment";
 
 function UpdateRequest() {
   const [studentFirstName, setStudentFirstName] = useState("")
@@ -32,7 +32,7 @@ function UpdateRequest() {
   }, [])
 
   const GetAcceptWithdrawlList = async () => {
-    let result = await fetch(`${Environment.server_url}/students/withdrawalrequest/list/${params.uuid}`, {
+    let result = await fetch(`${students_server_url}/students/withdrawalrequest/list/${params.uuid}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -55,7 +55,7 @@ function UpdateRequest() {
   }
 
   const handaledata = async () => {
-    let result = await fetch(`${Environment.server_url}/students/withdrawalrequest/${params.uuid}`, {
+    let result = await fetch(`${students_server_url}/students/withdrawalrequest/${params.uuid}`, {
       method: "post",
       headers: {
         "Content-Type": "application/json",
