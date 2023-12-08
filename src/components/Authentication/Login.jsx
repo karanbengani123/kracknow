@@ -88,6 +88,7 @@ function Login() {
             return (result.json());
           }
         }).then((result) => {
+          console.log(result)
           setErrorMessage(result.message)
           localStorage.setItem("user", JSON.stringify(email))
           localStorage.setItem("token", JSON.stringify(result.payload.token))

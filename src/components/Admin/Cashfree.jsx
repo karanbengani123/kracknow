@@ -56,7 +56,7 @@ function Cashfree() {
     const searchtable = async (key) => {
         console.log(key)
 
-        let result = await fetch(`${Environment.server_url}/wallet/allhistory?q=${key}`,
+        let result = await fetch(`${Environment.server_url}/allhistory?q=${key}`,
             {
                 method: "GET",
                 headers: {

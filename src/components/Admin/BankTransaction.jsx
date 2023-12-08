@@ -7,7 +7,7 @@ import Header from "./Header";
 import { debounce } from "lodash";
 import ReactPaginate from "react-paginate";
 import Environment from "./Environment";
-import loader from '../Images/loader.gif';
+import loader from "../Images/loader.gif";
 
 function BankTransaction() {
   const [Cashfreelist, setCashfreeList] = useState([]);
@@ -38,7 +38,7 @@ function BankTransaction() {
   //To Get The Cashfree List.....
 
   const GetAcceptWithdrawlList = async (page) => {
-    setLoading(true)
+    setLoading(true);
     let result = await fetch(
       `${Environment.server_url}/wallet/studentaddmoneyrequestforadmin?limit=${itemsPerPage}&page=${page}`,
       {
@@ -51,7 +51,7 @@ function BankTransaction() {
     );
     let results = await result.json();
     console.log(results);
-    setLoading(false)
+    setLoading(false);
 
     if (result.status === 200) {
       setCashfreeList(results.payload.rows);
@@ -181,7 +181,7 @@ function BankTransaction() {
               <div className="row">
                 <div className="col-12">
                   <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 className="mb-sm-0">Payout Request List</h4>
+                    <h4 className="mb-sm-0">Deposit Request </h4>
                     <div className="page-title-right">
                       {/* <ol className="breadcrumb m-0">
                             <li className="breadcrumb-item"><a href="javascript: void(0);">Withdraw requests</a></li>
@@ -238,22 +238,12 @@ function BankTransaction() {
                         >
                           <thead className="thead-light">
                             <tr>
-                              {/* <th style={{ width: 20 }}>
-                                                                <div className="form-check">
-                                                                    <input type="checkbox" className="form-check-input" id="customercheck" />
-                                                                    <label className="form-check-label mb-0" htmlFor="customercheck">&nbsp;</label>
-                                                                </div>
-                                                            </th> */}
                               <th>Student</th>
                               <th>Amount</th>
                               {/* <th>Payment type value</th> */}
                               {/* <th>Receipt</th> */}
                               <th>Requested date</th>
                               <th>Status</th>
-                              {/* <th>Status msg</th> */}
-                              {/* <th>Account number</th>
-                                                            <th>Upi id</th>
-                                                            <th>Transfer id</th> */}
                               <th>Action</th>
                             </tr>
                           </thead>

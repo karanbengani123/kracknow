@@ -10,11 +10,6 @@ import Environment from "./Environment";
 // import { useForm } from "react-hook-form";
 
 function UpdateSubCategory() {
-    // const { register, handleSubmit, formState: { errors }, } = useForm();
-
-    // const onSubmit = () => {
-    //     console.log("data");
-    // }
 
     const [categoryUUID, setcategoryUUID] = useState();
     const [label, setLabel] = useState('');

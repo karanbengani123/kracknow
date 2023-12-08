@@ -10,6 +10,8 @@ import Environment from "./Environment";
 
 function Setting() {
   const [amount, setAmount] = useState("");
+  const [minamount, setMinamount] = useState("");
+  const [maxamount, setMaxamount] = useState("");
   const [upi, setUpi] = useState("");
   const [bankName, setBankName] = useState("");
   const [account, setAccount] = useState("");
@@ -40,6 +42,7 @@ function Setting() {
   useEffect(() => {
     getStudent();
     fetchbankDetails();
+    getWithdrawal();
   }, []);
 
   const handletransactionimg = (e) => {
@@ -121,13 +124,16 @@ function Setting() {
   };
 
   const fetchbankDetails = async () => {
-    let result = await fetch(`${Environment.server_url}/sessions/banklist`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
-      },
-    });
+    let result = await fetch(
+      `${Environment.server_url}/sessions/banklist_student`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+        },
+      }
+    );
     result = await result.json();
     if (result.message === "Successful") {
       setBankList(result.payload[0]);
@@ -288,13 +294,6 @@ function Setting() {
       });
   };
   const getStudent = async () => {
-    // setStartExamDisable(true)
-    // setShowLoaderShow(true)
-    // setTimeout(() => {
-    //     setStartExamDisable(false);
-    //     setShowLoaderShow(false);
-    // }, 5000);
-
     let result = await fetch(
       `${Environment.server_url}/students/amount/initialamount`,
       {
@@ -307,6 +306,55 @@ function Setting() {
     );
     result = await result.json();
     setAmount(result.payload.intValue);
+  };
+  const updateWithdrawal = async () => {
+
+    let result = await fetch(
+      `${Environment.server_url}/students/amount/withdrawallimit`,
+      {
+        method: "PUT",
+        body: JSON.stringify({ minamount , maxamount }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+        },
+      }
+    )
+      .then((catdata) => {
+        if (catdata.status === 200) {
+          setMinamount('')
+          setMaxamount('')
+          setShowSuccess(true);
+          setTimeout(() => {
+            getWithdrawal();
+          }, 1000);
+          // navigate('../Exam');
+          return catdata.json();
+        } else {
+          setShow(true);
+          return catdata.json();
+        }
+      })
+      .then((catdata) => {
+        setErrorMessage(catdata.message);
+      });
+  };
+  const getWithdrawal = async () => {
+    let result = await fetch(
+      `${Environment.server_url}/students/amount/withdrawallimit`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+        },
+      }
+    );
+    result = await result.json();
+    console.log(result.payload)
+    setMinamount(result.payload.minval)
+    setMaxamount(result.payload.maxval)
+    // setAmount(result.payload.intValue);
   };
   return (
     <>
@@ -358,7 +406,7 @@ function Setting() {
                   <div className="card">
                     <div className="card-body">
                       <div class="row">
-                        <div className="col-sm-3">
+                        <div className="col-sm-4">
                           <h6>
                             <b>Joining bonus (In Rupees)</b>
                           </h6>
@@ -381,6 +429,57 @@ function Setting() {
                             onClick={() => updateStudent()}
                           >
                             Save
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-lg-12">
+                  <div className="card">
+                    <div className="card-body">
+                      <div class="row">
+                        <div className="col-sm-4">
+                          <h6>
+                            <b>Min. Withdrawal Amount (In Rupees)</b>
+                          </h6>
+                          <input
+                            type={"number"}
+                            placeholder={"Enter Minimun Amount"}
+                            value={minamount}
+                            onChange={(e) =>
+                              setMinamount(
+                                e.target.valueAsNumber || e.target.value
+                              )
+                            }
+                            className="form-control"
+                          ></input>
+                        </div>
+                        <div className="col-sm-4">
+                          <h6>
+                            <b>Max. Withdrawal Amount (In Rupees)</b>
+                          </h6>
+                          <input
+                            type={"number"}
+                            placeholder={"Enter Maximum Amount"}
+                            value={maxamount}
+                            onChange={(e) =>
+                              setMaxamount(
+                                e.target.valueAsNumber || e.target.value
+                              )
+                            }
+                            className="form-control"
+                          ></input>
+                        </div>
+                        <div className="col-sm-3 sendmoneybtn">
+                          <button
+                            type="button"
+                            className="ml-2 btn btn-success sendMoneyButton"
+                            onClick={() => updateWithdrawal()}
+                          >
+                            Update
                           </button>
                         </div>
                       </div>
@@ -525,7 +624,7 @@ function Setting() {
                           className="ml-2 btn btn-success sendMoneyButton"
                           onClick={() => addBankDetails()}
                         >
-                          Save
+                          {!newEntry ? "Update" : "Add"}
                         </button>
                       </div>
                     </div>

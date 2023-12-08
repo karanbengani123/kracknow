@@ -14,7 +14,7 @@ function Payoutrequest() {
   const [studentLastName, setStudentLastName] = useState("");
   const [studentWalletBalance, setStudentWalletBalance] = useState("");
   const [paymentStatus, setPaymentStatus] = useState("");
-  const [Cashfreelist, setCashfreeList] = useState("");
+  const [query, setQuery] = useState("");
   const [studentEmail, setStudentEmail] = useState("");
   const [walletList, setWalletList] = useState([]);
   const [show, setShow] = useState(false);
@@ -63,6 +63,8 @@ function Payoutrequest() {
   };
 
   const handaledata = async () => {
+    setStartExamDisable(true);
+    setShowLoaderShow(true);
     let result = await fetch(
       `${Environment.server_url}/wallet/adminaddmoney/${params.uuid}`,
       {
@@ -74,6 +76,8 @@ function Payoutrequest() {
       }
     );
     let results = await result.json();
+    setStartExamDisable(false);
+    setShowLoaderShow(false);
     if (result.status === 200) {
       navigate("/payoutrequest");
     } else {
@@ -90,6 +94,9 @@ function Payoutrequest() {
       }
     }
   };
+
+
+  console.log(walletList.transactionImage)
   return (
     <>
       <Header />
@@ -103,8 +110,8 @@ function Payoutrequest() {
                     <h4 className="mb-sm-0">Update Request</h4>
                     <div className="page-title-right">
                       <ol className="breadcrumb m-0">
-                        <Link to="/Withdraw" className="breadcrumb-item">
-                          Payout requests
+                        <Link to="/payoutrequest" className="breadcrumb-item">
+                        DepositRequest
                         </Link>
                         <li className="breadcrumb-item active">
                           UpdateRequest
@@ -254,14 +261,31 @@ function Payoutrequest() {
                             <p className="mb-0">
                               <b>Transaction Image</b>
                             </p>
+                            {walletList.transactionImage
+                             && 
                             <Zoom>
                               <img
                                 src={walletList.transactionImage}
                                 style={{ maxWidth: "100px" }}
                               />
                             </Zoom>
+                             }
                           </div>
-                          
+                          {/* <div className="col-12 col-sm-4">
+                            <label for="search-bar-0" className="search-label">
+                              Query
+                            </label>
+
+                            <input
+                              id="search-bar-0"
+                              type="text"
+                              aria-labelledby="search-bar-0-label"
+                              className="form-control"
+                              placeholder="query"
+                              value={query}
+                              onChange={(e) => setQuery(e.target.value)}
+                            />
+                          </div> */}
                         </div>
                         <div className="button">
                           <button
@@ -283,6 +307,8 @@ function Payoutrequest() {
                               "Complete request"
                             )}
                           </button>
+                         
+                            
                           <Link to="/payoutrequest">
                             <button type="button" className="btn">
                               Cancel

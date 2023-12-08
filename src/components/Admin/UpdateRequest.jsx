@@ -5,7 +5,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import SideNav from "./SideNav";
 import Footer from "./Footer";
 import Header from "./Header";
-import Environment, { students_server_url } from "./Environment";
+import Environment  from "./Environment";
 
 function UpdateRequest() {
   const [studentFirstName, setStudentFirstName] = useState("")
@@ -23,6 +23,7 @@ function UpdateRequest() {
   const [showLoaderShow, setShowLoaderShow] = useState(false);
   const [fetchError, setFetchError] = useState('')
   const [message, setMessage] = useState("");
+  const [removemsg, setRemovemsg] = useState(false)
 
   const params = useParams();
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ function UpdateRequest() {
   }, [])
 
   const GetAcceptWithdrawlList = async () => {
-    let result = await fetch(`${students_server_url}/students/withdrawalrequest/list/${params.uuid}`, {
+    let result = await fetch(`${Environment.server_url}/students/withdrawalrequest/list/${params.uuid}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -47,6 +48,7 @@ function UpdateRequest() {
       setStudentLastName(results.payload.student.lastName);
       setStudentWalletBalance(results.payload.student.wallet.balance);
     } else {
+      console.log(result)
       setFetchError(results.message)
       setTimeout(() => {
         setFetchError('')
@@ -55,15 +57,32 @@ function UpdateRequest() {
   }
 
   const handaledata = async () => {
-    let result = await fetch(`${students_server_url}/students/withdrawalrequest/${params.uuid}`, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
-      },
-      body: JSON.stringify({'statusMsg':message})
-    })
+    let sendmessage = walletList.statusMsg ? walletList.statusMsg : message
+
+    setShowLoaderShow(true)
+    var result
+    if(removemsg){
+      result = await fetch(`${Environment.server_url}/students/withdrawalrequest/${params.uuid}`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+        },
+        body: JSON.stringify({'statusMsg':''})
+      })
+    }else {
+      result = await fetch(`${Environment.server_url}/students/withdrawalrequest/${params.uuid}`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+        },
+        body: JSON.stringify({'statusMsg':sendmessage})
+      })
+    }
     let results = await result.json();
+    setShowLoaderShow(false)
+
     if (result.status === 200) {
       navigate("/Withdraw")
     } else {
@@ -79,6 +98,37 @@ function UpdateRequest() {
         }, 3000);
       }
     }
+  }
+  const getDateTime = (dateString) => {
+    if (!dateString) {
+      return;
+    }
+    const d = dateString;
+    const date = new Date(d);
+    return (
+      [
+        date.getDate(),
+        date.toLocaleString("default", { month: "long" }),
+        date.getFullYear(),
+      ].join(" ") +
+      ", " +
+      formatAMPM(date)
+    );
+  };
+
+  const formatAMPM = (date) => {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? "pm" : "am";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    var strTime = hours + ":" + minutes + " " + ampm;
+    return strTime;
+  };
+
+  const handleremovemessage = () => {
+    setRemovemsg(true)
   }
   return (
     <>
@@ -166,7 +216,7 @@ function UpdateRequest() {
                           </div>
                           <div className="col-12 col-sm-4">
                             <p className="mb-0"><b>Requested at</b></p>
-                            <p>{(walletList.createdAt)}</p>
+                            <p>{ getDateTime(walletList.createdAt)}</p>
                           </div>
                         </div>
                         <div className="form-row mb-4">
@@ -180,22 +230,19 @@ function UpdateRequest() {
                             }
                           </div>
                           <div className="col-12 col-sm-4">
-                          <p className="mb-0"><b>Message</b></p>
-                            <input
-                              type="text"
-                              class="form-control"
-                              name="upi"
-                              placeholder="Enter message"
-                              value={message}
-                              onChange={(e) => setMessage(e.target.value)}
-                            />
+                          {!removemsg && <>
+                            <p className="mb-0"><b>Message</b></p>
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="upi"
+                                placeholder="Enter message"
+                                value={message ? message : walletList.statusMsg}
+                                onChange={(e) => setMessage(e.target.value)}
+                              />
+                          </>
+}
                           </div>
-                          {/* {walletList.statusMsg === null ? <span></span> : <div className="col-12 col-sm-4">
-                            <p className="mb-0"><b>Status message</b></p>
-                            <span className="badge badge-danger"><b>{walletList.statusMsg}</b></span>
-                          </div>
-                          } */}
-
                         </div>
                         <div className="button">
                           <button type="submit" onClick={handaledata} className="btn btn-success savebtn" disabled={startExamDisable}>
@@ -213,6 +260,9 @@ function UpdateRequest() {
                                 )
                             }
                           </button>
+                          <button type="button" className="btn btn-success savebtn ml-2" onClick={handleremovemessage}>
+                              Clear Message
+                            </button>
                           <Link to="/Withdraw"><button type="button" className="btn">Cancel</button></Link>
                         </div>
                       </div>

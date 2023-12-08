@@ -6,7 +6,7 @@ import Footer from "./Footer";
 import Header from "./Header";
 import { debounce } from "lodash";
 import ReactPaginate from "react-paginate";
-import Environment, { students_server_url } from "./Environment";
+import Environment from "./Environment";
 import loader from "../Images/loader.gif";
 
 function Withdraw() {
@@ -38,7 +38,7 @@ function Withdraw() {
     setLoading(true);
 
     let result = await fetch(
-      `${students_server_url}/students/withdrawalrequest/list?limit=${itemsPerPage}&page=${page}`,
+      `${Environment.server_url}/students/withdrawalrequest/list?limit=${itemsPerPage}&page=${page}`,
       {
         method: "GET",
         headers: {
@@ -98,7 +98,7 @@ function Withdraw() {
     // let key = event.target.value
     setLoading(true);
     let result = await fetch(
-      `${students_server_url}/students/withdrawalrequest/list?limit=${itemsPerPage}&page=1&q=${key}`,
+      `${Environment.server_url}/students/withdrawalrequest/list?limit=${itemsPerPage}&page=1&q=${key}`,
       {
         method: "GET",
         headers: {

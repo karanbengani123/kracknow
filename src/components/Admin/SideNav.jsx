@@ -82,7 +82,7 @@ function SideNav() {
                                         <li className="nav-item">
                                             <Link to="/payoutrequest" className="nav-link">
                                                 <i className="far fa-circle nav-icon" />
-                                                <p>Payout Request </p>
+                                                <p>Deposit Request </p>
                                             </Link>
                                         </li>
                                         <li className="nav-item">
