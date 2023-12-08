@@ -47,8 +47,8 @@ function Login() {
     const viewStudentDetails = async (tokens) => {
       // const tokens = localStorage.getItem("token");
       const decoder = jwt_decode(tokens);
-      // let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/students/${decoder.id}`,
-      let result = await fetch(`http://localhost:3000/students/${decoder.id}`,
+      let result = await fetch(` https://4uwwei55mc.execute-api.ap-sousth-1.amazonaws.com/prod/students/${decoder.id}`,
+      // let result = await fetch(`http://localhost:3000/students/${decoder.id}`,
         {
           method: "GET",
           headers: {
@@ -63,8 +63,8 @@ function Login() {
 
     // let item = { email, password }
     if (email !== "" && password !== "") {
-      // let result = await fetch('https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/sessions/student/auth', {
-      let result = await fetch('http://localhost:3000/sessions/student/auth', {
+      let result = await fetch(' https://4uwwei55mc.execute-api.ap-south-1.amazonaws.com/prod/sessions/student/auth', {
+      // let result = await fetch('http://localhost:3000/sessions/student/auth', {
         method: 'POST',
         body: JSON.stringify({ email, password }),
         headers: {

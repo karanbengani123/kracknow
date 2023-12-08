@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import SideNav from "./SideNav";
 import Footer from "./Footer";
 import Header from "./Header";
+import {  baseurlwallet } from "./BaseUrl";
 
 function Wallet() {
   const [walletBalance, setWalletBalance] = useState("");
@@ -13,7 +14,7 @@ function Wallet() {
   }, []);
 
   let walletballance = async () => {
-    let result = await fetch("http://localhost:3000/wallet/balance", {
+    let result = await fetch(`${baseurlwallet}/wallet/balance`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,

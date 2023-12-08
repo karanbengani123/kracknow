@@ -5,6 +5,7 @@ import SideNav from "./SideNav";
 import Footer from "./Footer";
 import Header from "./Header";
 import { useForm } from "react-hook-form";
+import { baseurl, baseurlwallet } from "./BaseUrl";
 
 function Wallettobank1() {
   const [amount, setAmount] = useState("");
@@ -16,6 +17,8 @@ function Wallettobank1() {
   const [upi, setUpi] = useState("");
   const [bankError, setBankError] = useState(false);
   const [upiError, setUpiError] = useState(false);
+  const [show, setShow] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const {
     register,
     handleSubmit,
@@ -28,14 +31,20 @@ function Wallettobank1() {
   const navigate = useNavigate();
 
   const handlewallettobanktra = async () => {
+    let upierrstate = false;
+    let bankerrstate = false;
     if (addmoneytype === "upi") {
       if (!upi) {
         document.getElementsByClassName("upiidError")[0].innerText =
           "Upi ID Required";
         setUpiError(true);
+        upierrstate = true;
       } else {
-        document.getElementsByClassName("upiidError")[0].innerText = "";
+        // setTimeout(() => {
+        //   document.getElementsByClassName("upiidError")[0].innerText = "";
+        // }, 3000);
         setUpiError(false);
+        upierrstate = false;
       }
     }
 
@@ -44,60 +53,81 @@ function Wallettobank1() {
         document.getElementsByClassName("nameError")[0].innerText =
           "Name Required";
         setBankError(true);
+        bankerrstate = true;
       } else {
-        document.getElementsByClassName("nameError")[0].innerText = "";
+        // setTimeout(() => {
+        //   document.getElementsByClassName("nameError")[0].innerText = "";
+        // }, 3000);
         setBankError(false);
+        bankerrstate = false;
       }
       if (!bankname) {
         document.getElementsByClassName("banknameError")[0].innerText =
           "Bank Name Required";
         setBankError(true);
+        bankerrstate = true;
       } else {
-        document.getElementsByClassName("banknameError")[0].innerText = "";
+        // setTimeout(() => {
+        //   document.getElementsByClassName("banknameError")[0].innerText = "";
+        // }, 3000);
         setBankError(false);
+        bankerrstate = false;
       }
       if (!account) {
         document.getElementsByClassName("accountError")[0].innerText =
           "Account Required";
         setBankError(true);
+        bankerrstate = true;
       } else {
-        document.getElementsByClassName("accountError")[0].innerText = "";
+        // setTimeout(() => {
+        //   document.getElementsByClassName("accountError")[0].innerText = "";
+        // }, 3000);
         setBankError(false);
+        bankerrstate = false;
       }
       if (!ifsc) {
         document.getElementsByClassName("ifscError")[0].innerText =
           "IFSC Required";
         setBankError(true);
+        bankerrstate = true;
       } else {
-        document.getElementsByClassName("ifscError")[0].innerText = "";
+        // setTimeout(() => {
+        //   document.getElementsByClassName("ifscError")[0].innerText = "";
+        // }, 3000);
         setBankError(false);
+        bankerrstate = false;
       }
-
-      setTimeout(() => {
-        setBankError(false);
-        document.getElementsByClassName("nameError")[0].innerText = "";
-        document.getElementsByClassName("banknameError")[0].innerText = "";
-        document.getElementsByClassName("accountError")[0].innerText = "";
-        document.getElementsByClassName("ifscError")[0].innerText = "";
-      }, 3000);
     }
 
-    if (!amount || !addmoneytype || bankError || upiError) {
+    console.log(bankerrstate);
+    console.log(upierrstate);
+    if (
+      !amount ||
+      !addmoneytype ||
+      bankerrstate === true ||
+      upierrstate === true
+    ) {
       if (!amount) {
         document.getElementsByClassName("AmountError")[0].innerText =
           "Amount Required";
       } else {
-        document.getElementsByClassName("AmountError")[0].innerText = "";
+        // setTimeout(() => {
+        //   console.log('call')
+        //   document.getElementsByClassName("AmountError")[0].innerText = "";
+        // }, 3000);
       }
       if (!addmoneytype) {
         document.getElementsByClassName("addmoneytypeError")[0].innerText =
           "Payment Type Required";
       } else {
-        document.getElementsByClassName("addmoneytypeError")[0].innerText = "";
+        // setTimeout(() => {
+        //   document.getElementsByClassName("addmoneytypeError")[0].innerText =
+        //     "";
+        // }, 3000);
       }
     } else {
       let result = await fetch(
-        "http://localhost:3000/wallet/studentwithdrawalrequest",
+        `${baseurlwallet}/wallet/studentwithdrawalrequest`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -115,15 +145,21 @@ function Wallettobank1() {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
-      ).then((result) => {
+      ).then(async (result) => {
         if (result.status === 200) {
+          setShowSuccess(true);
           canclebtn();
-          navigate("/Wallet");
+          setTimeout(() => {
+            setShowSuccess(false);
+            navigate("/Wallet");
+          }, 3000);
           return result.json();
         } else {
-          console.log(result);
+          result = await result.json();
+          console.log("------", result.message);
           document.getElementsByClassName("statusError")[0].innerText =
-            "Something Went Wrong , Try After Some Time";
+            result.message;
+          // "Something Went Wrong , Try After Some Time";
           setTimeout(() => {
             document.getElementsByClassName("statusError")[0].innerText = "";
           }, 3000);
@@ -131,9 +167,19 @@ function Wallettobank1() {
         throw result;
       });
 
-      result = await result.json();
-      console.warn("Login Result", result);
+      // result = await result.json();
+      // console.warn("Login Result", result);
     }
+    setTimeout(() => {
+      console.log('call')
+      document.getElementsByClassName("AmountError")[0].innerText = "";
+      document.getElementsByClassName("addmoneytypeError")[0].innerText ="";
+      document.getElementsByClassName("ifscError")[0].innerText = "";
+      document.getElementsByClassName("accountError")[0].innerText = "";
+      document.getElementsByClassName("banknameError")[0].innerText = "";
+      document.getElementsByClassName("nameError")[0].innerText = "";
+      document.getElementsByClassName("upiidError")[0].innerText = "";
+    }, 3000);
   };
 
   const canclebtn = () => {
@@ -171,6 +217,23 @@ function Wallettobank1() {
                   </div>
                 </div>
               </div>
+              {showSuccess && (
+                <div
+                  className="alert alert-success alert-dismissible fade show"
+                  role="alert"
+                >
+                  <strong className="text-success">
+                    {"Withdrawal Request Apply Successful "}
+                  </strong>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"
+                    onClick={() => setShowSuccess(false)}
+                  ></button>
+                </div>
+              )}
               <div className="row">
                 <div className="col-lg-12">
                   <div className="card">
@@ -201,7 +264,7 @@ function Wallettobank1() {
                                 <b>Select Payment Type</b>
                               </p>
                               <select
-                                className="form-select form-select mb-2 form-control valid"
+                                className="form-select form-select  form-control valid"
                                 aria-label="Default select example"
                                 value={addmoneytype}
                                 onChange={(e) =>
@@ -244,7 +307,17 @@ function Wallettobank1() {
                                     <p>
                                       <b>Enter Bank</b>
                                     </p>
-                                    <select
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      name="bankname"
+                                      placeholder="Enter Bank Name"
+                                      value={bankname}
+                                      onChange={(e) =>
+                                        setBankname(e.target.value)
+                                      }
+                                    />
+                                    {/* <select
                                       className="form-select form-select mb-2 form-control valid"
                                       aria-label="Default select example"
                                       value={bankname}
@@ -254,7 +327,7 @@ function Wallettobank1() {
                                     >
                                       <option selected>Select Bank Name</option>
                                       <option value="upi">loop</option>
-                                    </select>
+                                    </select> */}
                                     <p
                                       className="banknameError"
                                       style={{
@@ -327,6 +400,7 @@ function Wallettobank1() {
                                   </div>
                                 </>
                               )}
+
                               {/* <p>
                                 <b>Ref# Value</b>
                               </p>
@@ -350,7 +424,10 @@ function Wallettobank1() {
                               {/* <button type="button" className="btn btn-success savebtnn">Schedule now</button> */}
                             </div>
                           </div>
-
+                          <p
+                            className="statusError"
+                            style={{ color: "red", fontWeight: "bold" }}
+                          ></p>
                           <div className="button">
                             <button
                               type="submit"
@@ -361,7 +438,7 @@ function Wallettobank1() {
                             </button>
                             <button
                               type="button"
-                              className="btn btn-success savebtn"
+                              className="btn btn-success savebtn ml-2"
                               onClick={canclebtn}
                             >
                               Cancle

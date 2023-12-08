@@ -41,8 +41,8 @@ function Signup() {
 
 
   const getCities = async () => {
-    // let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/sessions/cities`, {
-    let result = await fetch(`http://localhost:3000/sessions/cities`, {
+    let result = await fetch(` https://4uwwei55mc.execute-api.ap-south-1.amazonaws.com/prod/sessions/cities`, {
+    // let result = await fetch(`http://localhost:3000/sessions/cities`, {
       method: "GET",
       // headers: {
       //   "Content-Type": "application/json",
@@ -60,7 +60,9 @@ function Signup() {
   const Signup = async () => {
     console.warn(firstName, lastName, profilePic, idProof, mobileNumber, email, password, selectCity);
 
-    const catdata = await fetch("http://localhost:3000/sessions/student/register", {
+    // const catdata = await fetch("http://localhost:3000/sessions/student/register", {
+    const catdata = await fetch(" https://4uwwei55mc.execute-api.ap-south-1.amazonaws.com/prod/sessions/student/register", {
+
       method: "POST",
       body: JSON.stringify({ firstName, lastName, profilePic, idProof, mobileNumber, email, password, city: selectCity || null }),
       headers: {

@@ -28,7 +28,7 @@ import Wallethistory from './Wallethistory';
 
 
 
-function AdminRouter() {
+function  AdminRouter() {
   return (
     <div className="App">           
       <Routes>

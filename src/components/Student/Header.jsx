@@ -6,6 +6,7 @@ import 'reactjs-popup/dist/index.css';
 import profileicon from '../images/guy-6.jpg';
 import bellicon from '../images/icons8-bell-64.png';
 import jwt_decode from "jwt-decode";
+import { baseurl, baseurlwallet } from "./BaseUrl";
 // import MagicBell, {FloatingNotificationInbox} from "@magicbell/magicbell-react";
 
 function Header() {
@@ -51,7 +52,7 @@ function Header() {
     }, [])
 
     let walletballance = async () => {
-        let result = await fetch("http://localhost:3000/wallet/balance", {
+        let result = await fetch(`${baseurlwallet}/wallet/balance`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`

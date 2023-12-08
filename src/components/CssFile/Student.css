@@ -37,6 +37,14 @@
     border-color: #2dcee3;
     text-transform: uppercase;
 }
+.lablesize {
+    font-size: 16px;
+}
+@media (min-width: 992px) and (max-width: 1250px) {
+    .lablesize {
+        font-size: 15px;
+    }
+}
 
 .add1 {
     color: #fff;
@@ -351,7 +359,9 @@ text-overflow: clip;
     .imgageupload {
         margin-top: 20px;
     }
-
+.lablesize {
+    font-size: 14px;
+}
     .tournamentimgageupload {
         margin-bottom: 20px;
     }

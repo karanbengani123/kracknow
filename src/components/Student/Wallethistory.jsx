@@ -5,6 +5,7 @@ import SideNav from "./SideNav";
 import Footer from "./Footer";
 import Header from "./Header";
 import ReactPaginate from "react-paginate";
+import { baseurlwallet } from "./BaseUrl";
 
 function Wallethistory() {
   const [walletBalance, setWalletBalance] = useState("");
@@ -22,7 +23,7 @@ function Wallethistory() {
 
   let walletballance = async (page) => {
     let result = await fetch(
-      `http://localhost:3000/wallet/wallettransactions?limit=${itemsPerPage}&page=${page}`,
+      `${baseurlwallet}/wallet/wallettransactions?limit=${itemsPerPage}&page=${page}`,
       {
         method: "GET",
         headers: {
@@ -207,13 +208,13 @@ function Wallethistory() {
                                   {item.type === "OUTBOUND" ? (
                                     <td>
                                       <span className="badge bg-success">
-                                        {item.type}
+                                      Withdrawal
                                       </span>
                                     </td>
                                   ) : (
                                     <td>
                                       <span className="badge bg-warning">
-                                        {item.type}
+                                      Deposit
                                       </span>
                                     </td>
                                   )}
@@ -225,15 +226,15 @@ function Wallethistory() {
                                   <td>{getDateTime(item.createdAt)}</td>
                                   <td>{item.amount}</td>
                                   <td>{item.statusMsg}</td>
-                                  {item.status === "SUCCESS" ? (
+                                  {item.status === "PENDING" ? (
                                     <td>
-                                      <span className="badge bg-success">
+                                      <span className="badge bg-warning">
                                         {item.status}
                                       </span>
                                     </td>
                                   ) : (
                                     <td>
-                                      <span className="badge bg-warning">
+                                      <span className="badge bg-success">
                                         {item.status}
                                       </span>
                                     </td>
