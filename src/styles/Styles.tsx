@@ -46,7 +46,8 @@ export const FormStyle = StyleSheet.create({
   errorText: {
     color: Colors.danger,
     fontSize: 12,
-    marginTop: 0
+    marginTop: 4,
+    marginLeft: 4
   },
   textInputRightIcon: {
     position: 'absolute',

@@ -543,22 +543,53 @@ export const GetUpcomingMockListAPI = async () => {
 
 //************* Payment API
 
+// export const postaddAmount = async (data: any) => {
+//   console.log('=-======+++++++++===', data)
+//   const userData = await AsyncStorage.getItem(Environment.PROJECT + 'token')
+//   const token = userData && JSON.parse(userData)
+//   console.log('======', token)
+//   return fetch(Environment.API + 'wallet/studentaddmoneyrequest', {
+//     method: 'POST',
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//       'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify({
+//       data
+//     })
+//   })
+
+// }
+// export const postaddAmount = async (data: any) => {
+//   const userData = await AsyncStorage.getItem(Environment.PROJECT + 'token');
+//   const token = userData && JSON.parse(userData);
+
+//   return fetch(`${Environment.API}/wallet/studentaddmoneyrequest`, {
+//     method: 'POST',
+//     headers: {
+//       'Authorization': `Bearer ${token}`,
+//       'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify(data)
+//   })
+// }
 export const postaddAmount = async (data: any) => {
-  console.log('======', data)
-  const userData = await AsyncStorage.getItem(Environment.PROJECT + 'token')
-  const token = userData && JSON.parse(userData)
-  return fetch(Environment.API + 'wallet/studentaddmoneyrequest', {
+  const userData = await AsyncStorage.getItem(Environment.PROJECT + 'token');
+  const token = userData && JSON.parse(userData);
+
+  const response = await fetch(`${Environment.API}/wallet/studentaddmoneyrequest`, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'multipart/form-data'
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify({
-      data
-    })
-  })
+    body: JSON.stringify(data)
+  });
 
-}
+  const responseData = await response.json();
+  return responseData; // Return the parsed JSON data
+};
+
 
 export const PayPaymentApi = async (data: any) => {
   console.log('======', data)
@@ -577,6 +608,8 @@ export const PayPaymentApi = async (data: any) => {
   })
 }
 
+
+
 export const WalletBalanceApi = async () => {
   const userData = await AsyncStorage.getItem(Environment.PROJECT + 'token')
   const token = userData && JSON.parse(userData)
@@ -589,18 +622,41 @@ export const WalletBalanceApi = async () => {
     },
   })
 }
-
-export const WalletHistoryApi = async () => {
+export const BankdetailsApi = async () => {
   const userData = await AsyncStorage.getItem(Environment.PROJECT + 'token')
   const token = userData && JSON.parse(userData)
   // debugger;
-  return fetch(Environment.API + '/wallet/history', {
+  return fetch(Environment.API + '/sessions/banklist_student', {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json'
     },
   })
+}
+
+export const WalletHistoryApi = async () => {
+  const userData = await AsyncStorage.getItem(Environment.PROJECT + 'token')
+  const token = userData && JSON.parse(userData)
+  // debugger;
+  // return fetch(Environment.API + '/wallet/history', {
+  //   method: 'GET',
+  //   headers: {
+  //     Authorization: `Bearer ${token}`,
+  //     'Content-Type': 'application/json'
+  //   },
+  // })
+
+  const response = await fetch(`${Environment.API}/wallet/wallettransactions`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+  });
+
+  const responseData = await response.json();
+  return responseData; // Return the parsed JSON data
 }
 
 // export const  PaymentHistoryStore = async (payload: any) => {
@@ -728,14 +784,24 @@ export const GetWithdrawListAPI = async () => {
   const userData = await AsyncStorage.getItem(Environment.PROJECT + 'token');
   const token = userData && JSON.parse(userData);
 
-  return fetch(`${Environment.API}/wallet/wallettransactionsforWithdrawal`, {
+  // return fetch(`${Environment.API}/wallet/wallettransactionsforWithdrawal`, {
+  //   method: 'GET',
+  //   headers: {
+  //     'Authorization': `Bearer ${token}`,
+  //     'Content-Type': 'application/json'
+  //   },
+  //   // body: JSON.stringify(payload)
+  // })
+  const response = await fetch(`${Environment.API}/wallet/wallettransactionsforWithdrawal`, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     },
-    // body: JSON.stringify(payload)
-  })
+  });
+
+  const responseData = await response.json();
+  return responseData; // Return the parsed JSON data
 }
 
 

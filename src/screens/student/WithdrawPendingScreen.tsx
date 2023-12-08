@@ -24,114 +24,156 @@ interface State {
 
 
 export default class WithdrawPendingScreen extends React.Component<Props, State> {
-    // private focusListener: any;
+    private focusListener: any;
 
     constructor(props: Props) {
         super(props);
 
         this.state = {
-            withdrawList: {}
-
-
-
+            withdrawList: {},
+            fetcherr: '',
         };
 
 
     }
-
     componentDidMount(): void {
         this._getWithdrawListHandler();
-        // this.focusListener = this.props.navigation.addListener('didFocus', () => {
-        //     this._getWithdrawListHandler();
-        // })
-
+        this.focusListener = this.props.navigation.addListener('didFocus', () => {
+            this._getWithdrawListHandler();
+        });
     }
 
-    componentWillUnmount(): void {
-        // this.setState = () => {
-        //     return;
-        // };
-        // this.focusListener.remove();
-    }
+    // componentWillUnmount(): void {
+    //     if (this.focusListener) {
+    //         this.focusListener.remove();
+    //     }
+    // }
+
 
 
     _getWithdrawListHandler(): void {
         // debugger;
+        // GetWithdrawListAPI()
+        //     .then(response => {
+        //         const statusCode = response.status;
+        //         const data = statusCode === 200 ? response.json() : [];
+
+        //         return Promise.all([statusCode, data]).then(res => ({
+        //             statusCode: res[0],
+        //             data: res[1]
+        //         }));
+        //     })
+        //     .then((res: {
+        //         statusCode: number,
+        //         data: {
+        //             payload: {
+        //                 respose: any;
+        //                 response: any[],
+        //             }
+        //             message: string
+        //         }
+        //     }) => {
+        //         // debugger;
+        //         this.setState({
+        //             withdrawList: res.data.payload
+        //         });
+
+        //     });
         GetWithdrawListAPI()
             .then(response => {
-                const statusCode = response.status;
-                const data = statusCode === 200 ? response.json() : [];
+                const successRecords = response.payload.Wallettransactionslist.rows.filter(record => record.status === "PENDING");
+                if (Array.isArray(successRecords)) {
+                    this.setState({
+                        withdrawList: successRecords
+                            .map((rows: {
+                                paymentDate: any;
+                                status: any;
+                                amount: any;
+                                type: any;
+                                message: any
+                            }) => {
+                                return {
+                                    paymentDate: rows.createdAt,
+                                    status: rows.status,
+                                    amount: rows.amount,
+                                    type: rows.type,
+                                    message: rows.statusMsg
+                                }
+                            })
 
-                return Promise.all([statusCode, data]).then(res => ({
-                    statusCode: res[0],
-                    data: res[1]
-                }));
-            })
-            .then((res: {
-                statusCode: number,
-                data: {
-                    payload: {
-                        respose: any;
-                        response: any[],
-                    }
-                    message: string
+                    });
                 }
-            }) => {
-                // debugger;
-                this.setState({
-                    withdrawList: res.data.payload
-                });
 
+
+            })
+
+            .catch(error => {
+                console.log(')))))))))))))))))))))))))))))(((((((((((((((((((((((', error)
+                this.setState({ fetcherr: error });
             });
 
     }
-
     renderItem = ({ item }: any) => (
         <>
-            {item.status === "PENDING" &&
-                <View style={styles.item1}>
 
-                    <Text
-                        style={{
-                            fontSize: 12, fontWeight: '500', color: '#0E242C', fontStyle: 'normal', marginLeft: 5, marginTop: 5
-                        }}
-                    >Amount: {item.amount}</Text>
-                    <Text style={{
-                        fontSize: 10, fontWeight: '400', color: '#00000', opacity: 0.6, marginTop: 10, marginLeft: 5
-                    }}>Date: {moment(new Date(item.createdAt)).utcOffset('').format("ddd, DD-MMM-YYYY, hh:mm a")}
-                        {/* {this.getDateTime(item.schedule[0].startTime)} */}
-                    </Text>
-                    <Text style={{
-                        fontSize: 10, fontWeight: '400', color: '#00000', opacity: 0.6, marginTop: 10, marginLeft: 5
-                    }}>Transfer Mode: {item.transferMode}
-                    </Text>
+            {/* {item.status === "PENDING" && */}
+            <View style={styles.item1}>
 
-                    {/* <View style={{alignSelf:'center', marginLeft:70}}>
+                <Text
+                    style={{
+                        fontSize: 12, fontWeight: '500', color: '#0E242C', fontStyle: 'normal', marginLeft: 5, marginTop: 5
+                    }}
+                >Amount: {item.amount}</Text>
+                <Text style={{
+                    fontSize: 10, fontWeight: '400', color: '#00000', opacity: 0.6, marginTop: 10, marginLeft: 5
+                }}>Date: {moment(new Date(item.paymentDate)).utcOffset('').format("ddd, DD-MMM-YYYY, hh:mm a")}
+                </Text>
+                <Text style={{
+                    fontSize: 10, fontWeight: '400', color: '#00000', opacity: 0.6, marginTop: 10, marginLeft: 5
+                }}>Transfer Mode: {item.type}
+                </Text>
+                <Text style={{
+                    fontSize: 10, fontWeight: '400', color: '#00000', opacity: 0.6, marginTop: 10, marginLeft: 5
+                }}>Status: {item.status}
+                </Text>
+                <Text style={{
+                    fontSize: 10, fontWeight: '400', color: '#00000', opacity: 0.6, marginTop: 10, marginLeft: 5
+                }}>Message: {item.message}
+                </Text>
+
+                {/* <View style={{alignSelf:'center', marginLeft:70}}>
 
                         <Image style={{  }} source={require("../../../assets/images/Checklist.png")} />
                     </View> */}
-                </View>
-            }
+            </View>
+            {/* } */}
         </>
     );
 
     render(): React.ReactNode {
         return (
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.root}>
-                    <FlatList
-                        // horizontal
-                        pagingEnabled={true}
-                        // showsHorizontalScrollIndicator={false}
-                        data={this.state.withdrawList}
-                        renderItem={this.renderItem}
-                        keyExtractor={(item, index) => index.toString()}
-                        // ListFooterComponent={
-                        //     <View style={{ height: 200 }}></View>
-                        // }
-                    />
-                </View>
-            </ScrollView >
+            <>
+                {
+                    this.state.fetcherr !== "" &&
+                    <Text style={styles.errorText}>{this.state.fetcherr}</Text>
+                }
+
+                {this.state.withdrawList.length > 0 &&
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        <FlatList
+                            // horizontal
+                            pagingEnabled={true}
+                            // showsHorizontalScrollIndicator={false}
+                            data={this.state.withdrawList}
+                            renderItem={this.renderItem}
+                            keyExtractor={(item, index) => index.toString()}
+                            ListFooterComponent={
+                                <View style={{ height: 500 }}></View>
+                            }
+                        />
+                    </ScrollView>
+                }
+            </>
         );
     }
 }
@@ -141,10 +183,15 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: Colors.white
     },
+
+    errorText: {
+        color: 'red',
+    },
     root: {
         // alignItems: 'center',
         padding: 20,
     },
+
     action: {
         display: 'flex',
         flexDirection: 'row',

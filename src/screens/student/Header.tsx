@@ -5,7 +5,7 @@ import { DrawerActions } from 'react-navigation-drawer';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { GetNotificationAPI, WalletBalanceApi } from '../../api-services/User.api';
 import { HeaderNavigatorStyles } from '../../styles/HeaderNavigatorStyles';
- 
+
 
 
 
@@ -56,11 +56,11 @@ export default class Header extends React.Component<Props, State> {
 
   _getWalletBalanceHandler(): void {
     // <ActivityIndicator size="small" color="#0000ff" />
+    console.log('****************call***********************header')
     WalletBalanceApi()
       .then(response => {
         const statusCode = response.status;
         const data = statusCode === 200 ? response.json() : [];
-        console.log('****************', response.json())
         return Promise.all([statusCode, data]).then(res => ({
           statusCode: res[0],
           data: res[1]
@@ -125,12 +125,9 @@ export default class Header extends React.Component<Props, State> {
 
 
         <View style={{ position: 'absolute', right: 0, bottom: 8, flexDirection: 'row' }}>
-
-
           <Text onPress={() => this.props.navigation.navigate("WalletNavigator")} style={{
             fontSize: 14,
             fontWeight: '700', marginTop: 3, color: 'black',
-
           }}>My Wallet: </Text>
           <Text onPress={() => this.props.navigation.navigate("WalletNavigator")} style={{
             fontSize: 14,
@@ -141,18 +138,9 @@ export default class Header extends React.Component<Props, State> {
             name={'notifications-outline'}
             size={25}
             color="black"
-            style={{ paddingLeft: 0, paddingRight: 0, paddingBottom: 2, marginLeft: 15, marginRight:15 }}
+            style={{ paddingLeft: 0, paddingRight: 0, paddingBottom: 2, marginLeft: 15, marginRight: 15 }}
             onPress={() => this.props.navigation.navigate('Notification')}
           />
-
-          {/* <View style={{ flexDirection: 'row' }}>
-            </View> */}
-{/* 
-            <Image
-              style={{ height: 10, width: 10, marginTop: 1, marginRight:15,  alignSelf:'flex-start' }}
-              source={require("../../../assets/images/red-dot.png")}
-            ></Image> */}
-
         </View>
 
 

@@ -45,7 +45,8 @@ export default class WalletMainScreen extends React.Component<Props, State> {
 
     this.state = {
       history: [],
-      balance: 0
+      balance: 0,
+      fetcherr: ''
 
     };
   }
@@ -54,73 +55,54 @@ export default class WalletMainScreen extends React.Component<Props, State> {
     this._getWalletHistoryHandler();
     this._getWalletBalanceHandler();
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      console.log('call main wallet ---------------------------------------- 21')
+
       this._getWalletHistoryHandler();
       this._getWalletBalanceHandler();
     })
   }
 
-  componentWillUnmount(): void {
-    this.setState = () => {
-      return;
-    };
-    // this.focusListener.remove();
-  }
+  // componentWillUnmount(): void {
+  //   console.log('call main wallet ---------------------------------------- 2nd')
+
+  //   this.focusListener.remove();
+  // }
 
 
   _getWalletHistoryHandler(): void {
     // <ActivityIndicator size="small" color="#0000ff" />
     WalletHistoryApi()
       .then(response => {
-        const statusCode = response.status;
-        const data = statusCode === 200 ? response.json() : [];
-        console.log('****************', response.json())
-        return Promise.all([statusCode, data]).then(res => ({
-          statusCode: res[0],
-          data: res[1]
-        }));
+        this.setState({
+          history: response.payload.Wallettransactionslist.rows
+            .map((rows: {
+              paymentMode: any;
+              updatedAt: any;
+              paymentDate: any;
+              status: any;
+              orderId: any;
+              amount: any;
+              type: any;
+              examType: any;
+              examTitle: any
+            }) => {
+              return {
+                paymentMode: rows.paymentMode,
+                updatedAt: rows.updatedAt,
+                paymentDate: rows.createdAt,
+                status: rows.status,
+                orderId: rows.orderId,
+                amount: rows.amount,
+                type: rows.type,
+                examType: rows.examType,
+                examTitle: rows.examTitle,
+              }
+            })
+        })
+      }).catch(error => {
+        this.setState({ fetcherr: error })
       })
-      .then((res: {
-        statusCode: number,
-        data: {
-          payload: {
-            wallettransaction: any;
-            balance: any;
-            response: any[],
-          }
-          message: string
-        }
-      }) => {
-        // debugger;
-        if (res.statusCode === 200) {
-          this.setState({
-            history: res.data.payload.wallettransaction.rows
-              .map((rows: {
-                paymentMode: any;
-                updatedAt: any;
-                paymentDate: any;
-                status: any;
-                orderId: any; amount: any;
-                type: any;
-                examType: any;
-                examTitle: any
-              }) => {
-                return {
-                  historyData: rows.amount,
-                  orderId: rows.orderId,
-                  status: rows.status,
-                  paymentDate: rows.paymentDate,
-                  updatedAt: rows.updatedAt,
-                  paymentMode: rows.paymentMode,
-                  type: rows.type,
-                  examType: rows.examType,
-                  examTitle: rows.examTitle
 
-
-                };
-              })
-          });
-        }
-      });
   }
 
   _getWalletBalanceHandler(): void {
@@ -163,7 +145,7 @@ export default class WalletMainScreen extends React.Component<Props, State> {
             fontSize: 12, fontWeight: '500', color: '#0E242C', fontStyle: 'normal', marginLeft: 5, marginTop: 5
           }}
           // numberOfLines={2}
-          ellipsizeMode='tail'>Amount: {item.historyData}</Text>
+          ellipsizeMode='tail'>Amount: {item.amount}</Text>
         <Text style={{
           fontSize: 10, fontWeight: '400', color: '#00000', opacity: 0.6, marginTop: 5, marginLeft: 5
         }}>Mode: {item.type}
@@ -199,6 +181,7 @@ export default class WalletMainScreen extends React.Component<Props, State> {
 
   render(): React.ReactNode {
     // debugger;
+    console.log('call main wallet ----------------------------------------')
 
     return (
       <SafeAreaView>
@@ -246,7 +229,10 @@ export default class WalletMainScreen extends React.Component<Props, State> {
           >
             Wallet history
           </Text>
-
+          {
+            this.state.fetcherr !== "" &&
+            <Text style={styles.errorText}>{this.state.fetcherr}</Text>
+          }
         </View>
 
 
@@ -280,6 +266,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 20,
     backgroundColor: "#1E276F",
+  },
+
+  errorText: {
+    color: 'red',
   },
   bankBtn: {
     width: "80%",

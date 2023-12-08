@@ -12,6 +12,7 @@ import {
   ImageSourcePropType,
   StatusBar,
 } from "react-native";
+import { withNavigationFocus } from 'react-navigation';
 
 import Colors from "../constants/Colors";
 
@@ -28,6 +29,8 @@ import UpcomingExams from "./UpcomingExams";
 import UpcomingTournaments from "./UpcomingTournaments";
 import UpcomingQuizzes from "./UpcomingQuizzes";
 import Footer from "./Footer";
+import { useIsFocused } from '@react-navigation/native';
+
 import {
   GetCompletedExamListAPI,
   GetStudentDetailsAPI,
@@ -127,6 +130,14 @@ export default class DashboardScreen extends React.Component<Props, State> {
   //     // debugger;
   // }
 
+  componentDidUpdate(prevProps: Props) {
+    const { isFocused } = this.props;
+
+    if (isFocused && !prevProps.isFocused) {
+      console.log('DashboardScreen is focused -----------------------------------------------');
+      // Your code to execute when the screen becomes focused
+    }
+  }
   componentDidMount(): void {
     this._getCompletedExamListHandler();
     // this.callApis();
@@ -160,6 +171,8 @@ export default class DashboardScreen extends React.Component<Props, State> {
 
   _getCompletedExamListHandler(): void {
     // debugger;
+    console.log('callll----------------------------')
+
     GetCompletedExamListAPI()
       .then((response) => {
         const statusCode = response.status;
@@ -354,7 +367,6 @@ export default class DashboardScreen extends React.Component<Props, State> {
 
   render(): React.ReactNode {
 
-
     return (
       <>
         <SafeAreaView style={{ flex: 1 }}>
@@ -390,11 +402,9 @@ export default class DashboardScreen extends React.Component<Props, State> {
               >
                 Recommended Exams
               </Text>
-              <RecommendedExams navigation={this.props.navigation}/>
+              <RecommendedExams navigation={this.props.navigation} />
               {/* <RecommendedExams navigation={this.props.navigation} /> */}
               {/* <UpcomingExams navigation={this.props.navigation} /> */}
-
-
 
               <Text
                 style={{

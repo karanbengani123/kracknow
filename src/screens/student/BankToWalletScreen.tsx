@@ -12,6 +12,8 @@ import FlashMessage from "react-native-flash-message";
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { GetBankListAPI, SignUpAPI } from '../../api-services/User.api';
 import HeaderBack from './HeaderBack';
+import Header from './Header';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 
@@ -92,11 +94,6 @@ export default class BankToWalletScreen extends React.Component<Props, State> {
 
     componentDidMount(): void {
         this._getBankListHandler();
-
-    }
-
-    componentWillUnmount(): void {
-
     }
 
 
@@ -127,7 +124,6 @@ export default class BankToWalletScreen extends React.Component<Props, State> {
 
     _withdrawHandler(): void {
         const payload: IWithdrawRequest = {
-            remaks: "Remarks",
             amount: this.state.amount,
             transferMode: this.state.selectedPayment,
             upiID: this.state.upiid || " ",
@@ -135,13 +131,14 @@ export default class BankToWalletScreen extends React.Component<Props, State> {
             accountNumber: this.state.account || " ",
             accountHolder: this.state.accountName || " ",
             IFSCCode: this.state.ifsc || " "
+
         };
 
         if (this.state.selectedPayment === "" || this.state.amount === "") {
 
             if (this.state.selectedPayment === "") {
                 this.setState({
-                    blankError: 'This field is required'
+                    blankError: 'required'
                 })
                 return;
             } else {
@@ -152,25 +149,25 @@ export default class BankToWalletScreen extends React.Component<Props, State> {
                 if (this.state.selectedPayment === "bank") {
                     if (this.state.selectedBank === "") {
                         this.setState({
-                            bankError: 'This field is required'
+                            bankError: 'required'
                         })
                         return;
                     }
                     if (this.state.account === "") {
                         this.setState({
-                            accountError: 'This field is required'
+                            accountError: 'required'
                         })
                         return;
                     }
                     if (this.state.ifsc === "") {
                         this.setState({
-                            ifscError: 'This field is required'
+                            ifscError: 'required'
                         })
                         return;
                     }
                     if (this.state.accountName === "") {
                         this.setState({
-                            accountNameError: 'This field is required'
+                            accountNameError: 'required'
                         })
                         return;
                     }
@@ -178,7 +175,7 @@ export default class BankToWalletScreen extends React.Component<Props, State> {
                 if (this.state.selectedPayment === "upi") {
                     if (this.state.upiid === "") {
                         this.setState({
-                            upiError: 'This field is required'
+                            upiError: 'required'
                         })
                         return;
                     }
@@ -187,14 +184,11 @@ export default class BankToWalletScreen extends React.Component<Props, State> {
             }
             if (this.state.amount === "") {
                 this.setState({
-                    amountError: 'This field is required'
+                    amountError: 'required'
                 })
                 return;
             }
         }
-
-
-
         // debugger
         WithdrawAPI(payload)
             .then((response) => {
@@ -213,6 +207,10 @@ export default class BankToWalletScreen extends React.Component<Props, State> {
                 }) => {
                     // debugger;
                     if (res.statusCode === 200) {
+                        showMessage({
+                            message: "Successfully Applied",
+                            type: "success",
+                        });
                         this.setState({
                             modalVisible: false, selectedPayment: '',
                             blankError: '',
@@ -232,7 +230,7 @@ export default class BankToWalletScreen extends React.Component<Props, State> {
                         });
                         // ToastAndroid.show("Successfully Scheduled", ToastAndroid.SHORT);
                         showMessage({
-                            message: "Successfully Scheduled",
+                            message: "Successfully Applied",
                             type: "success",
                         });
 
@@ -241,6 +239,7 @@ export default class BankToWalletScreen extends React.Component<Props, State> {
                     else {
                         // ToastAndroid.show(res.data.message, ToastAndroid.SHORT);
                         this.setState({ modalVisible: false });
+                        console.log('---------error ----------***-------', res)
                         showMessage({
                             message: res.data.message,
                             type: "danger",
@@ -291,24 +290,57 @@ export default class BankToWalletScreen extends React.Component<Props, State> {
                 });
             });
     }
-
+    _closebtnHandler(): void {
+        this.setState({
+            modalVisible: false, selectedPayment: '',
+            blankError: '',
+            amount: '',
+            upiid: '',
+            amountError: '',
+            blankError1: '',
+            upiError: '',
+            selectedBank: '',
+            bankError: '',
+            ifscError: '',
+            accountError: '',
+            account: '',
+            ifsc: '',
+            accountName: '',
+            accountNameError: ''
+        });
+    }
 
     render(): React.ReactNode {
-
         const { modalVisible } = this.state;
-
         const Items = [
             { label: 'UPI ID', value: 'upi' },
             { label: 'Paytm', value: 'paytm' },
             { label: 'Bank Account', value: 'bank' }
         ]
 
-
         return (
             <SafeAreaView>
-                <HeaderBack navigation={this.props.navigation} name="" />
+                {/* <HeaderBack navigation={this.props.navigation} name="" /> */}
+                {/* <Header navigation={this.props.navigation} /> */}
+                <View style={{ padding: 20, flexDirection: "row" }}>
+                    <Ionicons
+                        name={"arrow-back"}
+                        size={25}
+                        color={Colors.black}
+                        onPress={() => this.props.navigation.goBack()}
+                    />
+                    <Text
+                        style={{
+                            fontSize: 16,
+                            marginLeft: 15,
+                            fontWeight: "700",
+                            color: "black",
+                        }}
+                    >
+                        Terms & Conditions
+                    </Text>
+                </View>
                 <FlashMessage position="top" />
-
                 <View style={{ alignItems: 'center' }}>
                     <TouchableOpacity
                         style={styles.loginBtn}
@@ -470,7 +502,7 @@ export default class BankToWalletScreen extends React.Component<Props, State> {
 
                                     <TouchableOpacity
                                         style={[styles.button, styles.buttonClose]}
-                                        onPress={() => this.setState({ modalVisible: false })}
+                                        onPress={() => this._closebtnHandler()}
                                     >
                                         <Text style={styles.textStyle}>Close</Text>
                                     </TouchableOpacity>
