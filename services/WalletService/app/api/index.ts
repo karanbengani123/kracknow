@@ -27,15 +27,23 @@ import { approveWithdrawal } from "../controllers/approveWithdrawal";
 import { getStudentAddMoneyRequestforAdmin } from "../controllers/getStudentAddMoneyRequestforAdmin";
 // import { getStudentWithdrawRequestaccept } from "../controllers/getStudentWithdrawRequestaccept";
 import { getStudentAddMoneyRequestforAdminseperate } from "../controllers/getStudentAddMoneyRequestforAdminseperate";
-import { Wallettransactions } from "../controllers/Wallettransactions";
+// import { Wallettransactions } from "../controllers/Wallettransactions";
 import { wallettransactionsforWithdrawal } from "../controllers/wallettransactionsforWithdrawal";
+import { hellohandler } from "../controllers/hellohandler";
 
 const router = Router();
 
-router.get("/wallet/hello", ( req, res) => {
-  console.log(req.body)
+router.get("/wallet/hello", (req, res) => {
+  console.log(req.body);
   return res.send(new Date());
 });
+
+router.get(
+  "/wallet/hellohandler",
+  controllerHandler({
+    controller: hellohandler,
+  })
+);
 
 router.post(
   "/wallet/gettoken",
@@ -96,67 +104,7 @@ router.get(
   })
 );
 
-// wallettransactions for student view
-router.get(
-  "/wallet/wallettransactions",
-  controllerHandler({
-    controller: Wallettransactions,
-    options: { transaction: false },
-  })
-);
 
-router.get(
-  "/wallet/wallettransactionsforWithdrawal",
-  controllerHandler({
-    controller: wallettransactionsforWithdrawal,
-    options: { transaction: false },
-  })
-);
-
-// student request for add money
-router.post(
-  "/wallet/studentaddmoneyrequest",
-  controllerHandler({
-    controller: postStudentaddmoneyRequest,
-    options: { transaction: true },
-  })
-);
-
-router.get(
-  "/wallet/studentaddmoneyrequestforadmin/:UUID",
-  controllerHandler({
-    controller: getStudentAddMoneyRequestforAdminseperate,
-    options: { transaction: true },
-  })
-);
-
-// student request admin listman
-router.get(
-  "/wallet/studentaddmoneyrequestforadmin",
-  controllerHandler({
-    controller: getStudentAddMoneyRequestforAdmin,
-    options: { transaction: false },
-  })
-);
-
-// admin addamount to student Wallet
-router.post(
-  "/wallet/adminaddmoney/:UUID",
-  controllerHandler({
-    controller: postAdminAddMoney,
-    options: { transaction: true },
-  })
-);
-
-// student withdrawal request
-router.post(
-  "/wallet/studentwithdrawalrequest",
-  controllerHandler({
-    controller: postStudentWithdrawRequest,
-    schema: studentWithdrawRequestSchema,
-    options: { transaction: true },
-  })
-);
 
 router.get(
   "/wallet/studentwithdrawalrequest",
@@ -212,4 +160,58 @@ router.put(
   })
 );
 
+
+
+// student request for add money
+router.post(
+  "/wallet/studentaddmoneyrequest",
+  controllerHandler({
+    controller: postStudentaddmoneyRequest,
+    options: { transaction: true },
+  })
+);
+router.get(
+  "/wallet/wallettransactionsforWithdrawal",
+  controllerHandler({
+    controller: wallettransactionsforWithdrawal,
+    options: { transaction: false },
+  })
+);
+
+
+// student withdrawal request
+router.post(
+  "/wallet/studentwithdrawalrequest",
+  controllerHandler({
+    controller: postStudentWithdrawRequest,
+    schema: studentWithdrawRequestSchema,
+    options: { transaction: true },
+  })
+);
+
+// student request admin listman
+router.get(
+  "/wallet/studentaddmoneyrequestforadmin",
+  controllerHandler({
+    controller: getStudentAddMoneyRequestforAdmin,
+    options: { transaction: false },
+  })
+);
+
+// admin addamount to student Wallet
+router.post(
+  "/wallet/adminaddmoney/:UUID",
+  controllerHandler({
+    controller: postAdminAddMoney,
+    options: { transaction: true },
+  })
+);
+
+router.get(
+  "/wallet/studentaddmoneyrequestforadmin/:UUID",
+  controllerHandler({
+    controller: getStudentAddMoneyRequestforAdminseperate,
+    options: { transaction: true },
+  })
+);
 export default router;

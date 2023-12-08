@@ -2,30 +2,12 @@ import * as mysql from "mysql2";
 import { Options, Sequelize } from "sequelize";
 
 // Options for the database connection
-// const options: Options = {
-//   database: process.env.DB_SCHEMA,
-//   dialect: "mysql",
-//   dialectModule: mysql,
-//   host: process.env.DB_HOST,
-//   username: process.env.DB_USERNAME,
-//   logging: false,
-//   pool: {
-//     max: 2,
-//     min: 0,
-//     idle: 0,
-//     acquire: 3000,
-//     evict: process.env.DEFAULT_LAMBDA_FUNCTION_TIMEOUT
-//       ? parseInt(process.env.DEFAULT_LAMBDA_FUNCTION_TIMEOUT)
-//       : 300,
-//   },
-// };
-
 const options: Options = {
-  database: 'kracknow',
+  database: process.env.DB_SCHEMA,
   dialect: "mysql",
   dialectModule: mysql,
-  host: 'localhost',
-  username: 'root',
+  host: process.env.DB_HOST,
+  username: process.env.DB_USERNAME,
   logging: false,
   pool: {
     max: 2,
@@ -38,6 +20,24 @@ const options: Options = {
   },
 };
 
+// const options: Options = {
+//   database: 'kracknow',
+//   dialect: "mysql",
+//   dialectModule: mysql,
+//   host: 'localhost',
+//   username: 'root',
+//   logging: false,
+//   pool: {
+//     max: 2,
+//     min: 0,
+//     idle: 0,
+//     acquire: 3000,
+//     evict: process.env.DEFAULT_LAMBDA_FUNCTION_TIMEOUT
+//       ? parseInt(process.env.DEFAULT_LAMBDA_FUNCTION_TIMEOUT)
+//       : 300,
+//   },
+// };
+
 /**
  * Add password to the options if it is provided
  * This is to prevent mysql throwing errors "PASSWORD=YES" when
@@ -49,7 +49,6 @@ if (process.env.DB_PASSWORD !== "null") {
 
 export const loadDatabase = async () => {
   const sequelize = new Sequelize(options);
-   console.log(options)
   await sequelize.authenticate();
   return sequelize;
 };

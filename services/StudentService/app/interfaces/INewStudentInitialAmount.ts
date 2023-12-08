@@ -1,3 +1,4 @@
 export interface INewStudentInitialAmount {
-  amount: number
+  amount: number;
 }
+

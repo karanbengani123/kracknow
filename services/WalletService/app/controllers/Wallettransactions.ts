@@ -14,7 +14,7 @@ export const Wallettransactions = async (params: IControllerParams<null>) => {
 
   // const where: any = { deletedAt: null }
   const studentUUID = params.user.id;
-  console.log("====================", studentUUID);
+  // console.log("====================", studentUUID);
 
   const wallets = await Wallet.findOne({
     where: {

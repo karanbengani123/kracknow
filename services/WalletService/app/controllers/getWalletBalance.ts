@@ -5,6 +5,8 @@ import { IControllerParams } from '../../../../shared/interfaces/IControllerPara
 export const getWalleBalance = async (params: IControllerParams<null>) => {
 
   // throw new HttpNotFound(ONLY_ADMIN_ALLOWED);
+
+
   const wallet = await Wallet.findOne({
     where: {
       studentUUID: params.user.id
@@ -12,7 +14,7 @@ export const getWalleBalance = async (params: IControllerParams<null>) => {
     attributes: ['balance']
   })
 
-  console.log(wallet)
+  // console.log(wallet)
 
   return {
     message: SUCCESSFUL,

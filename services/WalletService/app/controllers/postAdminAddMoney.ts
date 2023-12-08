@@ -21,8 +21,8 @@ import { IAdminAddMoney } from "../interfaces";
 export const postAdminAddMoney = async (
   params: IControllerParams<IAdminAddMoney>
 ) => {
-  const {  transaction } = params;
-  console.log(params.args.params.UUID);
+
+  const { transaction } = params;
 
   const admin = await User.findByPk(params.user.id);
   if (!admin) {
@@ -52,10 +52,9 @@ export const postAdminAddMoney = async (
     throw new HttpNotFound(NO_PENDING_PAYOUT_FOUND);
   }
 
+  wallet.balance = wallet.dataValues.balance + existingRequest.dataValues.amount;
   existingRequest.approvedby = admin.dataValues.uuid;
   existingRequest.status = SUCCESS;
-  wallet.balance =
-    wallet.dataValues.balance + existingRequest.dataValues.amount;
   existingRequestFORwithdrawal.status = SUCCESS;
 
   await existingRequest.save({ transaction });

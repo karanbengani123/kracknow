@@ -15,6 +15,7 @@ import { studentLoginSchema } from "../validations/studentLoginSchema";
 import { addBankAccount } from "../controllers/addBankAdmin";
 import { getBankdetail } from "../controllers/getBankdetail";
 import { updateBankAccount } from "../controllers/updateBankAccountAdmin";
+import { getBankdetailsforstudent } from "../controllers/getBankdetailsforstudent";
 
 
 const router = Router();
@@ -77,12 +78,26 @@ router.post(
   })
 );
 
+
+// bank list view for admin
 router.get(
   "/sessions/banklist",
   controllerHandler({
     controller: getBankdetail,
+    options: { transaction: true },
   })
 );
+
+// bank list view for student
+router.get(
+  "/sessions/banklist_student",
+  controllerHandler({
+    controller: getBankdetailsforstudent,
+
+  })
+);
+
+// bank entry for admin
 router.post(
   "/sessions/admin/addBankDetails",
   controllerHandler({

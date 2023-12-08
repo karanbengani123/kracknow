@@ -30,7 +30,8 @@ export const adminLogin = async (params: IControllerParams<IAdminLogin>) => {
     message: 'successfully logged in',
     payload: {
       token,
-      role: user?.role?.roleName
+      role: user?.role?.roleName,
+      user
     }
   }
 }

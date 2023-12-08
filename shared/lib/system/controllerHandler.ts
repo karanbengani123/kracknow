@@ -14,12 +14,17 @@ import { instance } from "../../database/sequelize";
  * handles the exception.
  * @param param
  */
-export const controllerHandler = ({ schema, controller, options }: IControllerHandlerParams) => {
 
-
+export const controllerHandler = ({
+  schema,
+  controller,
+  options,
+}: IControllerHandlerParams) => {
   return async (req: Request, res: Response) => {
     let transaction: Transaction;
+
     try {
+      // console.log("req for testing =====??????", req);
       let payload = {};
 
       payload = { ...(req.body ? req.body : {}), ...req.params };
@@ -36,6 +41,8 @@ export const controllerHandler = ({ schema, controller, options }: IControllerHa
       // console.log('=====??????',req.body);
 
       let createTransaction = true;
+      //console.log("req for testing =====??????", options);
+
       if (
         options &&
         options.hasOwnProperty("transaction") &&
@@ -48,20 +55,13 @@ export const controllerHandler = ({ schema, controller, options }: IControllerHa
         transaction = await getTransaction();
       }
 
+      logger.debug("request contents" ,(req as any).requestContext);
       const user: { id?: string; type?: string } = {};
-      if (
-        (req as any).requestContext &&
-        (req as any).requestContext.authorizer &&
-        ((req as any).requestContext.authorizer.id ||
-          (req as any).requestContext.authorizer.claims)
-      ) {
+
+      if ((req as any).requestContext &&        (req as any).requestContext.authorizer &&        ((req as any).requestContext.authorizer.id ||          (req as any).requestContext.authorizer.claims)      ) {
         if ((req as any).requestContext.authorizer.claims) {
-          (req as any).requestContext.authorizer.id = (
-            req as any
-          ).requestContext.authorizer.claims.id;
-          (req as any).requestContext.authorizer.type = (
-            req as any
-          ).requestContext.authorizer.claims.type;
+          (req as any).requestContext.authorizer.id = (req as any).requestContext.authorizer.claims.id;
+          (req as any).requestContext.authorizer.type = (            req as any).requestContext.authorizer.claims.type;
         }
         user.id = (req as any).requestContext.authorizer.id;
         if ((req as any).requestContext.authorizer.type) {
@@ -101,8 +101,9 @@ export const controllerHandler = ({ schema, controller, options }: IControllerHa
         transaction,
         user,
       };
-      const response = await controller(params);
 
+      const response = await controller(params);
+      //console.log("----------------==========-------------", response);
       if (
         options &&
         options.hasOwnProperty("download") &&
@@ -116,14 +117,14 @@ export const controllerHandler = ({ schema, controller, options }: IControllerHa
       // Return response to the client
       const method = req.method === "POST" && response.created ? Created : Ok;
       method(res, response.message, response.payload);
+     
     } catch (e) {
       if (transaction) {
         await transaction.rollback();
       }
       // tslint:disable-next-line: no-console
       // console.error(e); // Log the error for debugging purpose
-      console.log('00000000000000000000000000000',res)
-      console.log('----------------------',e)
+    
       handleError(e, res);
     } finally {
       // console.log("Closing connection ==========>");

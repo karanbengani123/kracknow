@@ -13,6 +13,7 @@ export const APPEARED = 'APPEARED'
 export const ACCEPTED = "ACCEPTED";
 export const INITIALIZED = "INITIALIZED";
 export const NEW_STUDENT_INITIAL_AMOUNT = "new_student_initial_amount";
+export const NEW_WITHDRWAL_LIMIT = "new_withdrawal_limit"
 export const PUBLIC_KEY = "public_key";
 export const STUDENT_RELOGIN = "Please Login Once";
 

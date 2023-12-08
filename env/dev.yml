@@ -1,7 +1,7 @@
 DB_HOST: kracknow-dev-2.ccbejngi3xsz.ap-south-1.rds.amazonaws.com 
 DB_USERNAME: admin
 DB_SCHEMA: kracknow-prod
-DB_PASSWORD: 
+DB_PASSWORD: krack123
 
 SHA256_PASSWORD_SALT: 4ac1af3e9cfedb03cf34e3ccb464a8a93d1b2136
 

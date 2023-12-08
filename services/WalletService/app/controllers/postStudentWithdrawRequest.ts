@@ -1,11 +1,14 @@
 import { SUCCESSFUL } from "../../../../shared/constants/httpSuccessMessages";
 import { IControllerParams } from "../../../../shared/interfaces/IControllerParams";
 import { IStudentWithdrawRequest } from "../interfaces";
-import { Wallet, WalletTransaction, WithdrawlRequest } from "../../../../shared/database/models";
-import {  OUTBOUND, PENDING, WALLET } from "../../../../shared/constants/message";
+import { Wallet, WalletTransaction, Withdrawallimit, WithdrawlRequest } from "../../../../shared/database/models";
+// import { Wallet, Withdrawallimit } from "../../../../shared/database/models";
+
+import {  NEW_WITHDRWAL_LIMIT, OUTBOUND, PENDING, WALLET } from "../../../../shared/constants/message";
 import { HttpNotFound } from "../../../../shared/exceptions/HttpNotFound";
 import {
   INSUFFICIENT_BALANCE,
+  MAXIMUM_AMOUNT,
   MINIMUM_AMOUNT,
 } from "../../../../shared/constants/httpErrorMessages";
 const uuid = require("uuid");
@@ -23,11 +26,17 @@ export const postStudentWithdrawRequest = async (
     },
   });
 
+  var withdrawal = await Withdrawallimit.findByPk(NEW_WITHDRWAL_LIMIT);
+console.log(withdrawal.dataValues.minval)
+console.log(withdrawal.dataValues.maxval)
   if (amount > wallet.balance) {
     throw new HttpNotFound(INSUFFICIENT_BALANCE);
   }
-  else if (amount < 200) {
-    throw new HttpNotFound(MINIMUM_AMOUNT);
+  else if (amount < parseInt(withdrawal.dataValues.minval)) {
+    throw new HttpNotFound(`${MINIMUM_AMOUNT} ${withdrawal.dataValues.minval}`);
+  }
+  else if (amount > parseInt(withdrawal.dataValues.maxval)) {
+    throw new HttpNotFound(`${MAXIMUM_AMOUNT} ${withdrawal.dataValues.maxval}`);
   }
 
 
@@ -69,7 +78,6 @@ export const postStudentWithdrawRequest = async (
     status: PENDING,
     paymentDate: new Date()
   };
-
   await WithdrawlRequest.create(withdrawalObject, { transaction });
   await WalletTransaction.create(wallettranslateObject, { transaction });
 

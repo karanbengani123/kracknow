@@ -29,16 +29,16 @@ export const wallettransactionsforWithdrawal = async (
   if (!wallets) {
     throw new HttpNotFound(STUDENT_RELOGIN);
   }
-  console.log(wallets);
   if (wallets) {
     var Wallettransactionslist = await WalletTransaction.findAndCountAll({
       where: {
         walletUUID: wallets.dataValues.uuid,
+        type:'OUTBOUND'
       },
       order: [["createdAt", "DESC"]],
       ...parseLimitOffsetFromRequest(queryString as { limit: any; page: any }),
     });
-    // console.log(Wallettransactionslist)
+    console.log(Wallettransactionslist)
 
 
 

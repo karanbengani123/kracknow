@@ -40,8 +40,5 @@ export const handler: APIGatewayProxyHandler = async (
   init(instance.connection);
   app.use("/", router);
 
-  
-
-
   return serverLessApp(event, context);
 };

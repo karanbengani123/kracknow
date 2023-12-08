@@ -27,6 +27,9 @@ import { storeFCMSchema } from '../validations/storeFCMSchema'
 import { deleteFCMSchema } from '../validations/deleteFCMSchema'
 import { AddmoneyRequest } from '../controllers/AddmoneyRequest'
 import { postStudentWithdrawReuest } from '../controllers/postStudentWithdrawReuest'
+import { putNewAdminWithdrawallimitAmount } from '../controllers/putNewAdminWithdrawallimitAmount'
+import { getNewAdminWithdrawallimitAmount } from '../controllers/getNewAdminWithdrawallimitAmount'
+import { newWithdrawalLimitAmountSchema } from '../validations/NewAdminWithdrawallimitAmountSchema'
 
 const router = Router()
 
@@ -119,31 +122,7 @@ router.post(
   })
 )
 
-// admin > withdrawallist
-router.get(
-  '/students/withdrawalrequest/list',
-  controllerHandler({
-    controller: getAllStudentWithdrawRequest,
-    options: { transaction: false },
-  })
-)
 
-// admin > withdrawal list seperate id
-router.get(
-  '/students/withdrawalrequest/list/:UUID',
-  controllerHandler({
-    controller: getStudentWithdrawRequest,
-    options: { transaction: false },
-  })
-)
-
-// admin > withdrawal done
-router.post(
-  '/students/withdrawalrequest/:UUID',
-  controllerHandler({
-    controller: putStudentWithdrawRequest,
-  })
-)
 
 router.get(
   '/students/amount/initialamount',
@@ -160,6 +139,7 @@ router.put(
     schema: newStudentInitialAmountSchema,
   })
 )
+
 
 router.get(
   '/students/getstudentexams/:uuid',
@@ -199,6 +179,48 @@ router.delete(
   controllerHandler({
     controller: deleteFCM,
     schema: deleteFCMSchema,
+  })
+)
+
+// admin > withdrawallist
+router.get(
+  '/students/withdrawalrequest/list',
+  controllerHandler({
+    controller: getAllStudentWithdrawRequest,
+    options: { transaction: false },
+  })
+)
+
+// admin > withdrawal list seperate id
+router.get(
+  '/students/withdrawalrequest/list/:UUID',
+  controllerHandler({
+    controller: getStudentWithdrawRequest,
+    options: { transaction: false },
+  })
+)
+
+// admin > withdrawal done
+router.post(
+  '/students/withdrawalrequest/:UUID',
+  controllerHandler({
+    controller: putStudentWithdrawRequest,
+  })
+)
+
+router.get(
+  '/students/amount/withdrawallimit',
+  controllerHandler({
+    controller: getNewAdminWithdrawallimitAmount,
+    options: { transaction: false },
+  })
+)
+
+router.put(
+  '/students/amount/withdrawallimit',
+  controllerHandler({
+    controller: putNewAdminWithdrawallimitAmount,
+    schema: newWithdrawalLimitAmountSchema,
   })
 )
 

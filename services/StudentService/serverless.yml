@@ -8,10 +8,9 @@ plugins:
 
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs14.x
   environment: ${file(../../env/${self:provider.stage}.yml)}
-  stage: ${opt:stage, 'dev'}
-  profile: kracknow
+  stage: ${opt:stage, 'prod'}
   region: ap-south-1
   iamRoleStatements:
     - Effect: 'Allow'

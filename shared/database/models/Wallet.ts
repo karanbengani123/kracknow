@@ -11,6 +11,7 @@ class Wallet extends Model {
   public readonly deletedAt?: Date
 }
 export function init(sequelize: Sequelize) {
+  
 Wallet.init(
   {
     uuid: {
