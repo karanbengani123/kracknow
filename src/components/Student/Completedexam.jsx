@@ -5,6 +5,7 @@ import SideNav from "./SideNav";
 import { Link } from 'react-router-dom';
 import '../CssFile/Student.css';
 import loader from '../images/loader.gif';
+import { baseurlwallet } from "./BaseUrl";
 
 
 function Completedexam() {
@@ -17,7 +18,7 @@ function Completedexam() {
     // console.warn("Examlist", exam);
     const getCompletedExam = async (page) => {
         setLoading(true)
-        let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules/completed/exams`, {
+        let result = await fetch(`${baseurlwallet}/schedules/completed/exams`, {
             method: "GET",
             headers: {
 

@@ -22,7 +22,7 @@ function Scheduledmocktest() {
 
     const getSchExam = async () => {
         setLoading(true)
-        // let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules`, {
+        // let result = await fetch(`${baseurlwallet}/schedules`, {
         //     method: "GET",
         //     headers: {
 

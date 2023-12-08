@@ -5,6 +5,7 @@ import QuestionList from "../data/questions.json";
 import Question from "./Question.jsx";
 import QuizResult from "./QuizResult.jsx";
 import '../CssFile/Quiz.css';
+import { baseurlwallet } from "./BaseUrl";
 
 
 
@@ -106,7 +107,7 @@ function QuizScreen() {
     // console.log("questions   ",getQuestion)
     //Get All questions starts............
     const getExamQuestion = async (page) => {
-        let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules/${params.uuid}/live/status/${params.examParticipantUUID}/?limit=${qnperpage}&page=${page}`, {
+        let result = await fetch(`${baseurlwallet}/schedules/${params.uuid}/live/status/${params.examParticipantUUID}/?limit=${qnperpage}&page=${page}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -131,7 +132,7 @@ function QuizScreen() {
 
     //Taking Answer in the Exam Starts.................
     const TakeExamAnswer = async (status) => {
-        let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules/${params.examParticipantUUID}/live/answer`, {
+        let result = await fetch(`${baseurlwallet}/schedules/${params.examParticipantUUID}/live/answer`, {
             method: "POST",
             body: JSON.stringify({ questionUUID, givenAnswer: optionList, options, description, answeredTime, examUUID, categoryType, time, isLastRecord, status }),
             headers: {

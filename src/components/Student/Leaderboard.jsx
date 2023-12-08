@@ -5,6 +5,7 @@ import SideNav from "./SideNav";
 import Footer from "./Footer";
 import Header from "./Header";
 import { useForm } from "react-hook-form";
+import { baseurlwallet } from "./BaseUrl";
 
 function Leaderboard() {
     const { register, handleSubmit, formState: { errors }, } = useForm();
@@ -25,7 +26,7 @@ function Leaderboard() {
 
     const viewLeaderboard = async () => {
         console.warn(params)
-        let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules/leaderBoard/${params.uuid}`,
+        let result = await fetch(`${baseurlwallet}/schedules/leaderBoard/${params.uuid}`,
             {
                 method: "GET",
                 headers: {

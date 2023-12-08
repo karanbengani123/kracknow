@@ -6,6 +6,7 @@ import SideNav from "./SideNav";
 import Footer from "./Footer";
 import loader from '../images/loader.gif';
 import Moment from "react-moment";
+import { baseurlwallet } from "./BaseUrl";
 
 
 
@@ -23,7 +24,7 @@ function Allmocktest() {
     //Get All Schedule Exam Start....
     const getExam = async (page) => {
         setLoading(true)
-        // let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules/all/exam?type=ALL_EXAM`, {
+        // let result = await fetch(`${baseurlwallet}/schedules/all/exam?type=ALL_EXAM`, {
         //     method: "GET",
         //     headers: {
         //         Authorization: `Bearer ${localStorage.getItem('token')}`

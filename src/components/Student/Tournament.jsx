@@ -6,6 +6,7 @@ import SideNav from "./SideNav";
 import Footer from "./Footer";
 import picture2 from '../images/Web-Banner.jpg';
 import Moment from "react-moment";
+import { baseurlwallet } from "./BaseUrl";
 
 
 
@@ -58,7 +59,7 @@ function Tournament() {
     }, [])
 
     const getExam = async (page) => {
-        let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules/all/exam`, {
+        let result = await fetch(`${baseurlwallet}/schedules/all/exam`, {
             method: "GET",
             headers: {
                
@@ -72,7 +73,7 @@ function Tournament() {
     console.warn("Examlist", exam);
 
     const getSchExam = async () => {
-        let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules`, {
+        let result = await fetch(`${baseurlwallet}/schedules`, {
             method: "GET",
             headers: {
                

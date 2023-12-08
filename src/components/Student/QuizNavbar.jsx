@@ -4,6 +4,7 @@ import Footer from './Footer';
 import SideNav from './SideNav';
 import Header from './Header';
 import '../CssFile/Quiz.css';
+import { baseurlwallet } from "./BaseUrl";
 
 
 function QuizNavbar() {
@@ -17,7 +18,7 @@ function QuizNavbar() {
 
     const viewLeaderboard = async () => {
         console.warn(params)
-        let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules/marks/${params.uuid}`,
+        let result = await fetch(`${baseurlwallet}/schedules/marks/${params.uuid}`,
             {
                 method: "GET",
                 headers: {

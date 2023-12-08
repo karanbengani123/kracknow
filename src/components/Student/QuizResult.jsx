@@ -1,6 +1,7 @@
 import '../CssFile/Quiz.css';
 import React,{useState,useEffect} from "react";
 import { useParams,Link } from "react-router-dom";
+import { baseurlwallet } from './BaseUrl';
 
 function QuizResult({retry}){
     const params = useParams()
@@ -40,7 +41,7 @@ function QuizResult({retry}){
 
     const viewExamDetails = async () => {
         console.warn(params)
-        let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules/marks/${params.examParticipantUUID}`,
+        let result = await fetch(`${baseurlwallet}/schedules/marks/${params.examParticipantUUID}`,
             {
                 method: "GET",
                 headers: {

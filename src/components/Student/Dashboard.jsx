@@ -12,6 +12,7 @@ import loader from "../images/loader.gif";
 import Popup from "reactjs-popup";
 import "../CssFile/Popup.css";
 import SimpleImageSlider from "react-simple-image-slider";
+import { baseurlwallet } from "./BaseUrl";
 
 function Dashboard() {
   const [show, setShow] = useState(false);
@@ -40,7 +41,7 @@ function Dashboard() {
   const getDashboardCount = async () => {
     setLoading(true);
     let result = await fetch(
-      `https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/dashboard`,
+      `${baseurlwallet}/dashboard`,
       {
         method: "GET",
         headers: {
@@ -59,7 +60,7 @@ function Dashboard() {
   //Get All Schedule Exam Start....
   const getExam = async (page) => {
     let result = await fetch(
-      `https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules/all/exam?type=UPCOMING`,
+      `${baseurlwallet}/schedules/all/exam?type=UPCOMING`,
       {
         method: "GET",
         headers: {
@@ -76,7 +77,7 @@ function Dashboard() {
   //Get All Schedule Exam Start....
   const getRecommendedExam = async (page) => {
     let result = await fetch(
-      `https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules/all/exam?type=RECOMENDED`,
+      `${baseurlwallet}/schedules/all/exam?type=RECOMENDED`,
       {
         method: "GET",
         headers: {
@@ -131,7 +132,7 @@ function Dashboard() {
 
   const getBanner = async () => {
     let result = await fetch(
-      `https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/Banner/All`,
+      `${baseurlwallet}/Banner/All`,
       {
         method: "GET",
         headers: {

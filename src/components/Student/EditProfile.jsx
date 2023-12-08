@@ -6,6 +6,7 @@ import Footer from "./Footer";
 import Header from "./Header";
 import jwt_decode from "jwt-decode";
 import loader from '../images/loader.gif';
+import { baseurlwallet } from "./BaseUrl";
 
 function EditProfile() {
   const token = localStorage.getItem("token");
@@ -80,7 +81,7 @@ function EditProfile() {
 
   const getStudentDetails = async () => {
     // console.warn(params)
-    let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/students/${decode.id}`,
+    let result = await fetch(`${baseurlwallet}/students/${decode.id}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -105,7 +106,7 @@ function EditProfile() {
     // console.warn(firstName, lastName, mobileNumber, profilePic, idProof, email, status, selectCity)
     setProfilePic("")
     setImgPreview(null)
-    let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/students/${decode.id}`, {
+    let result = await fetch(`${baseurlwallet}/students/${decode.id}`, {
       method: "PUT",
       body: JSON.stringify({ firstName, lastName, mobileNumber, profilePic: "", idProof, email, status, city: selectCity }),
       headers: {
@@ -143,7 +144,7 @@ function EditProfile() {
         setShowLoaderShow(false);
     }, 5000);
     // console.warn(firstName, lastName, mobileNumber, profilePic, idProof, email, status, selectCity)
-    let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/students/${decode.id}`, {
+    let result = await fetch(`${baseurlwallet}/students/${decode.id}`, {
       method: "PUT",
       body: JSON.stringify({ firstName, lastName, mobileNumber, profilePic, idProof, email, status, city: selectCity }),
       headers: {
@@ -178,7 +179,7 @@ function EditProfile() {
   // }, [])
 
   const getCities = async () => {
-    let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/common/cities`, {
+    let result = await fetch(`${baseurlwallet}/common/cities`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -197,7 +198,7 @@ function EditProfile() {
     const fileName = fileObj.name;
     const fileExtension = fileName.match(/[a-zA-Z]{2,4}$/)[0];
     console.log(fileName, fileExtension)
-    const response = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/common/filesupload`, {
+    const response = await fetch(`${baseurlwallet}/common/filesupload`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -242,7 +243,7 @@ function EditProfile() {
     const fileName = fileObj.name;
     const fileExtension = fileName.match(/[a-zA-Z]{2,4}$/)[0];
     console.log(fileName, fileExtension)
-    const response = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/common/filesupload`, {
+    const response = await fetch(`${baseurlwallet}/common/filesupload`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

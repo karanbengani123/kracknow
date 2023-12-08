@@ -5,6 +5,7 @@ import "../CssFile/Quiz.css";
 import Header from "./Header";
 import SideNav from "./SideNav";
 import Footer from "./Footer";
+import { baseurlwallet } from "./BaseUrl";
 
 function Review() {
   const params = useParams();
@@ -15,7 +16,7 @@ function Review() {
 
   const getReviewList = async () => {
     let result = await fetch(
-      `https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules/review/answer/${params.uuid}`,
+      `${baseurlwallet}/schedules/review/answer/${params.uuid}`,
       {
         method: "GET",
         headers: {

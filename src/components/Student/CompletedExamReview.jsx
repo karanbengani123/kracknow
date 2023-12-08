@@ -8,6 +8,7 @@ import "../CssFile/Student.css";
 import loader from "../images/loader.gif";
 import Popup from "reactjs-popup";
 import Modal from "react-modal";
+import { baseurlwallet } from "./BaseUrl";
 
 function CompletedExamReview() {
     const [loading, setLoading] = useState(false);
@@ -83,7 +84,7 @@ function CompletedExamReview() {
     const getExam = async () => {
         setLoading(true);
         let result = await fetch(
-            `https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules/${params.uuid}`,
+            `${baseurlwallet}/schedules/${params.uuid}`,
             {
                 method: "GET",
                 headers: {
@@ -124,7 +125,7 @@ function CompletedExamReview() {
     const viewLeaderboard = async () => {
         console.warn(params);
         let result = await fetch(
-            `https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules/leaderBoard/${params.uuid}`,
+            `${baseurlwallet}/schedules/leaderBoard/${params.uuid}`,
             {
                 method: "GET",
                 headers: {
@@ -139,7 +140,7 @@ function CompletedExamReview() {
     //Get Review List OF student..........
     const getReviewList = async () => {
         let result = await fetch(
-            `https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules/review/answer/${params.uuid}`,
+            `${baseurlwallet}/schedules/review/answer/${params.uuid}`,
             {
                 method: "GET",
                 headers: {

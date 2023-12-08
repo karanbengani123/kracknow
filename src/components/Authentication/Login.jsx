@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import '../CssFile/Student.css';
 import logo from '../images/logo1.png';
 import jwt_decode from "jwt-decode";
+import { baseurlwallet } from "../Student/BaseUrl";
 
 
 function Login() {
@@ -47,7 +48,7 @@ function Login() {
     const viewStudentDetails = async (tokens) => {
       // const tokens = localStorage.getItem("token");
       const decoder = jwt_decode(tokens);
-      let result = await fetch(` https://4uwwei55mc.execute-api.ap-sousth-1.amazonaws.com/prod/students/${decoder.id}`,
+      let result = await fetch(`${baseurlwallet}/students/${decoder.id}`,
       // let result = await fetch(`http://localhost:3000/students/${decoder.id}`,
         {
           method: "GET",
@@ -63,7 +64,7 @@ function Login() {
 
     // let item = { email, password }
     if (email !== "" && password !== "") {
-      let result = await fetch(' https://4uwwei55mc.execute-api.ap-south-1.amazonaws.com/prod/sessions/student/auth', {
+      let result = await fetch(`${baseurlwallet}/sessions/student/auth`, {
       // let result = await fetch('http://localhost:3000/sessions/student/auth', {
         method: 'POST',
         body: JSON.stringify({ email, password }),

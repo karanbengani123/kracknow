@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Select from 'react-select';
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from 'react-router-dom';
+import { baseurlwallet } from "../Student/BaseUrl";
 
 
 // const cities = [
@@ -41,7 +42,7 @@ function Signup() {
 
 
   const getCities = async () => {
-    let result = await fetch(` https://4uwwei55mc.execute-api.ap-south-1.amazonaws.com/prod/sessions/cities`, {
+    let result = await fetch(`${baseurlwallet}/sessions/cities`, {
     // let result = await fetch(`http://localhost:3000/sessions/cities`, {
       method: "GET",
       // headers: {
@@ -61,7 +62,7 @@ function Signup() {
     console.warn(firstName, lastName, profilePic, idProof, mobileNumber, email, password, selectCity);
 
     // const catdata = await fetch("http://localhost:3000/sessions/student/register", {
-    const catdata = await fetch(" https://4uwwei55mc.execute-api.ap-south-1.amazonaws.com/prod/sessions/student/register", {
+    const catdata = await fetch(`${baseurlwallet}/sessions/student/register`, {
 
       method: "POST",
       body: JSON.stringify({ firstName, lastName, profilePic, idProof, mobileNumber, email, password, city: selectCity || null }),

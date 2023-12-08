@@ -6,6 +6,7 @@ import SideNav from "./SideNav";
 import Footer from "./Footer";
 import loader from '../images/loader.gif';
 import Moment from "react-moment";
+import { baseurlwallet } from "./BaseUrl";
 
 
 
@@ -22,7 +23,7 @@ function ScheduledExam() {
 
     const getSchExam = async () => {
         setLoading(true)
-        let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules`, {
+        let result = await fetch(`${baseurlwallet}/schedules`, {
             method: "GET",
             headers: {
 

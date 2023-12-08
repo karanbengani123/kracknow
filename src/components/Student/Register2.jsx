@@ -10,6 +10,7 @@ import loader from '../images/loader.gif';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import moment from "moment-timezone";
+import { baseurlwallet } from "./BaseUrl";
 
 
 
@@ -76,7 +77,7 @@ function Register2() {
 
     const getExam = async () => {
         setLoading(true)
-        let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules/${params.uuid}`, {
+        let result = await fetch(`${baseurlwallet}/schedules/${params.uuid}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -175,7 +176,7 @@ function Register2() {
     // console.warn("ExamStartTime", getstartTime, "ExamEndTime", getendTime);
 
     const getQuestionSubCategory = async () => {
-        let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules/subcategory/${examUUID}`, {
+        let result = await fetch(`${baseurlwallet}/schedules/subcategory/${examUUID}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -213,7 +214,7 @@ function Register2() {
     // console.warn(currentTime)
 
     const registerAPI = async () => {
-        const catdata = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules/${params.uuid}/join`, {
+        const catdata = await fetch(`${baseurlwallet}/schedules/${params.uuid}/join`, {
             method: "POST",
             body: JSON.stringify({ examUUID: exam.uuid, primarySubcategory, secondarySubcategory, currentTime }),
             headers: {
@@ -245,7 +246,7 @@ function Register2() {
 
     const unregister = async () => {
         if (window.confirm("Are you sure you want to unregister!") === true) {
-            let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules/${exam.schedule[0].studentExam.uuid}/disjoin`, {
+            let result = await fetch(`${baseurlwallet}/schedules/${exam.schedule[0].studentExam.uuid}/disjoin`, {
                 method: "Delete",
                 // body: JSON.stringify({ examUUID:exam.uuid}),
                 headers: {
@@ -277,7 +278,7 @@ function Register2() {
             setShowLoaderShow(false);
         }, 5000);
         setCurrentTime(moment().utcOffset('+05:30').format('YYYY-MM-DD hh:mm:ss a'))
-        let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules/${exam.schedule[0].studentExam.uuid}/start/Exam/student`, {
+        let result = await fetch(`${baseurlwallet}/schedules/${exam.schedule[0].studentExam.uuid}/start/Exam/student`, {
             method: "PUT",
             body: JSON.stringify({ examUUID: exam.uuid, examScheduleUUID, currentTime }),
             headers: {

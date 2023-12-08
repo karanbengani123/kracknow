@@ -11,6 +11,7 @@ import ScheduledExam from "./ScheduledExam";
 import TabNavItem from "./TabNavItem";
 import TabContent from "./TabContent";
 import Completedexam from "./Completedexam";
+import { baseurlwallet } from "./BaseUrl";
 // import { TabContent } from "react-bootstrap";
 
 
@@ -34,7 +35,7 @@ function Tournament() {
     // console.warn("Examlist", exam);
 
     const getSchExam = async () => {
-        let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules`, {
+        let result = await fetch(`${baseurlwallet}/schedules`, {
             method: "GET",
             headers: {
 
@@ -47,7 +48,7 @@ function Tournament() {
     }
 
     const getCompletedExam = async (page) => {
-        let result = await fetch(`https://zlasvmkyg1.execute-api.ap-south-1.amazonaws.com/dev/schedules/completed/exams`, {
+        let result = await fetch(`${baseurlwallet}/schedules/completed/exams`, {
             method: "GET",
             headers: {
 
