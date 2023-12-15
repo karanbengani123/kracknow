@@ -58,7 +58,6 @@ export default class WithdrawCompletedRequest extends React.Component<Props, Sta
         GetWithdrawListAPI()
             .then(response => {
                 const successRecords = response.payload.Wallettransactionslist.rows.filter(record => record.status === "SUCCESS");
-                console.log('=============%%%%%%%%%%%%%%%%%%%%%%%%%%%%', successRecords)
                 if (Array.isArray(successRecords)) {
                     this.setState({
                         withdrawList: successRecords
@@ -85,7 +84,6 @@ export default class WithdrawCompletedRequest extends React.Component<Props, Sta
             })
 
             .catch(error => {
-                console.log(')))))))))))))))))))))))))))))(((((((((((((((((((((((', error)
                 this.setState({ fetcherr: error });
             });
 
@@ -127,7 +125,6 @@ export default class WithdrawCompletedRequest extends React.Component<Props, Sta
     );
 
     render(): React.ReactNode {
-        // console.log('call -------------------------------------------------------------------')
 
         return (<>
             {

@@ -117,50 +117,39 @@ export default class DashboardScreen extends React.Component<Props, State> {
   }
 
 
-  // async callApis() {
-  //   const response = await GetBannerImageUrls();
-  //   const data = await response.json();
-  //   const urls: string[] = data.payload.lists.rows
-  //     .filter((imageObj: any) => imageObj.tag === "MOBILE")
-  //     .map((imageUrl: any) => imageUrl.url);
-  //   if (urls.length)
-  //     this.setState({
-  //       imageUrls: urls,
-  //     });
-  //     // debugger;
-  // }
-
-  componentDidUpdate(prevProps: Props) {
-    const { isFocused } = this.props;
-
-    if (isFocused && !prevProps.isFocused) {
-      console.log('DashboardScreen is focused -----------------------------------------------');
-      // Your code to execute when the screen becomes focused
-    }
-  }
   componentDidMount(): void {
     this._getCompletedExamListHandler();
     // this.callApis();
     this._getStudentListHandler();
     this.getBanner()
-    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+    this.focusListener = this.props.navigation.addListener('focus', () => {
       this._getCompletedExamListHandler();
       // this.callApis();
       this._getStudentListHandler();
       this.getBanner()
     })
-    // this._getCompletedExamListHandler();
-    // // this.callApis();
-    // this._getStudentListHandler();
-    // this.getBanner()
   }
 
+
+
+  componentDidUpdate(prevProps: Props) {
+    const { isFocused } = this.props;
+
+    if (isFocused && !prevProps.isFocused) {
+      // Your code to execute when the screen becomes focused
+    }
+  }
+
+
   componentWillUnmount(): void {
+    if (this.focusListener)
+      this.focusListener();
     this.setState = () => {
       return;
     };
     // this.focusListener.remove();
   }
+
 
   _toggleTabHandler(tabName: string): void {
     this.setState({
@@ -171,7 +160,6 @@ export default class DashboardScreen extends React.Component<Props, State> {
 
   _getCompletedExamListHandler(): void {
     // debugger;
-    console.log('callll----------------------------')
 
     GetCompletedExamListAPI()
       .then((response) => {
@@ -366,7 +354,6 @@ export default class DashboardScreen extends React.Component<Props, State> {
 
 
   render(): React.ReactNode {
-
     return (
       <>
         <SafeAreaView style={{ flex: 1 }}>

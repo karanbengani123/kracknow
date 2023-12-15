@@ -41,7 +41,7 @@ export default class Header extends React.Component<Props, State> {
   componentDidMount(): void {
     this._getWalletBalanceHandler();
     this._getNotificationListHandler();
-    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+    this.focusListener = this.props.navigation.addListener('focus', () => {
       this._getWalletBalanceHandler();
       this._getNotificationListHandler();
     })
@@ -54,9 +54,8 @@ export default class Header extends React.Component<Props, State> {
     // this.focusListener.remove();
   }
 
+
   _getWalletBalanceHandler(): void {
-    // <ActivityIndicator size="small" color="#0000ff" />
-    console.log('****************call***********************header')
     WalletBalanceApi()
       .then(response => {
         const statusCode = response.status;

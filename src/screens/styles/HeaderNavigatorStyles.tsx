@@ -7,7 +7,7 @@ export const HeaderNavigatorStyles = StyleSheet.create({
     paddingHorizontal: 10
   },
   iconSpacing: {
-    paddingVertical: 2,
+    paddingVertical: 3,
     paddingHorizontal: 10
   }
 });

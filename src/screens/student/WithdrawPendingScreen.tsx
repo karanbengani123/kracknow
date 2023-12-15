@@ -108,7 +108,6 @@ export default class WithdrawPendingScreen extends React.Component<Props, State>
             })
 
             .catch(error => {
-                console.log(')))))))))))))))))))))))))))))(((((((((((((((((((((((', error)
                 this.setState({ fetcherr: error });
             });
 

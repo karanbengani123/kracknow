@@ -29,6 +29,7 @@ import HeaderBack from "./HeaderBack";
 interface Props {
   navigation: any;
   isMultiSelect: boolean;
+  route: any
 }
 
 interface State {
@@ -52,25 +53,22 @@ export default class WalletMainScreen extends React.Component<Props, State> {
   }
 
   componentDidMount(): void {
-    this._getWalletHistoryHandler();
-    this._getWalletBalanceHandler();
-    this.focusListener = this.props.navigation.addListener('didFocus', () => {
-      console.log('call main wallet ---------------------------------------- 21')
 
-      this._getWalletHistoryHandler();
+
+    this.focusListener = this.props.navigation.addListener('focus', () => {
+          this._getWalletHistoryHandler();
       this._getWalletBalanceHandler();
-    })
+    });
+   
   }
 
-  // componentWillUnmount(): void {
-  //   console.log('call main wallet ---------------------------------------- 2nd')
-
-  //   this.focusListener.remove();
-  // }
+  componentWillUnmount(): void {
+    if (this.focusListener)
+      this.focusListener();
+  }
 
 
   _getWalletHistoryHandler(): void {
-    // <ActivityIndicator size="small" color="#0000ff" />
     WalletHistoryApi()
       .then(response => {
         this.setState({
@@ -111,7 +109,6 @@ export default class WalletMainScreen extends React.Component<Props, State> {
       .then(response => {
         const statusCode = response.status;
         const data = statusCode === 200 ? response.json() : [];
-        console.log('****************', response.json())
         return Promise.all([statusCode, data]).then(res => ({
           statusCode: res[0],
           data: res[1]
@@ -178,11 +175,8 @@ export default class WalletMainScreen extends React.Component<Props, State> {
 
   );
 
-
   render(): React.ReactNode {
     // debugger;
-    console.log('call main wallet ----------------------------------------')
-
     return (
       <SafeAreaView>
         <HeaderBack navigation={this.props.navigation} name="Wallet" />
@@ -197,6 +191,7 @@ export default class WalletMainScreen extends React.Component<Props, State> {
             </View>
           </View>
         </View>
+        {/* {additionalContent} */}
 
 
         <View style={{ alignItems: 'center' }}>

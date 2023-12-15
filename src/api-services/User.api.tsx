@@ -135,7 +135,6 @@ export const GetExamQuestionAPI = async (
   const token = userData && JSON.parse(userData)
 
   const queryString = ObjToQueryString(queryParams)
-  console.log(`${Environment.API}/schedules/${examUuid}/live/status/${participantUuid}${queryString}`, '-------api')
   return fetch(
     `${Environment.API}/schedules/${examUuid}/live/status/${participantUuid}${queryString}`,
     {
@@ -576,7 +575,7 @@ export const GetUpcomingMockListAPI = async () => {
 export const postaddAmount = async (data: any) => {
   const userData = await AsyncStorage.getItem(Environment.PROJECT + 'token');
   const token = userData && JSON.parse(userData);
-
+  console.log(token)
   const response = await fetch(`${Environment.API}/wallet/studentaddmoneyrequest`, {
     method: 'POST',
     headers: {
@@ -587,6 +586,7 @@ export const postaddAmount = async (data: any) => {
   });
 
   const responseData = await response.json();
+  console.log('======================', responseData)
   return responseData; // Return the parsed JSON data
 };
 

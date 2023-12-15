@@ -34,25 +34,25 @@ const WalletNavigator = (navigation: any) => {
   const NativeStack: any = createNativeStackNavigator<RootStackParams>();
   return (
     <NativeStack.Navigator
-    screenOptions={{
-      headerShown: false
-    }}
+      screenOptions={{
+        headerShown: false
+      }}
     >
       <NativeStack.Screen name="WalletMain" component={WalletMainScreen}
-        //   setOptions ={{
-        //   title: 'Wallet',
-        //   // headerLeft: () => NavigationBackHomeIcon(),
-        // }}
-        // options={{ title: 'My home', headerLeft:(navigation: any) => NavigationBackIcon (navigation) }}
+      //   setOptions ={{
+      //   title: 'Wallet',
+      //   // headerLeft: () => NavigationBackHomeIcon(),
+      // }}
+      // options={{ title: 'My home', headerLeft:(navigation: any) => NavigationBackIcon (navigation) }}
 
-        // options={(navigation: any) => ({
-        //   title: 'Wallet',
-        //   headerTitleStyle: {
-        //     color: "black",
-        //     fontSize: 18 
-        //   },
-        //   headerLeft: () => NavigationBackIcon(navigation)
-        // })}
+      // options={(navigation: any) => ({
+      //   title: 'Wallet',
+      //   headerTitleStyle: {
+      //     color: "black",
+      //     fontSize: 18 
+      //   },
+      //   headerLeft: () => NavigationBackIcon(navigation)
+      // })}
 
       />
       <NativeStack.Screen name="Wallet" component={WalletScreen} />
@@ -65,7 +65,7 @@ const WalletNavigator = (navigation: any) => {
 
 export default WalletNavigator;
 
-const NavigationBackIcon = (navigation: any) => {
+export const NavigationBackIcon = (navigation: any) => {
   return (
     <View style={HeaderNavigatorStyles.headerStyle}>
       <Ionicons
@@ -73,7 +73,7 @@ const NavigationBackIcon = (navigation: any) => {
         size={20}
         color="black"
         style={HeaderNavigatorStyles.iconSpacing}
-        onPress={() => navigation.navigate('Dashboard')}
+        onPress={() => navigation.navigate('WalletMain')}
       />
     </View>
   )

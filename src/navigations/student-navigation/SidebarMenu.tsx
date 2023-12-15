@@ -31,7 +31,7 @@ interface State {
 }
 
 export default class SidebarMenu extends React.Component<Props, State> {
-   private focusListener: any;
+  private focusListener: any;
 
   constructor(props: any) {
     super(props);
@@ -46,24 +46,24 @@ export default class SidebarMenu extends React.Component<Props, State> {
   componentDidMount() {
     this._getStudentListHandler();
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
-    this._getStudentListHandler();
+      this._getStudentListHandler();
     })
   }
 
   componentWillUnmount(): void {
     this.setState = () => {
       return;
-  };
-  // this.focusListener.remove();
+    };
+    // this.focusListener.remove();
   }
 
   _logoutHandler() {
     AsyncStorage.setItem(Environment.PROJECT + "token", "").then(e => {
       console.log("token cleared")
     })
-    
+
     this._deleteTokenHandler()
-    
+
     console.log(AsyncStorage.getItem(Environment.PROJECT + "token"), "/////////////////")
 
   }
@@ -101,8 +101,9 @@ export default class SidebarMenu extends React.Component<Props, State> {
             AsyncStorage.setItem(Environment.PROJECT + "token", "").then(e => {
               console.log("token cleared")
             })
-            this.props.navigation.replace('Authentication')}
-           else {
+            this.props.navigation.replace('Authentication')
+          }
+          else {
             console.log('error')
           }
         }
@@ -113,7 +114,7 @@ export default class SidebarMenu extends React.Component<Props, State> {
   handleBackButton() {
     // this.props.navigation.navigate("Exam");
     return true;
-}
+  }
 
   _getStudentListHandler(): void {
     // debugger;
@@ -315,7 +316,7 @@ export default class SidebarMenu extends React.Component<Props, State> {
         // onPress={() => this.props.navigation.navigate('Authentication')}
         // onPress={() => this.props.navigation.navigate('Authentication')}
         >
-          <View style={styles.footerContainer}> 
+          <View style={styles.footerContainer}>
             <Image
               style={{ height: 20, width: 20, marginTop: 2 }}
               source={require("../../../assets/images/logout-64.png")}

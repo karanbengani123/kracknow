@@ -138,7 +138,6 @@ export default class SearchScreen extends React.Component<Props, State> {
               const promises = res.data?.payload?.signedUrls.map(
                 (url: ISignedUrl) => {
                   uploadImage(url.signedUrl, fileDetails[0]).then((res) => {
-                    console.log(res, "ees");
                   });
                   this.setState({
                     profilePic: url.fileUrl,

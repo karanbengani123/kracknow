@@ -207,6 +207,7 @@ export default class BankToWalletScreen extends React.Component<Props, State> {
                 }) => {
                     // debugger;
                     if (res.statusCode === 200) {
+                        this._getBankListHandler();
                         showMessage({
                             message: "Successfully Applied",
                             type: "success",
@@ -228,18 +229,10 @@ export default class BankToWalletScreen extends React.Component<Props, State> {
                             accountName: '',
                             accountNameError: ''
                         });
-                        // ToastAndroid.show("Successfully Scheduled", ToastAndroid.SHORT);
-                        showMessage({
-                            message: "Successfully Applied",
-                            type: "success",
-                        });
-
-                        // this.props.navigation.navigate("KeywordUpdate");
                     }
                     else {
                         // ToastAndroid.show(res.data.message, ToastAndroid.SHORT);
                         this.setState({ modalVisible: false });
-                        console.log('---------error ----------***-------', res)
                         showMessage({
                             message: res.data.message,
                             type: "danger",

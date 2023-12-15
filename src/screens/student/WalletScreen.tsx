@@ -289,13 +289,14 @@ import {
   ScrollView,
   FlatList,
   TextInput,
+  SafeAreaView,
   Alert,
   Modal,
   Pressable,
   ActivityIndicator
 } from 'react-native'
 import RNPgReactNativeSDK from 'react-native-pg-react-native-sdk'
-import { BankdetailsApi, PayPaymentApi, WalletBalanceApi, getToken, postaddAmount } from '../../api-services/User.api'
+import { BankdetailsApi, PayPaymentApi, WalletBalanceApi, postaddAmount } from '../../api-services/User.api'
 import Environment from '../../screens/constants/Environment'
 import Colors from '../constants/Colors'
 import { FormStyle } from '../styles/Styles'
@@ -306,6 +307,10 @@ import * as RNFS from 'react-native-fs';
 import FlashMessage, { showMessage } from 'react-native-flash-message'
 import Header from './Header'
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationBackIcon } from '../../navigations/student-navigation/WalletNavigator'
+import { HeaderNavigatorStyles } from '../styles/HeaderNavigatorStyles'
 
 interface Props {
   navigation: any
@@ -347,6 +352,7 @@ export default class WalletScreen extends React.Component<Props, State> {
     this._getWalletBalanceHandler();
     this._getbankDetailshandler();
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
+
       this._getWalletBalanceHandler();
       this._getbankDetailshandler();
     })
@@ -403,7 +409,6 @@ export default class WalletScreen extends React.Component<Props, State> {
     } else {
       this.setState({ isPressed: true });
 
-      // console.log('call--------------------', this.state.amount, this.state.transactionid, this.state.selectedFile, this.state.baseImg)
       let data = { transactionImage: this.state.selectedFile, transactionId: this.state.transactionid, amount: this.state.amount }
       postaddAmount(data)
         .then((data) => {
@@ -420,7 +425,6 @@ export default class WalletScreen extends React.Component<Props, State> {
             type: "danger",
           });
           this.setState({ sendMsgerr: err, isPressed: false })
-          console.log('--------', err);
           // Handle error here
         });
 
@@ -466,7 +470,6 @@ export default class WalletScreen extends React.Component<Props, State> {
       .then((response) => {
         const statusCode = response.status;
         const data = statusCode === 200 ? response.json() : [];
-        console.log("****************calllllllll", response.json());
         return Promise.all([statusCode, data]).then((res) => ({
           statusCode: res[0],
           data: res[1],
@@ -521,193 +524,215 @@ export default class WalletScreen extends React.Component<Props, State> {
     }
   };
 
-  // fileToBase64 = async (uri) => {
-  //   try {
-  //     const fileContent = await RNFS.readFile(uri, 'base64');
-  //     return fileContent;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // };
-
+  // const WalletScreen = ({ navigation }) => {
+  //   const handleNavigateBack = () => {
+  //     navigation.goBack();
+  //     navigation.getParam('handleReload')(); // Call the handleReload function from the params
+  //   };
 
   render(): React.ReactNode {
     return (
-      // onChangeText={(text) => this.setState({ orderAmount: text })}
-      // onPress={this.paymentInitiate.bind(this)}
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <SafeAreaView>
+
+        {/* // onChangeText={(text) => this.setState({ orderAmount: text })}
+      // onPress={this.paymentInitiate.bind(this)} */}
+
         <FlashMessage position="top" />
         {/* <HeaderBack navigation={this.props.navigation} name="" /> */}
         {/* <Header navigation={this.props.navigation} /> */}
-        <View style={{ padding: 20, flexDirection: "row" }}>
+
+        {/* <View style={{ padding: 10, flexDirection: "row" }}>
           <Ionicons
             name={"arrow-back"}
             size={25}
             color={Colors.black}
             onPress={() => this.props.navigation.goBack()}
           />
-
+          <Text
+            style={{
+              fontSize: 16,
+              marginLeft: 15,
+              fontWeight: "700",
+              color: "black",
+            }}
+          >
+            Wallet
+          </Text>
+        </View> */}
+        <View style={{ padding: 10, flexDirection: "row" }}>
+          <Ionicons
+            name={"arrow-back"}
+            size={25}
+            color={Colors.black}
+            // onPress={handleNavigateBack}
+            onPress={() => this.props.navigation.goBack()} // Use goBack to navigate back
+          // onPress={() => this.props.navigation.navigate('WalletMain', {
+          //   refresh: true,
+          // })}
+          />
+          <Text
+            style={{
+              fontSize: 16,
+              marginLeft: 15,
+              fontWeight: "700",
+              color: "black",
+            }}
+          >
+            Wallet
+          </Text>
         </View>
-
-        <View style={{ backgroundColor: '#1E276F', alignItems: 'center' }}>
-          <View style={{ alignItems: "center", borderStyle: "solid", borderRadius: 15, borderColor: "white", borderWidth: 2, padding: 30, margin: 40, display: "flex", flexDirection: "row", justifyContent: "space-evenly" }}>
-            <View style={{ alignItems: "center", justifyContent: 'center' }}>
-              <Text style={{ color: 'white' }}>Available Balance</Text>
-              <Text style={{
-                fontSize: 14,
-                fontWeight: '700', marginTop: 3, color: 'white'
-              }}>{'\u20B9'}{this.state.balance}</Text>
+        {/* <NavigationBackIcon /> */}
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={{ backgroundColor: '#1E276F', alignItems: 'center' }}>
+            <View style={{ alignItems: "center", borderStyle: "solid", borderRadius: 15, borderColor: "white", borderWidth: 2, padding: 25, margin: 30, display: "flex", flexDirection: "row", justifyContent: "space-evenly" }}>
+              <View style={{ alignItems: "center", justifyContent: 'center' }}>
+                <Text style={{ color: 'white' }}>Available Balance</Text>
+                <Text style={{
+                  fontSize: 14,
+                  fontWeight: '700', marginTop: 3, color: 'white'
+                }}>{'\u20B9'}{this.state.balance}</Text>
+              </View>
             </View>
           </View>
-        </View>
 
-        {/* <View style={{justifyContent:'center', flexDirection:'row', alignItems:'center' }}>
-          <Text style={{ fontSize: 20, }}>+ {'\u20B9'}</Text>
-          <TextInput
-            onChangeText={(text) => this.setState({ orderAmount: text, blankError: "" })}
-            keyboardType='numeric'
-            style={{ borderStyle: "solid", borderBottomColor: '#1E276F', borderBottomWidth: 1, color: 'black', width:'20%' }}
-            value={this.state.orderAmount}
-          >
-          </TextInput>
-        </View> */}
-        <View style={styles.container1}>
-          <Text style={{ fontWeight: 'bold', marginBottom: 15, width: "80%" }}>Please Send Money To The Provided Number only. After Sending The payment , insert the mandatory field</Text>
-        </View>
-        <View style={styles.container1}>
-
-          <Image
-            style={{ height: 200, width: 200 }}
-            source={{
-              uri: this.state.banklist.qrCodeImage,
-            }}
-          ></Image>
-          <View style={{
-            backgroundColor: "#e4e8e5",
-            borderRadius: 10,
-            width: "80%",
-            height: 100,
-            marginBottom: 10,
-            color: "red",
-            marginTop: 10,
-            backgroundColor: "#fff",
-          }}>
-
-            <Text style={{ paddingLeft: 10 }}>Upi  :  <Text>{this.state.banklist.upi}</Text></Text>
-            <Text style={{ paddingLeft: 10, paddingTop: 5 }}>Bank Name  :  <Text>{this.state.banklist.bankName}</Text></Text>
-            <Text style={{ paddingLeft: 10, paddingTop: 5 }}>Account  :  <Text></Text>{this.state.banklist.account}</Text>
-            <Text style={{ paddingLeft: 10, paddingTop: 5 }}>Ifsc  :  <Text></Text>{this.state.banklist.ifsc}</Text>
+          <View style={styles.container1}>
+            <Text style={{ fontWeight: 'bold', marginBottom: 15, width: "80%" }}>Please Send Money To The Provided Number only. After Sending The payment , insert the mandatory field</Text>
           </View>
+          <View style={styles.container1}>
 
-          {this.state.firstClick ?
-            <>
-              <View style={styles.inputView}>
-                <TextInput
-                  style={styles.TextInput}
-                  placeholder="Enter Transaction ID"
-                  placeholderTextColor="black"
-                  onChangeText={(text) => this.setState({ transactionid: text, blankErroramt: "" })}
-                  value={this.state.transactionid}
-                />
+            <Image
+              style={{ height: 200, width: 200 }}
+              source={{
+                uri: this.state.banklist.qrCodeImage,
+              }}
+            ></Image>
+            <View style={{
+              backgroundColor: "#e4e8e5",
+              borderRadius: 10,
+              width: "80%",
+              height: 100,
+              marginBottom: 10,
+              color: "red",
+              marginTop: 10,
+              backgroundColor: "#fff",
+            }}>
+
+              <Text style={{ paddingLeft: 10 }}>Upi  :  <Text>{this.state.banklist.upi}</Text></Text>
+              <Text style={{ paddingLeft: 10, paddingTop: 5 }}>Bank Name  :  <Text>{this.state.banklist.bankName}</Text></Text>
+              <Text style={{ paddingLeft: 10, paddingTop: 5 }}>Account  :  <Text></Text>{this.state.banklist.account}</Text>
+              <Text style={{ paddingLeft: 10, paddingTop: 5 }}>Ifsc  :  <Text></Text>{this.state.banklist.ifsc}</Text>
+            </View>
+
+            {this.state.firstClick ?
+              <>
+                <View style={styles.inputView}>
+                  <TextInput
+                    style={styles.TextInput}
+                    placeholder="Enter Transaction ID"
+                    placeholderTextColor="black"
+                    onChangeText={(text) => this.setState({ transactionid: text, blankErroramt: "" })}
+                    value={this.state.transactionid}
+                  />
 
 
-              </View>
+                </View>
 
 
-              <View style={styles.inputView}>
+                <View style={styles.inputView}>
 
-                <TouchableOpacity style={styles.button} onPress={this.pickDocument} >
-                  <Text>{this.state.filename ? this.state.filename : 'Pick a File'}</Text>
-                </TouchableOpacity>
-              </View>
-              {
-                this.state.blankErrorid !== "" &&
-                <Text style={styles.errorText}>{this.state.blankErrorid}</Text>
-              }
-
-            </>
-            :
-            <>
-              <View style={styles.inputView}>
-                <TextInput
-                  style={styles.TextInput}
-                  placeholder="Enter Amount"
-                  keyboardType="numeric"
-                  placeholderTextColor="black"
-                  onChangeText={(text) => this.setState({ amount: text, blankErroramt: "" })}
-                  value={this.state.amount.toString()} />
-              </View>
-              <View style={{ alignSelf: 'center' }}>
+                  <TouchableOpacity style={styles.button} onPress={this.pickDocument} >
+                    <Text>{this.state.filename ? this.state.filename : 'Pick a File'}</Text>
+                  </TouchableOpacity>
+                </View>
                 {
-                  this.state.blankErroramt !== "" &&
-                  <Text style={styles.errorText}>{this.state.blankErroramt}</Text>
+                  this.state.blankErrorid !== "" &&
+                  <Text style={styles.errorText}>{this.state.blankErrorid}</Text>
                 }
 
-              </View>
-              <View style={{ position: 'relative', flexDirection: 'row' }}>
+              </>
+              :
+              <>
+                <View style={styles.inputView}>
+                  <TextInput
+                    style={styles.TextInput}
+                    placeholder="Enter Amount"
+                    keyboardType="numeric"
+                    placeholderTextColor="black"
+                    onChangeText={(text) => this.setState({ amount: text, blankErroramt: "" })}
+                    value={this.state.amount.toString()} />
+                </View>
+                <View style={{ alignSelf: 'center' }}>
+                  {
+                    this.state.blankErroramt !== "" &&
+                    <Text style={styles.errorText}>{this.state.blankErroramt}</Text>
+                  }
 
-                <TouchableOpacity onPress={() => this.setState({ amount: 500, blankErroramt: "" })} style={styles.amountbtn}  >
-                  {<Text style={styles.textamount} style={{ color: "white", fontWeight: "700" }}>500</Text>}
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.setState({ amount: 1000, blankErroramt: "" })} style={styles.amountbtn} >
-                  {<Text style={{ color: "white", fontWeight: "700" }}>1000</Text>}
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.setState({ amount: 2000, blankErroramt: "" })} style={styles.amountbtn} >
-                  {<Text style={{ color: "white", fontWeight: "700" }}>2000</Text>}
-                </TouchableOpacity>
-              </View>
-              {/* <View style={{ display: 'flex', justifyContent: 'center' }}>
+                </View>
+                <View style={{ position: 'relative', flexDirection: 'row' }}>
+
+                  <TouchableOpacity onPress={() => this.setState({ amount: 500, blankErroramt: "" })} style={styles.amountbtn}  >
+                    {<Text style={styles.textamount} style={{ color: "white", fontWeight: "700" }}>500</Text>}
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => this.setState({ amount: 1000, blankErroramt: "" })} style={styles.amountbtn} >
+                    {<Text style={{ color: "white", fontWeight: "700" }}>1000</Text>}
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => this.setState({ amount: 2000, blankErroramt: "" })} style={styles.amountbtn} >
+                    {<Text style={{ color: "white", fontWeight: "700" }}>2000</Text>}
+                  </TouchableOpacity>
+                </View>
+                {/* <View style={{ display: 'flex', justifyContent: 'center' }}>
               </View> */}
-            </>
-          }
-        </View>
+              </>
+            }
+          </View>
 
 
 
-        <View style={{ alignItems: 'center', marginTop: 10 }}>
-          {
-            this.state.sendMsgerr !== "" &&
-            <Text style={styles.errorText}>{this.state.sendMsgerr}</Text>
-          }
-          {this.state.firstClick ?
-            <TouchableOpacity onPress={this.paymentInitiate.bind(this)} style={styles.loginBtn} >
-              {<Text style={{ color: "white", fontWeight: "700", marginTop: 15 }}>Submit</Text>}
-              {/* <Text style={{ color: "white", marginTop: 15 }}>
+          <View style={{ alignItems: 'center' }}>
+            {
+              this.state.sendMsgerr !== "" &&
+              <Text style={styles.errorText}>{this.state.sendMsgerr}</Text>
+            }
+            {this.state.firstClick ?
+              <TouchableOpacity onPress={this.paymentInitiate.bind(this)} style={styles.loginBtn} >
+                {<Text style={{ color: "white", fontWeight: "700", marginTop: 15 }}>Submit</Text>}
+                {/* <Text style={{ color: "white", marginTop: 15 }}>
             {
               !this.state.isPressed ? 'Add now' : ''
             }
           </Text> */}
-              {
-                !this.state.isPressed
-                  ? <Text></Text>
-                  :
-                  <View style={{ marginBottom: 20 }}>
-                    <ActivityIndicator
-                      size={'small'}
-                      color={Colors.white}
-                    />
-                  </View>
-              }
-            </TouchableOpacity>
-            :
-            <TouchableOpacity onPress={this.amountentered.bind(this)} style={styles.loginBtn} >
-              {<Text style={{ color: "white", fontWeight: "700", marginTop: 15 }}>Submit</Text>}
-              {
-                !this.state.isPressed
-                  ? <Text></Text>
-                  :
-                  <View style={{ marginBottom: 20 }}>
-                    <ActivityIndicator
-                      size={'small'}
-                      color={Colors.white}
-                    />
-                  </View>
-              }
-            </TouchableOpacity>
-          }
+                {
+                  !this.state.isPressed
+                    ? <Text></Text>
+                    :
+                    <View style={{ marginBottom: 20 }}>
+                      <ActivityIndicator
+                        size={'small'}
+                        color={Colors.white}
+                      />
+                    </View>
+                }
+              </TouchableOpacity>
+              :
+              <TouchableOpacity onPress={this.amountentered.bind(this)} style={styles.loginBtn} >
+                {<Text style={{ color: "white", fontWeight: "700", marginTop: 15 }}>Submit</Text>}
+                {
+                  !this.state.isPressed
+                    ? <Text></Text>
+                    :
+                    <View style={{ marginBottom: 20 }}>
+                      <ActivityIndicator
+                        size={'small'}
+                        color={Colors.white}
+                      />
+                    </View>
+                }
+              </TouchableOpacity>
+            }
 
-        </View>
-      </ScrollView>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     )
   }
 }
@@ -773,14 +798,24 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     // alignItems: "center",
   },
+  // loginBtn: {
+  //   width: '80%',
+  //   borderRadius: 10,
+  //   height: 50,
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   marginTop: 20,
+  //   backgroundColor: '#1E276F'
+  // },
   loginBtn: {
-    width: '80%',
+    width: "80%",
     borderRadius: 10,
     height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 20,
-    backgroundColor: '#1E276F'
+    backgroundColor: "#1E276F",
+    marginBottom: 100
   },
   amountbtn: {
     width: 60,

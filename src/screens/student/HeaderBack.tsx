@@ -173,8 +173,6 @@ export default class HeaderBack extends React.Component<Props, State> {
   }
 
   render(): React.ReactNode {
-    // console.log('0000000000000000000000000000000000000000', this.state.balance)
-    // console.log('----********************************----', this.props.navigation)
     return (
 
       <View style={{ flexDirection: 'row', backgroundColor: 'white', paddingHorizontal: 10, padding: 15, }}>
