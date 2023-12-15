@@ -27,7 +27,7 @@ import { approveWithdrawal } from "../controllers/approveWithdrawal";
 import { getStudentAddMoneyRequestforAdmin } from "../controllers/getStudentAddMoneyRequestforAdmin";
 // import { getStudentWithdrawRequestaccept } from "../controllers/getStudentWithdrawRequestaccept";
 import { getStudentAddMoneyRequestforAdminseperate } from "../controllers/getStudentAddMoneyRequestforAdminseperate";
-// import { Wallettransactions } from "../controllers/Wallettransactions";
+import { Wallettransactions } from "../controllers/Wallettransactions";
 import { wallettransactionsforWithdrawal } from "../controllers/wallettransactionsforWithdrawal";
 import { hellohandler } from "../controllers/hellohandler";
 
@@ -104,7 +104,14 @@ router.get(
   })
 );
 
-
+// student request for add money
+router.post(
+  "/wallet/studentaddmoneyrequest",
+  controllerHandler({
+    controller: postStudentaddmoneyRequest,
+    options: { transaction: true },
+  })
+);
 
 router.get(
   "/wallet/studentwithdrawalrequest",
@@ -160,16 +167,14 @@ router.put(
   })
 );
 
-
-
-// student request for add money
-router.post(
-  "/wallet/studentaddmoneyrequest",
+// wallettransactions for student view
+router.get("/wallet/wallettransactions",
   controllerHandler({
-    controller: postStudentaddmoneyRequest,
-    options: { transaction: true },
+    controller: Wallettransactions,
+    options: { transaction: false },
   })
 );
+
 router.get(
   "/wallet/wallettransactionsforWithdrawal",
   controllerHandler({
@@ -178,10 +183,8 @@ router.get(
   })
 );
 
-
 // student withdrawal request
-router.post(
-  "/wallet/studentwithdrawalrequest",
+router.post("/wallet/studentwithdrawalrequest",
   controllerHandler({
     controller: postStudentWithdrawRequest,
     schema: studentWithdrawRequestSchema,
