@@ -20,6 +20,7 @@ function Addmoney() {
   const [bankList, setBankList] = useState([]);
   const [fetchError, setFetchError] = useState("");
   const [amountbtnclick, setAmountbtnclick] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handletransactionimg = (e) => {
     let addImage = e.target.files[0];
@@ -137,6 +138,10 @@ function Addmoney() {
         setStartExamDisable(false);
         if (result.status === 200) {
           const data = await result.json();
+          setShowSuccess(true);
+          setTimeout(() => {
+            setShowSuccess(false);
+          }, 3000);
           setTransactionamount("");
           setTransactionid("");
           setTransactionimg("");
@@ -167,7 +172,6 @@ function Addmoney() {
   };
 
   const handleamountClickBtn = (data) => {
-    console.log(data);
     setTransactionamount(data);
   };
   const fetchbankDetails = async () => {
@@ -223,6 +227,23 @@ function Addmoney() {
                   </div>
                 </div>
               </div>
+              {showSuccess && (
+                <div
+                  className="alert alert-success alert-dismissible fade show"
+                  role="alert"
+                >
+                  <strong className="text-success">
+                    {"Withdrawal Request Apply Successful "}
+                  </strong>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"
+                    onClick={() => setShowSuccess(false)}
+                  ></button>
+                </div>
+              )}
               <div className="card">
                 <div className="card-body">
                   <div className="row">
