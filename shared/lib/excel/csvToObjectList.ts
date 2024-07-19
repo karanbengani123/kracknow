@@ -53,10 +53,32 @@ export const s3CSVToObjectList = (file: string, bucket: string, keyIndexMap: { [
   })
 }
 
+// const getItemByKey = (key: string, list: string[], colounIndexMap) => {
+//   const meta = colounIndexMap[key]
+//   const value = list[meta.index]
+//   const trimmedValue = value ? value.trim() : value
+//   if (meta.type === 'stringArray') {
+//     logger.debug('stringArray', { trimmedValue })
+//     if (trimmedValue === '') {
+//       return ''
+//     }
+//     return value.split('\n').map(item => item.trim()).filter(item => !!item)
+//   }
+//   if (meta.type === 'number') {
+//     if (parseInt(trimmedValue) === NaN) {
+//       return ''
+//     } else {
+//       return parseInt(trimmedValue)
+//     }
+//   }
+//   return value ? value.trim() : ''
+// }
+
 const getItemByKey = (key: string, list: string[], colounIndexMap) => {
   const meta = colounIndexMap[key]
   const value = list[meta.index]
   const trimmedValue = value ? value.trim() : value
+
   if (meta.type === 'stringArray') {
     logger.debug('stringArray', { trimmedValue })
     if (trimmedValue === '') {
@@ -64,12 +86,16 @@ const getItemByKey = (key: string, list: string[], colounIndexMap) => {
     }
     return value.split('\n').map(item => item.trim()).filter(item => !!item)
   }
+
   if (meta.type === 'number') {
-    if (parseInt(trimmedValue) === NaN) {
+    const parsedValue = parseInt(trimmedValue, 10)
+
+    if (isNaN(parsedValue)) {
       return ''
     } else {
-      return parseInt(trimmedValue)
+      return parsedValue
     }
   }
+
   return value ? value.trim() : ''
 }

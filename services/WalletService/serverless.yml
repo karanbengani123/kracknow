@@ -9,7 +9,7 @@ plugins:
 
 provider:
   name: aws
-  runtime: nodejs14.x
+  runtime: nodejs18.x
   environment: ${file(../../env/${self:provider.stage}.yml)}
   stage: ${opt:stage, 'prod'}
   region: ap-south-1

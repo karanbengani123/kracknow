@@ -3,6 +3,7 @@ import { controllerHandler } from "../../../../shared/lib/system/controllerHandl
 import { getCities } from "../../../CommonService/app/controllers/getCities";
 import { adminLogin } from "../controllers/adminLogin";
 import { forgetPassword } from "../controllers/forgotPassword";
+import { studentforgetPassword } from "../controllers/studentforgotPassword";
 import { getAdmin } from "../controllers/getAdmin";
 import { getAdminByUUID } from "../controllers/getAdminByUUID";
 import { studentLogin } from "../controllers/studentlogin";
@@ -22,13 +23,9 @@ const router = Router();
 
 router.post("/sessions/admin/auth", controllerHandler({controller: adminLogin,schema: adminLoginSchema}));
 
-router.put(
-  "/sessions/admin/forgetpassword",
-  controllerHandler({
-    controller: forgetPassword,
-    schema: forgotPasswordSchema,
-  })
-);
+router.put("/sessions/admin/forgetpassword",controllerHandler({controller: forgetPassword,schema: forgotPasswordSchema,}));
+
+router.put("/sessions/student/forgetpassword", controllerHandler({controller: studentforgetPassword, schema: forgotPasswordSchema,}));
 
 router.post(
   "/sessions/student/register",

@@ -7,9 +7,9 @@ plugins:
 
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs18.x
   environment: ${file(../../env/${self:provider.stage}.yml)}
-  stage: ${opt:stage, 'dev'}
+  stage: ${opt:stage, 'prod'}
   profile: kracknow
   region: ap-south-1
   logs:

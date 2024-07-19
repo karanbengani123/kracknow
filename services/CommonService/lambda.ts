@@ -1,6 +1,7 @@
 import {
   APIGatewayProxyEvent,
   APIGatewayProxyHandler,
+  APIGatewayProxyResult,
   Context,
 } from "aws-lambda";
 import ServerlessHttp from "serverless-http";
@@ -17,7 +18,10 @@ const serverLessApp = ServerlessHttp(app, {
 export const handler: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
   context: Context
-) => {
+  ): Promise<APIGatewayProxyResult> => {
+    var response: APIGatewayProxyResult;
+  
+    try {
   if (!instance.connection) {
     console.log("No connection exists");
     instance.connection = await loadDatabase();
@@ -39,6 +43,22 @@ export const handler: APIGatewayProxyHandler = async (
 
   init(instance.connection);
   app.use("/", router);
+  const serverLessResponse = await serverLessApp(event, context);
 
-  return serverLessApp(event, context);
+  // Ensure the 'statusCode' property is present in the response
+  if (!("statusCode" in serverLessResponse)) {
+    throw new Error('Invalid response format: missing "statusCode" property');
+  }
+
+  // Cast the response to APIGatewayProxyResult
+  response = serverLessResponse as APIGatewayProxyResult;
+} catch (error) {
+  console.error(error);
+  response = {
+    statusCode: 500,
+    body: JSON.stringify({ error: "Internal Server Error" }),
+  };
+}
+
+return response;
 };
