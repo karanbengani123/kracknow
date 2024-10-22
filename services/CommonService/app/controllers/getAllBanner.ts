@@ -8,6 +8,7 @@ import { queryLikeString } from '../../../../shared/helpers/string'
 import { IControllerParams } from '../../../../shared/interfaces/IControllerParams'
 
 export const getAllBanner = async (params: IControllerParams<null>) => {
+
   const filterParams = params.args.queryString
 
   const querryParams: FindOptions = {

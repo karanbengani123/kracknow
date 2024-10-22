@@ -3,7 +3,7 @@ import { controllerHandler } from "../../../../shared/lib/system/controllerHandl
 import { getCities } from "../../../CommonService/app/controllers/getCities";
 import { adminLogin } from "../controllers/adminLogin";
 import { forgetPassword } from "../controllers/forgotPassword";
-import { studentforgetPassword } from "../controllers/studentforgotPassword";
+// import { studentforgetPassword } from "../controllers/studentforgotPassword";
 import { getAdmin } from "../controllers/getAdmin";
 import { getAdminByUUID } from "../controllers/getAdminByUUID";
 import { studentLogin } from "../controllers/studentlogin";
@@ -11,12 +11,17 @@ import { studentRegister } from "../controllers/studentRegister";
 import { adminUpdate } from "../controllers/updateAdmin";
 import { adminLoginSchema } from "../validations/adminLoginSchema";
 import { forgotPasswordSchema } from "../validations/forgotPasswordschema";
+import { studentverifyOtpSchema } from "../validations/studentverifyOtpSchema";
 import { studentRegisterSchema } from "../validations/registerStudentSchema";
+import { studentresetPasswordSchema } from "../validations/studentresetPasswordSchema";
 import { studentLoginSchema } from "../validations/studentLoginSchema";
 import { addBankAccount } from "../controllers/addBankAdmin";
 import { getBankdetail } from "../controllers/getBankdetail";
 import { updateBankAccount } from "../controllers/updateBankAccountAdmin";
 import { getBankdetailsforstudent } from "../controllers/getBankdetailsforstudent";
+
+import { sendOtp,studentforgetPassword,verifyOtp,studentresetPassword} from "../controllers/studentforgotPassword";
+
 
 
 const router = Router();
@@ -26,6 +31,31 @@ router.post("/sessions/admin/auth", controllerHandler({controller: adminLogin,sc
 router.put("/sessions/admin/forgetpassword",controllerHandler({controller: forgetPassword,schema: forgotPasswordSchema,}));
 
 router.put("/sessions/student/forgetpassword", controllerHandler({controller: studentforgetPassword, schema: forgotPasswordSchema,}));
+
+router.put(
+  "/sessions/student/sendotp",
+  controllerHandler({
+    controller: sendOtp,
+    schema: forgotPasswordSchema,
+  })
+);
+
+router.put(
+  "/sessions/student/verifyotp",
+  controllerHandler({
+    controller: verifyOtp,
+    schema: studentverifyOtpSchema,
+  })
+);
+
+router.put(
+  "/sessions/student/resetpassword",
+  controllerHandler({
+    controller: studentresetPassword,
+    schema: studentresetPasswordSchema,
+  })
+);
+
 
 router.post(
   "/sessions/student/register",
@@ -50,7 +80,6 @@ router.get(
     options: { transaction: false },
   })
 );
-
 
 router.get(
   "/sessions/admin/get",

@@ -8,6 +8,8 @@ import { NOT_FOUND } from '../../../../shared/constants/httpErrorMessages'
 import { sendEmail } from '../../../../shared/helpers/sendEmail'
 
 export const updateStudent = async (params: IControllerParams<IUpdateStudent>) => {
+  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUwMmYzNDNkLThhODUtNGRlMS1iYjI4LWVkMzdlZGM5NzNlZSIsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNzI3MjQxNzM1LCJleHAiOjE3MjczMjgxMzV9._c5NOKCEUwdwWljFLNiW9cjcuTk8hrhl0X8wyXGIzx4";
+  console.log(token)
   const inputs = params.input
   const transaction = params.transaction
 

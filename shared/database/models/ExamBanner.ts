@@ -5,10 +5,13 @@ class ExamBanner extends Model {
   public uuid?: string;
   public url: string;
   public phoneBanner: string;
+  public videoAdUrl: string | null;
+  public isVideoAdEnabled: boolean;
 
   public readonly createdAt?: Date;
   public readonly updatedAt?: Date;
   public readonly deletedAt?: Date;
+
 }
 export function init(sequelize: Sequelize) {
   ExamBanner.init(
@@ -27,6 +30,16 @@ export function init(sequelize: Sequelize) {
 
       phoneBanner: {
         type: DataTypes.STRING,
+      },
+
+      videoAdUrl: {
+        type: DataTypes.STRING, // Nullable column for videoAdUrl
+        allowNull: true,        // Allowing null for this column
+      },
+      isVideoAdEnabled: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,  // Default to false if not provided
+        allowNull: false,     // Not nullable as it has a default
       },
     },
     makeModelOptions(sequelize, "exam_banner")

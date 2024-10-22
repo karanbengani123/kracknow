@@ -21,8 +21,25 @@ import { getQuestion } from '../controllers/getIndividualQuestionReview'
 import { getPiechartData } from '../controllers/getPiechartData'
 import { postDistributeMoney } from '../controllers/postDistributeMoney'
 import { getPreviousQuestionStatusForExam } from '../controllers/getPreviousQuestionStatusForExam'
+import { registerBattleSchema } from '../validations/registerBattleSchema'
+import { registerBattle,getOpponentBattle } from '../controllers/registerBattle'
 
 const router = Router()
+
+router.post(
+  '/schedules/battle/register',
+  controllerHandler({
+    controller: registerBattle,
+    schema: registerBattleSchema,
+  })
+)
+
+router.get(
+  '/schedules/battles/:battleUUID/opponent',
+  controllerHandler({
+    controller: getOpponentBattle,
+  })
+)
 
 router.post(
   '/schedules/:examScheduleUUID/join',
@@ -31,6 +48,8 @@ router.post(
     schema: joinExamSchema,
   })
 )
+
+
 
 router.delete(
   '/schedules/:scheduleExamParticipationUUID/disjoin',

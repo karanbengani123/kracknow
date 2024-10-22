@@ -59,6 +59,8 @@ import StudentCompletedTournamentExamsStatus, { init as StudentCompletedTourname
 import TournamentScheduledExam, { init as TournamentScheduledExamInit } from "./TournamentScheduledExam";
 import student_addmoney_request, { init as student_addmoney_requestInit } from './AddmoneyRequest'
 import Withdrawallimit, { init as WithdrawallimitInit } from './Withdrawallimit'
+import BattleParticipation, { init as BattleParticipationInit } from './BattleParticipation'
+import Bundle, { init as BundleInit} from './Bundle'
 
 // End
 export function init(sequelize: Sequelize) {
@@ -121,6 +123,8 @@ export function init(sequelize: Sequelize) {
   TournamentScheduledExamInit(sequelize);
   student_addmoney_requestInit(sequelize);
   WithdrawallimitInit(sequelize)
+  BattleParticipationInit(sequelize)
+  BundleInit(sequelize)
   // Execute the relationships
   execute();
 }
@@ -187,5 +191,7 @@ export {
   StudentCompletedTournamentExamsStatus,
   TournamentScheduledExam,
   student_addmoney_request,
-  Withdrawallimit
+  Withdrawallimit,
+  BattleParticipation,
+  Bundle
 };

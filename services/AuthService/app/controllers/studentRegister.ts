@@ -9,7 +9,7 @@ import {
 } from '../../../../shared/database/models'
 import { IStudentRegister } from '../interfaces/IStudentRegister'
 import { ACCOUNT_CREATED_CHECK_EMAIL } from '../../../../shared/constants/httpSuccessMessages'
-import { sendEmail } from '../../../../shared/helpers/sendEmail'
+// import { sendEmail } from '../../../../shared/helpers/sendEmail'
 import {
   ADMIN,
   INBOUND,
@@ -33,7 +33,7 @@ export const studentRegister = async (
   if (existingStudent) {
     throw new HttpBadRequest('student already exists')
   }
-  const password = uuid.v4().split('-')[4]
+  // const password = uuid.v4().split('-')[4]
   const initialamount = await KeyValue.findByPk(NEW_STUDENT_INITIAL_AMOUNT)
   const student = await Student.create(
     {
@@ -41,7 +41,8 @@ export const studentRegister = async (
       firstName: inputs.firstName,
       lastName: inputs.lastName,
       mobileNumber: inputs.mobileNumber,
-      password: generateSha256Password(password),
+      // password: generateSha256Password(password),
+      password: generateSha256Password(inputs.password),
       status: true,
       cityUUID: inputs.city,
       wallet: [
@@ -78,17 +79,17 @@ export const studentRegister = async (
   }
 
   await transaction.commit()
-  if (student) {
-    await sendEmail(inputs.email, 'STUDENT_REGISTER', {
-      body: {
-        firstName: student.firstName,
-        email: student.email,
-        mobileNumber: student.mobileNumber,
-        password: password,
-      },
-      subject: {},
-    })
-  }
+  // if (student) {
+  //   await sendEmail(inputs.email, 'STUDENT_REGISTER', {
+  //     body: {
+  //       firstName: student.firstName,
+  //       email: student.email,
+  //       mobileNumber: student.mobileNumber,
+  //       password: password,
+  //     },
+  //     subject: {},
+  //   })
+  // }
 
   return {
       message: ACCOUNT_CREATED_CHECK_EMAIL,

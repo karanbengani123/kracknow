@@ -7,8 +7,10 @@ import { STUDENT_DETAILS_NOT_FOUND } from '../../../../shared/constants/httpErro
 
 export const getKeyword = async (params: IControllerParams<null>) => {
   const studentUUID = params.user.id
+  console.log(studentUUID)
   const student: Student = await Student.findByPk(studentUUID)
 
+  
   if (!student) {
     throw new HttpNotFound(STUDENT_DETAILS_NOT_FOUND)
   }

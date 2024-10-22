@@ -67,7 +67,7 @@ module.exports = {
       },
       type: {
         allowNull: false,
-        type: DataTypes.ENUM('EXAM', 'QUIZ', 'MOCK_TEST')
+        type: DataTypes.ENUM('EXAM', 'QUIZ', 'MOCK_TEST','BATTLE')
       },
       totalWinningPrize: {
         type: DataTypes.INTEGER

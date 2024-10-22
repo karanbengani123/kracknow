@@ -17,4 +17,4 @@ export const ALLOWED_EMAILS = [
 ]
 
 export const ACCOUNT_CREATED_CHECK_EMAIL =
-    "Account created. Please check your email for credentials.";
+    "Account created successfully.";

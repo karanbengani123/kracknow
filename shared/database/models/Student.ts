@@ -19,10 +19,15 @@ class Student extends Model {
   public quizRegistered: number
   public quizCompleted: number
   public isRegistered: boolean
+  public forgotPasswordOtp: string | null; // Allow it to be nullable
 
   public readonly createdAt?: Date
   public readonly updatedAt?: Date
   public readonly deletedAt?: Date
+  public readonly otpExpiresAt?: Date
+
+  
+  
 }
 export function init(sequelize: Sequelize) {
 Student.init(
@@ -119,7 +124,18 @@ Student.init(
     deletedAt: {
       allowNull: true,
       type: DataTypes.DATE
-    }
+    },
+    forgotPasswordOtp: {
+      allowNull: true,
+      type: DataTypes.STRING,
+    },
+    otpExpiresAt: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
+
+
+
   },
   makeModelOptions(sequelize, 'students')
 )

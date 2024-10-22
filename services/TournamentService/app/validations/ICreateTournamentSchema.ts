@@ -96,6 +96,19 @@ export const createTournamentSchema = checkSchema({
       errorMessage: "isFree is required",
     },
   },
+  enableAd: {
+    exists: {
+      errorMessage: "enableAd is required",
+    },
+    in: ["body"],
+    isEmpty: {
+      errorMessage: "enableAd is required",
+      negated: true,
+    },
+    isBoolean: {
+      errorMessage: "enableAd is required",
+    },
+  },
   isFeatured: {
     exists: {
       errorMessage: "isFeatured is required",

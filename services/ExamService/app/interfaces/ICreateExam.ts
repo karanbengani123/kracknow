@@ -8,6 +8,7 @@ export interface ICreateExam {
   marksPerQuestion: number
   studentLimit: number
   isFree: boolean
+  enableAd: boolean
   joinFee: number
   type: string
   joinDelay: number
@@ -21,4 +22,6 @@ export interface ICreateExam {
   ExamQuestion: any[]
   ExamPrice: any[]
   ExamRankingFactor: any[]
+  videoAdUrl: string; 
+  isVideoAdEnabled: boolean; 
 }

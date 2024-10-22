@@ -41,7 +41,7 @@ export const scheduleExamSchema = checkSchema({
       negated: true
     },
     isIn: {
-      options: [['EXAM','MOCK_TEST','QUIZ']],
+      options: [['EXAM','MOCK_TEST','QUIZ','BATTLE']],
       errorMessage: 'type is required'
     }
   }

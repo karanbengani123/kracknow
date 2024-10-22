@@ -30,6 +30,9 @@ import { postStudentWithdrawReuest } from '../controllers/postStudentWithdrawReu
 import { putNewAdminWithdrawallimitAmount } from '../controllers/putNewAdminWithdrawallimitAmount'
 import { getNewAdminWithdrawallimitAmount } from '../controllers/getNewAdminWithdrawallimitAmount'
 import { newWithdrawalLimitAmountSchema } from '../validations/NewAdminWithdrawallimitAmountSchema'
+import { putNewConversionRate } from '../controllers/putNewConversionRate'
+import { newConversionRateSchema } from '../validations/newConversionRateSchema'
+import { getNewConversionRate } from '../controllers/getNewConversionRate'
 
 const router = Router()
 
@@ -81,6 +84,7 @@ router.get(
     options: { transaction: false },
   })
 )
+
 
 router.post(
   '/students/changepassword',
@@ -137,6 +141,22 @@ router.put(
   controllerHandler({
     controller: putNewStudentInitialAmount,
     schema: newStudentInitialAmountSchema,
+  })
+)
+
+router.get(
+  '/students/amount/conversionrates',
+  controllerHandler({
+    controller: getNewConversionRate,
+    options: { transaction: false },
+  })
+)
+
+router.put(
+  '/students/amount/conversionrates',
+  controllerHandler({
+    controller: putNewConversionRate,
+    schema: newConversionRateSchema,
   })
 )
 

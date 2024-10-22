@@ -44,6 +44,22 @@ export const StudentSchema = checkSchema({
     }
   },
 
+  password: {
+    exists: {
+      errorMessage: 'Password is required'
+    },
+    in: ['body'],
+    isEmpty: {
+      errorMessage: 'Password is required',
+      negated: true
+    },
+    isLength: {
+      errorMessage: 'The Password should be at least 6 characters long',
+      options: { min: 6 }
+    }
+
+  },
+
   mobileNumber: {
     exists: {
       errorMessage: ' Mobile Number is required'

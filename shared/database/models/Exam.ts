@@ -16,6 +16,7 @@ class Exam extends Model {
   public totalQuestions: number;
   public studentLimit: number;
   public isFree: boolean;
+  public enableAd: boolean;
   public joinFee: double;
   public joinDelay: number;
   public totalWinningPrize: number;
@@ -81,7 +82,10 @@ export function init(sequelize: Sequelize) {
       isFree: {
         type: DataTypes.BOOLEAN,
       },
-
+      enableAd: {
+        allowNull: false,
+        type: DataTypes.BOOLEAN,
+      },
       joinDelay: {
         allowNull: false,
         type: DataTypes.INTEGER,

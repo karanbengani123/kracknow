@@ -10,6 +10,7 @@ class Tournament extends Model {
   public webBanner: string;
   public phoneBanner: string;
   public isFree: boolean;
+  public enableAd: boolean;
   public joinFee: double;
   public joinDelay: number;
   public winningPrice: double;
@@ -23,6 +24,9 @@ class Tournament extends Model {
   public pending: number;
   public allowPrimarySelection: boolean;
   public allowSecondarySelection: boolean;
+
+  public videoAdUrl: string | null;
+  public isVideoAdEnabled: boolean;
 
   public readonly createdAt?: Date;
   public readonly updatedAt?: Date;
@@ -59,6 +63,10 @@ export function init(sequelize: Sequelize) {
         type: DataTypes.INTEGER,
       },
       isFree: {
+        allowNull: false,
+        type: DataTypes.BOOLEAN,
+      },
+      enableAd: {
         allowNull: false,
         type: DataTypes.BOOLEAN,
       },
@@ -113,6 +121,15 @@ export function init(sequelize: Sequelize) {
       },
       allowSecondarySelection: {
         type: DataTypes.BOOLEAN,
+      },
+      videoAdUrl: {
+        type: DataTypes.STRING, // Nullable column for videoAdUrl
+        allowNull: true,        // Allowing null for this column
+      },
+      isVideoAdEnabled: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,  // Default to false if not provided
+        allowNull: false,     // Not nullable as it has a default
       },
     },
     makeModelOptions(sequelize, "tournaments")

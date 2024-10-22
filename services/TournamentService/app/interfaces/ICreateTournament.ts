@@ -9,6 +9,7 @@ export interface ICreateTournament {
   marksPerQuestion: number;
   studentLimit: number;
   isFree: boolean;
+  enableAd: boolean;
   joinDelay: number;
   joinFee: number;
   isFeatured: boolean;
@@ -20,4 +21,6 @@ export interface ICreateTournament {
   tournamentExams: any[];
   tournamentPrize: any[];
   tournamentRankingFactor: any[];
+  videoAdUrl: string; 
+  isVideoAdEnabled: boolean; 
 }

@@ -50,6 +50,7 @@ export const addExam = async (params: IControllerParams<ICreateExam>) => {
       }, { transaction })
     }
   }
+  const videoAdUrl = inputs.videoAdUrl || null;
   const genId = UniqueIDGenerator.getInstance.generateID(freshId.label, freshId.id)
   const newExam = await Exam.create({
     title: inputs.title,
@@ -65,6 +66,7 @@ export const addExam = async (params: IControllerParams<ICreateExam>) => {
     totalQuestions: inputs.ExamQuestion ? inputs.ExamQuestion.length : 0,
     studentLimit: inputs.studentLimit,
     isFree: inputs.isFree,
+    enableAd: inputs.enableAd,
     joinFee: inputs.joinFee ? inputs.joinFee : 0,
     type: inputs.type,
     joinDelay: inputs.joinDelay,
@@ -73,6 +75,8 @@ export const addExam = async (params: IControllerParams<ICreateExam>) => {
     isLastRecord: true,
     description: inputs.description || null,
     examBanner: {
+      videoAdUrl: videoAdUrl,  
+      isVideoAdEnabled: Boolean(videoAdUrl),
       url: inputs.ExamBanner,
       phoneBanner: inputs.phoneBanner ? inputs.phoneBanner : null
     },
