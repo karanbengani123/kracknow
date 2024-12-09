@@ -8,7 +8,7 @@ import { debounce } from 'lodash';
 import ReactPaginate from "react-paginate";
 import Environment from "./Environment";
 
-function Cashfree() {
+function TournamentVideofreeview() {
     const [Cashfreelist, setCashfreeList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(5);
@@ -233,31 +233,6 @@ function Cashfree() {
                                                     />
                                                 </div>
                                             </div>
-                                            {/* <div className="row">
-                                                <div className="col-sm-10">
-                                                    <div className="dataTables_info pr-5" id="DataTables_Table_0_info" role="status" aria-live="polite">Showing 1 to 10 of 12 entries</div>
-                                                </div>
-                                                <div className="col-sm-2 ">
-                                                    <div className="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
-                                                        <ul className="pagination pagination-rounded">
-                                                            <li className="paginate_button page-item previous disabled" id="DataTables_Table_0_previous">
-                                                                <a aria-controls="DataTables_Table_0" data-dt-idx={0} tabIndex={0} className="page-link">
-                                                                    <i className="mdi mdi-chevron-left" />
-                                                                </a>
-                                                            </li>
-                                                            <li className="paginate_button page-item active">
-                                                                <a aria-controls="DataTables_Table_0" data-dt-idx={1} tabIndex={0} className="page-link">1</a>
-                                                            </li>
-                                                            <li className="paginate_button page-item ">
-                                                                <a aria-controls="DataTables_Table_0" data-dt-idx={2} tabIndex={0} className="page-link">2</a>
-                                                            </li>
-                                                            <li className="paginate_button page-item next" id="DataTables_Table_0_next">
-                                                                <a aria-controls="DataTables_Table_0" data-dt-idx={3} tabIndex={0} className="page-link"><i className="mdi mdi-chevron-right" /></a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div> */}
                                         </div>
                                     </div>
                                 </div>
@@ -271,4 +246,4 @@ function Cashfree() {
         </>
     )
 }
-export default Cashfree
+export default TournamentVideofreeview

@@ -91,34 +91,37 @@ const Quizadd = () => {
         }
     };
 
+    const [videoPreviewId, setVideoPreviewId] = useState(null);
+    const [error2, setError2] = useState(false);
 
-
-    // const [formValues, setFormValues] = useState([{ type: 'ON_CORRECT_ANSWER', title: '1', time: '1', point: '1' }])
-    // let handleChange = (i, e) => {
-    //     let newFormValues = [...formValues];
-    //     newFormValues[i][e.target.name] = e.target.value;
-    //     setFormValues(newFormValues);
-    // }
-
-    // let addFormFields = () => {
-    //     setFormValues([...formValues, { type: (questionType), title: (titile), time: (time), point: (points) }])
-    //     setExamRankingFactor(formValues)
-    // }
-
-    // console.warn(ExamRankingFactor, "formvalues")
-
-    // let removeFormFields = (i) => {
-    //     let newFormValues = [...formValues];
-    //     newFormValues.splice(i, 1);
-    //     setFormValues(newFormValues);
-    //     alert("Wants To Delete");
-    // }
-    // let handleSubmit = (event) => {
-    //     event.preventDefault();
-    //     alert(JSON.stringify(formValues));
-    // }
+    const handleVideoChangeId = (e) => {
+        setError2(false);
+        const selected = e.target.files[0];
+        const ALLOWED_TYPES = ["video/mp4", "video/webm", "video/ogg"];
+        if (selected && ALLOWED_TYPES.includes(selected.type)) {
+            let reader = new FileReader();
+            reader.onloadend = () => {
+                setVideoPreviewId(reader.result);
+            };
+            reader.readAsDataURL(selected);
+    
+            // Get video duration in seconds
+            const videoElement = document.createElement("video");
+            videoElement.src = URL.createObjectURL(selected);
+            videoElement.onloadedmetadata = () => {
+                const videoDuration = videoElement.duration;  // Duration in seconds
+                console.log("Video duration: ", videoDuration, "seconds");
+                setVideoDuration(videoDuration); // Store video duration in state
+            };
+        } else {
+            setError2(true);
+            console.log("File not supported");
+        }
+    };
+    
 
     const navigate = useNavigate()
+    const [videoAdLength, setvideoAdLength] = useState(null);
     const [show, setShow] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [errorMessage, setErrorMessage] = useState("")
@@ -139,15 +142,18 @@ const Quizadd = () => {
     const [allowPrimarySelection, setAllowPrimarySelection] = useState('')
     const [allowSecondarySelection, setAllowSecondarySelection] = useState('')
     const [joinDelay, setJoinDelay] = useState(0)
+    const [numberOfQuestion, setNumberOfQuestion] = useState('')
     const [ExamKeyword, setExamKeyword] = useState([])
     const [description, setDescription] = useState('')
     const [categoryUUID, setcategoryUUID] = useState('');
     const [ExamBanner, setExamBanner] = useState('');
     const [phoneBanner, setphoneBanner] = useState('');
+    const [videoAdUrl, setvideoAdUrl] = useState('');
     const [ExamQuestion, setExamQuestion] = useState([]);
     const [city, setCity] = useState([]);
     const [ExamCity, setExamCity] = useState([]);
     const [type, setType] = useState("QUIZ")
+    const [adViewDuration, setVideoDuration] = useState(null);
 
     // const [toValue, settoValue] = useState('');
     // const [fromValue, setFromValue] = useState('');
@@ -354,6 +360,28 @@ const Quizadd = () => {
         setTotalLength(result.payload.students.rows.length);
     }
 
+    const handleNumberOfQuestionsChange = (e) => {
+        const value = e.target.valueAsNumber || 0;
+        setNumberOfQuestion(value);
+        const updatedQuestions = [...question];
+        let selectedCount = 0;
+
+        updatedQuestions.forEach((q, idx) => {
+            if (selectedCount < value) {
+                updatedQuestions[idx].checked = true;
+                selectedCount++;
+            } else {
+                updatedQuestions[idx].checked = false;
+            }
+        });
+
+        setQuestion(updatedQuestions); 
+
+        const selectedQuestions = updatedQuestions.slice(0, value).map(q => ({ questionUUID: q.uuid }));
+        setQuestionList(selectedQuestions);
+    };
+
+
     const handlePageChange = async (data) => {
         setCurrentPage(data.selected + 1);
         const questionFromServer = await getQuestionlist(data.selected + 1);
@@ -391,7 +419,6 @@ const Quizadd = () => {
     }
 
 
-    //Search Handler(debounce) and search Table start... 
     const searchHandler = (event) => {
         handler(event);
     };
@@ -414,10 +441,6 @@ const Quizadd = () => {
             setTotalLength(result.payload.list.length);
         }
     }
-
-    // console.warn("Updated ExamKEyword",ExamKeyword)
-
-
 
     const Addexam = async () => {
         if (ExamBanner === '') {
@@ -642,9 +665,9 @@ const Quizadd = () => {
         const catdata = await fetch(`${Environment.server_url}/exams/addexam`, {
             method: "POST",
             body: description ?
-                JSON.stringify({ type, ExamBanner, phoneBanner, title, categoryUUID, description, allowPrimarySelection, allowSecondarySelection, isFeatured, marksPerQuestion, studentLimit, isFree, joinFee, marksPerQuestion, timePerQuestion, totalWinningPrize, joinDelay, ExamKeyword, ExamCity, ExamQuestion:questionListitem, ExamPrice: dataBundle, ExamRankingFactor: dataBundle1 })
+                JSON.stringify({ adViewDuration,videoAdLength,type, ExamBanner, phoneBanner,videoAdUrl, title, categoryUUID, description, allowPrimarySelection, allowSecondarySelection, isFeatured, marksPerQuestion, studentLimit, isFree, joinFee, marksPerQuestion, timePerQuestion, totalWinningPrize, joinDelay, ExamKeyword, ExamCity, ExamQuestion:questionListitem, ExamPrice: dataBundle, ExamRankingFactor: dataBundle1 })
                 :
-                JSON.stringify({ type, ExamBanner, phoneBanner, title, categoryUUID, allowPrimarySelection, allowSecondarySelection, isFeatured, marksPerQuestion, studentLimit, isFree, joinFee, marksPerQuestion, timePerQuestion, totalWinningPrize, joinDelay, ExamKeyword, ExamCity, ExamQuestion:questionListitem, ExamPrice: dataBundle, ExamRankingFactor: dataBundle1 }),
+                JSON.stringify({ adViewDuration,videoAdLength,type, ExamBanner, phoneBanner,videoAdUrl, title, categoryUUID, allowPrimarySelection, allowSecondarySelection, isFeatured, marksPerQuestion, studentLimit, isFree, joinFee, marksPerQuestion, timePerQuestion, totalWinningPrize, joinDelay, ExamKeyword, ExamCity, ExamQuestion:questionListitem, ExamPrice: dataBundle, ExamRankingFactor: dataBundle1 }),
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
@@ -840,54 +863,49 @@ const Quizadd = () => {
         // } catch { }
     }
 
+    async function uploadVideo(file) {
+        const fileObj = file.target.files[0];
+        const fileName = fileObj.name;
+        const fileExtensionMatch = fileName.match(/\.([a-zA-Z0-9]{2,4})$/i); 
 
-    // const handlecheck = (e) => {
-    //     if (e.target.checked) {
-    //         setExamQuestion([...ExamQuestion, { questionUUID:(e.target.value) }]);
-    //     } else {
-    //         const index = ExamQuestion.findIndex((id) => id === e.target.value);
-    //         const updatedArray = ExamQuestion.splice(index, 1);
-    //         setExamQuestion(updatedArray);
-    //         console.warn("QuestionUUID", ExamQuestion)
-    //     }
-    // };
+        
+        const fileExtension = fileExtensionMatch[1]; 
+            
+        const response = await fetch(`${Environment.server_url}/common/filesupload`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            },
+            body: JSON.stringify({
+                "for": "Superadmin",
+                "files": [
+                    {
+                        "extension": fileExtension,
+                        "contentType": "video",
+                        "fileName": fileName
+                    }
+                ]
+            })
 
-    // const handlecheck = (e, index) => {
-    //     question[index].status = false;
-    //     setQuestion(question);
-    //     if (e.target.checked) {
-    //         setExamQuestion([...ExamQuestion, { questionUUID: e.target.value }]);
-    //     } else {
-    //         // setQuestionChecked(false)
-    //         setExamQuestion(ExamQuestion.filter((id) => id !== e.target.value))
-    //         const updatedArray = ExamQuestion.splice(ExamQuestion, 1)
-    //         setExamQuestion(updatedArray)
-    //     }
-    // };
+        });
 
-    // const handlecheck = React.useCallback((e, index)=>{
-    //     question[index].status = false;
-    //     setQuestion(question);
-    // })
+        const result = await response.json();
 
+        const { signedUrl, fileUrl } = result.payload.signedUrls[0];
 
-    // console.warn(ExamCity,"ExamCity")
-
-
+        setvideoAdUrl(fileUrl);
 
 
-    // function handleShortlist(event) {
-    //     var updatedList = [...listId];
-    //     if (event.target.checked) {
-    //       updatedList.push(event.target.value);
-    //     } else {
-    //       updatedList.splice(listId.indexOf(event.target.value), 1);
-    //     }
-    //     setListId(updatedList);
-    //   }
-
-    // console.warn("Keyword", keywords)
-    // console.warn("QuestionUUID Outside", ExamQuestion)
+        await fetch(signedUrl, {
+            method: "PUT",
+            // headers: {
+            //     "Content-Type": "application/json",
+            //     Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            // },
+            body: fileObj,
+        });
+    }
 
     function handleDisabledCheck() {
         if (joinFee > 0) {
@@ -953,7 +971,7 @@ const Quizadd = () => {
                                                                 <button className="popupbtn2">Upload from Banner gallery</button>
                                                             </div>
                                                         </Popup> */}
-                                                        <div className="col-12 col-sm-6 imgageupload">
+                                                        <div className="col-12 col-sm-4 imgageupload">
                                                             <p><b>Quiz Banner</b><span className="required text-danger">*</span></p>
                                                             <div className="container-exam">
                                                                 {error && <p className="errorMsg">File not supported</p>}
@@ -993,7 +1011,7 @@ const Quizadd = () => {
                                                             {/* {<div><p className="ErrorMessage">{ExamBanner === "" ? (ExamBannerErr) : ("")}</p></div>} */}
                                                             <div><p className="bannerError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
                                                         </div>
-                                                        <div className="col-12 col-sm-6 imgageupload">
+                                                        <div className="col-12 col-sm-4 imgageupload">
                                                             <p><b>Phone Banner</b><span className="required text-danger">*</span></p>
                                                             <div className="container-exam">
                                                                 {error1 && <p className="errorMsg">File not supported</p>}
@@ -1027,6 +1045,37 @@ const Quizadd = () => {
                                                             </div>
                                                             <div><p className="phonebannerError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
                                                         </div>
+                                                        <div className="col-12 col-sm-4 imgageupload">
+                                                            <p><b>Video Upload</b></p>
+                                                            <div className="container-exam">
+                                                                {error2 && <p className="errorMsg">File not supported</p>}
+                                                                <div className="imgPreview" style={{ background: videoPreviewId ? `url("${videoPreviewId}") no-repeat center/cover` : "#c2c7d0"}}>
+                                                                    {!videoPreviewId ? (
+                                                                        <>
+                                                                            <label htmlFor="videoUpload" className="customFileUpload">
+                                                                                Choose Video
+                                                                            </label>
+                                                                            <input type="file" id="videoUpload" accept="video/*" // Ensures only video files can be selected
+                                                                                onChange={(e) => {
+                                                                                    handleVideoChangeId(e);
+                                                                                    uploadVideo(e); // Make sure this is called after validation in handleVideoChangeId
+
+                                                                                }}
+                                                                            />
+                                                                        </>
+                                                                    ) : (
+                                                                        <video width="100%" controls>
+                                                                            <source src={videoPreviewId} type="video/mp4" />
+                                                                            Your browser does not support the video tag.
+                                                                        </video>
+                                                                    )}
+                                                                </div>
+                                                                    {videoPreviewId && (
+                                                                        <button className="btn-exam" onClick={() => setVideoPreviewId(null)}>Remove</button>
+                                                                    )}
+                                                                </div>
+                                                        </div>
+
                                                     </div>
 
                                                     <div className="form-row mb-4">
@@ -1052,10 +1101,11 @@ const Quizadd = () => {
                                                             <div><p className="titleError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
                                                         </div>
                                                         <div className="col-sm-4">
-                                                            <p><b>Student limit</b><span className="required text-danger">*</span></p>
-                                                            <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Student limit" onChange={(e) => { setStudentLimit(e.target.valueAsNumber || e.target.value); studentlimitSelected() }}></input>
-                                                            <div><p className="studentlimitError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
+                                                            <p><b>Video length</b></p>
+                                                            <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Video length" onChange={(e) => { setvideoAdLength(e.target.valueAsNumber || e.target.value); }}></input>
+                                                            {/* <div><p className="studentlimitError" style={{ color: "red", fontWeight: 'bold' }}></p></div> */}
                                                         </div>
+                                                       
                                                         {/* <div className="col-sm-3">
                                                             <p><b>Start time</b><span className="required text-danger">*</span></p>
                                                             <input type="datetime-local" name="end_time" id="end_time" className="form-control valid" aria-invalid="false" onChange={(e) => { setStartTime(e.target.value) }} />
@@ -1216,8 +1266,29 @@ const Quizadd = () => {
                                                             </Multiselect>
                                                             <div><p className="examcityError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
                                                         </div>
+                                                        <div className="col-12 col-sm-4">
+                                                            <div className="form-group">
+                                                                <div className="controls">
+                                                                    <p><b>Number of Questions</b></p>
+                                                                    <input
+                                                                        placeholder="Enter number of questions to select"
+                                                                        className="form-control valid"
+                                                                        name="number_of_question"
+                                                                        type="number"
+                                                                        value={numberOfQuestion}
+                                                                        onChange={handleNumberOfQuestionsChange} // Update state and select/deselect questions
+                                                                        min="0"
+                                                                        max={question.length}  // Ensure it doesn't exceed the number of available questions
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-
+                                                    <div className="col-sm-4">
+                                                            <p><b>Student limit</b><span className="required text-danger">*</span></p>
+                                                            <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Student limit" onChange={(e) => { setStudentLimit(e.target.valueAsNumber || e.target.value); studentlimitSelected() }}></input>
+                                                            <div><p className="studentlimitError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
+                                                    </div>
                                                     <div className="form-row mb-4">
                                                         <div className="col-sm">
                                                             <p><b>Keywords</b><span className="required text-danger">*</span></p>

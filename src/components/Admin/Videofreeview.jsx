@@ -7,7 +7,7 @@ import Header from "./Header";
 import Environment from "./Environment";
 import moment from "moment";
 
-function Cashfreereview() {
+function Videofreeview() {
     const [Cashfreelist, setCashfreeList] = useState([])
     const [totalInbound, setTotalInbound] = useState([])
     const [totaloutBound, setTotalOutBound] = useState([])
@@ -20,7 +20,7 @@ function Cashfreereview() {
 
     //To Get The Cashfree List.....
     const getCashfreeList = async (page) => {
-        let result = await fetch(`${Environment.server_url}/wallet/${params.uuid}/history`, {
+        let result = await fetch(`${Environment.server_url}/schedules/all/${params.uuid}/video/student?type=FREE`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -28,7 +28,7 @@ function Cashfreereview() {
             }
         });
         result = await result.json();
-        setCashfreeList(result.payload.wallet.wallettransaction);
+        setCashfreeList(result.payload.reports);
         setTotalInbound(result.payload.totalInbound.map((item) => item.totalInbound));
         setTotalOutBound(result.payload.totalOutbound.map((item) => item.totalOutbound));
         // setTotalPage(Math.ceil(result.payload.lists.count / itemsPerPage));
@@ -68,11 +68,11 @@ function Cashfreereview() {
                             <div className="row">
                                 <div className="col-12">
                                     <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-                                        <h4 className="mb-sm-0">Bank Transaction List</h4>
+                                        <h4 className="mb-sm-0">Video Ad Overview List</h4>
                                         <div className="page-title-right">
                                             <ol className="breadcrumb m-0">
-                                                <li className="breadcrumb-item"><a href="javascript: void(0);">Bank transaction</a></li>
-                                                <li className="breadcrumb-item active">Cashfree transaction list</li>
+                                                <li className="breadcrumb-item"><a href="javascript: void(0);">Video Ad Overview</a></li>
+                                                <li className="breadcrumb-item active">Video Ad Overview List</li>
                                             </ol>
                                         </div>
                                     </div>
@@ -108,11 +108,9 @@ function Cashfreereview() {
                                                     <thead className="thead-light">
                                                         <tr>
                                                             {/* <th>Order id</th> */}
-                                                            <th>Type</th>
                                                             <th>Name</th>
-                                                            {/* <th>Reference id</th> */}
-                                                            <th>Payment Date</th>
-                                                            <th>Payment Mode</th>
+                                                            <th>Start Time</th>
+                                                            <th>End Time</th>
                                                             <th>Amount</th>
                                                             <th>Type</th>
                                                             <th>Status</th>
@@ -184,4 +182,4 @@ function Cashfreereview() {
         </>
     )
 }
-export default Cashfreereview
+export default Videofreeview

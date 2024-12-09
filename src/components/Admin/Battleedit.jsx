@@ -91,35 +91,6 @@ const Quizedit = () => {
         }
     };
 
-    const [videoPreviewId, setVideoPreviewId] = useState(null);
-    const [error2, setError2] = useState(false);
-
-
-    const handleVideoChangeId = (e) => {
-        setError2(false);
-        const selected = e.target.files[0];
-        const ALLOWED_TYPES = ["video/mp4", "video/webm", "video/ogg"];
-        if (selected && ALLOWED_TYPES.includes(selected.type)) {
-            let reader = new FileReader();
-            reader.onloadend = () => {
-                setVideoPreviewId(reader.result);
-            };
-            reader.readAsDataURL(selected);
-    
-            // Get video duration in seconds
-            const videoElement = document.createElement("video");
-            videoElement.src = URL.createObjectURL(selected);
-            videoElement.onloadedmetadata = () => {
-                const videoDuration = videoElement.duration;  // Duration in seconds
-                console.log("Video duration: ", videoDuration, "seconds");
-                setVideoDuration(videoDuration); // Store video duration in state
-            };
-        } else {
-            setError2(true);
-            console.log("File not supported");
-        }
-    };
-
 
     const [formValues, setFormValues] = useState([{}])
     let handleChange = (i, e) => {
@@ -179,7 +150,7 @@ const Quizedit = () => {
     const [joiningFees, setJoiningFees] = useState();
     const [keyword, setGetKeyword] = useState([]);
     const [ExamRankingFactor, setExamRankingFactor] = useState([])
-    const [type, setType] = useState("QUIZ")
+    const [type, setType] = useState("BATTLE")
     const [rankType, setRankType] = useState('')
     const [rankTime, setRankTime] = useState('')
     const [rankPoint, setRankPoint] = useState('')
@@ -195,9 +166,19 @@ const Quizedit = () => {
 
     const [category, setCategory] = useState();
     const [sincategory, setSincategory] = useState([]);
-    const [adViewDuration, setVideoDuration] = useState(null);  
-    const [videoAdLength, setvideoAdLength] = useState(null);
-    const [videoAdUrl, setvideoAdUrl] = useState('');   
+
+
+
+    // const [title, setTitle] = useState();
+    // const [studentLimit, setStudentLimit] = useState();
+    // const [description, setDescription] = useState();
+    // const [isFeatured, setIsFeatured] = useState();
+    // const [ExamBanner, setExamBanner] = useState();
+    // const [isFree, setIsFree] = useState();
+
+    // const [joinDelay, setJoinDelay] = useState();
+    // const [city, setCity] = useState([]);
+    // const [ExamCity, setExamCity] = useState([]);
 
     const [questionType, setQuestionType] = useState()
     const [titile, setTitile] = useState()
@@ -249,6 +230,22 @@ const Quizedit = () => {
     const [prizeAmount8, setPrizeAmount8] = useState('')
 
     const [profilePic, setProfilePic] = useState('')
+
+
+
+
+
+    // const getSinCategory = async () => {
+    //     let result = await fetch(`${Environment.server_url}/categories`, {
+    //         method: "GET",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+    //         }
+    //     });
+    //     result = await result.json();
+    //     setSincategory(result.payload.lists.rows);
+    // }
 
     useEffect(() => {
         // getSinCategory();
@@ -507,53 +504,7 @@ const Quizedit = () => {
         // } catch { }
     }
 
-    async function uploadVideo(file) {
-        // try {
-        const fileObj = file.target.files[0];
-        const fileName = fileObj.name;
-        console.log(fileName)
-        const fileExtensionMatch = fileName.match(/\.([a-zA-Z0-9]{2,4})$/i); 
 
-        
-        const fileExtension = fileExtensionMatch[1]; 
-            
-        const response = await fetch(`${Environment.server_url}/common/filesupload`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
-            },
-            body: JSON.stringify({
-                "for": "Superadmin",
-                "files": [
-                    {
-                        "extension": fileExtension,
-                        "contentType": "video",
-                        "fileName": fileName
-                    }
-                ]
-            })
-
-        });
-
-        const result = await response.json();
-
-        const { signedUrl, fileUrl } = result.payload.signedUrls[0];
-
-        setvideoAdUrl(fileUrl);
-
-
-        await fetch(signedUrl, {
-            method: "PUT",
-            // headers: {
-            //     "Content-Type": "application/json",
-            //     Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
-            // },
-            body: fileObj,
-        });
-        console.log("file url", fileUrl)
-        // } catch { }
-    }
 
 
     const [prizeAmount, setPrizeAmount] = useState([]);
@@ -574,8 +525,6 @@ const Quizedit = () => {
         setphoneBanner(result.payload.response.phoneBanner)
         setImgPreview(result.payload.response.banner)
         setImgPreviewId(result.payload.response.phoneBanner)
-        setVideoPreviewId(result.payload.response.videoAdUrl)
-        setvideoAdLength(result.payload.response.videoAdLength)
         setcategoryUUID(result.payload.response.categoryUUID)
         setTitle(result.payload.response.title)
         setStudentLimit(result.payload.response.studentLimit)
@@ -599,6 +548,18 @@ const Quizedit = () => {
         // setQuestions(result.payload.response.questions)
         setIsFree(result.payload.response.isFree)
         settimePerQuestion(result.payload.response.timePerQuestion)
+        // setQuestionCheck(result.payload.reponse.)
+        // setPerQuestionTimeLimit(result.payload.response.timePerQuestion)
+        // setRanks(result.payload.response.rankingFactor)
+        // rank.map((item)=>
+        // <>
+        // <span>{setRankType(item.type)}</span>
+        // <span>{setRankPoint(item.point)}</span>
+        // <span>{setRankTime(item.time)}</span>
+        // <span>{setRankTitle(item.title)}</span>
+        // </>
+        // )
+        // setRankingFactor(result.payload.response.rankingFactor)
 
         setPrizeAmount0(result.payload.response.priceRatio[0].amount)
         setPrizeAmount1(result.payload.response.priceRatio[1].amount)
@@ -614,6 +575,24 @@ const Quizedit = () => {
         setRankingFactor(result.payload.response.rankingFactor)
     }
 
+    // console.warn(category,"repopulated category")
+    // useEffect(() => {
+    //     console.log("values ", prizeAmount)
+    //     if (prizeAmount.length) {
+    //         console.log("length true")
+
+    //         prizeAmount.map(value => {
+    //             Array.from(document.getElementsByClassName('rankList')).map(currObj => {
+    //                 currObj.getElementsByTagName("input")[0].value = value.fromValue
+    //                 currObj.getElementsByTagName("input")[0].value = value.toValue
+    //                 currObj.getElementsByTagName("input")[2].value = value.amount
+    //                 console.log(currObj.getElementsByTagName("input")[0])
+    //             })
+    //         })
+    //     }
+    //     setIndexes(prizeAmount)
+    // }, [prizeAmount])
+
     useEffect(() => {
         if (prizeAmount.length) {
             console.log("length true", document.getElementsByClassName('rankList'))
@@ -628,6 +607,16 @@ const Quizedit = () => {
             })
 
         }
+        // useEffect(() => {
+        //     // value={prizeAmount[num]?.fromValue || 0}
+        //     // value={prizeAmount[num]?.toValue || 0}
+        //     // value={prizeAmount[num]?.amount || 0}
+        //     Array.from(document.getElementsByClassName("rankList")).map(obj => {
+        //         Array.from(document.getElementsByTagName("input")).map(inputObj=>{
+        //             console.log("inval",inputObj)
+        //         })
+        //     })
+        // // }, [indexes])
 
     }, [prizeAmount])
 
@@ -643,11 +632,37 @@ const Quizedit = () => {
                 currObj.getElementsByTagName("input")[2].value = rankingFactor[index].points
                 currObj.getElementsByTagName("input")[1].value = rankingFactor[index].time
                 currObj.getElementsByTagName("input")[3].value = rankingFactor[index].coins
+                // console.log("///////",rankingFactor[index].type)
+                // console.log("#######",rankingFactor[index].title)
+                // console.log("#######",rankingFactor[index].time)
+                // console.log("#######",rankingFactor[index].points)
+
+                //     index+=1;
             })
 
         }
     }, [rankingFactor])
 
+    // useEffect(()=>{
+    //     console.log("values ",rankingFactor)
+    //     if(rankingFactor.length){
+    //         console.log("length 1 true")
+
+    //         rankingFactor.map(value => {
+    //             Array.from(document.getElementsByClassName('examList')).map(currObj => {
+    //                 currObj.getElementsByTagName("select")[0].value = value.type
+    //                 currObj.getElementsByTagName("input")[1].value = value.title
+    //                 currObj.getElementsByTagName("input")[2].value = value.time
+    //                 currObj.getElementsByTagName("input")[3].value = value.point
+    //                 console.log(currObj.getElementsByTagName("input")[0])
+    //             })
+    //         })
+    //     }
+    //     setIndexes1(rankingFactor)
+    // },[rankingFactor])
+
+
+    // Edit Exam by UUID...
     const updateExam = async () => {
         const rank = [];
         rank.push({
@@ -746,7 +761,7 @@ const Quizedit = () => {
 
         let result = await fetch(`${Environment.server_url}/exams/${params.uuid}`, {
             method: "PUT",
-            body: JSON.stringify({ adViewDuration,videoAdLength,videoAdUrl,categoryUUID, webBanner, phoneBanner, ExamCity, ExamKeyword, ExamPrice: dataBundle, ExamQuestion: questions, allowPrimarySelection, allowSecondarySelection, description, isFeatured, isFree, joinDelay, joinFee, marksPerQuestion, timePerQuestion, studentLimit, title, totalWinningPrize, ExamRankingFactor: dataBundle1 }),
+            body: JSON.stringify({ categoryUUID, webBanner, phoneBanner, ExamCity, ExamKeyword, ExamPrice: dataBundle, ExamQuestion: questions, allowPrimarySelection, allowSecondarySelection, description, isFeatured, isFree, joinDelay, joinFee, marksPerQuestion, timePerQuestion, studentLimit, title, totalWinningPrize, ExamRankingFactor: dataBundle1 }),
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
@@ -756,7 +771,7 @@ const Quizedit = () => {
             if (catdata.status === 200) {
                 setShowSuccess(true);
                 setTimeout(() => {
-                    navigate("/Quiz");
+                    navigate("/Battle");
                 }, 3000);
                 // navigate('../Exam');
                 return (catdata.json());
@@ -850,6 +865,17 @@ const Quizedit = () => {
         handleDisabledCheck();
     }, [joinFee])
 
+    // function handleDisableCheck() {
+    //     if (timePerQuestion < 0) {
+    //         document.getElementById("marksper_question").style.pointerEvents = "none"
+    //     } else {
+    //         document.getElementById("marksper_question").style.pointerEvents = "auto"
+    //     }
+    // }
+    // useEffect(() => {
+    //     handleDisableCheck();
+    // }, [timePerQuestion])
+
     if (show === true) {
         setTimeout(() => setShow(false), 3000);
     }
@@ -868,11 +894,11 @@ const Quizedit = () => {
                             <div className="row">
                                 <div className="col-12">
                                     <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-                                        <h4 className="mb-sm-0">Edit Quiz</h4>
+                                        <h4 className="mb-sm-0">Edit Battle</h4>
                                         <div className="page-title-right">
                                             <ol className="breadcrumb m-0">
-                                                <Link to="/Quiz" className="breadcrumb-item">Quiz</Link>
-                                                <li className="breadcrumb-item active">Edit Quiz</li>
+                                                <Link to="/Battle" className="breadcrumb-item">Battle</Link>
+                                                <li className="breadcrumb-item active">Edit Battle</li>
                                             </ol>
                                         </div>
                                     </div>
@@ -913,7 +939,7 @@ const Quizedit = () => {
                                                                 <button className="popupbtn2">Upload from Banner gallery</button>
                                                             </div>
                                                         </Popup> */}
-                                                        <div className="col-12 col-sm-4 imgageupload">
+                                                        <div className="col-12 col-sm-6 imgageupload">
                                                             <p><b>Web Banner</b></p>
                                                             <div className="container-exam">
                                                                 {error && <p className="errorMsg">File not supported</p>}
@@ -953,7 +979,7 @@ const Quizedit = () => {
                                                                 )}
                                                             </div>
                                                         </div>
-                                                        <div className="col-12 col-sm-4 imgageupload">
+                                                        <div className="col-12 col-sm-6 imgageupload">
                                                             <p><b>Phone Banner</b></p>
                                                             <div className="container-exam">
                                                                 {error1 && <p className="errorMsg">File not supported</p>}
@@ -985,47 +1011,6 @@ const Quizedit = () => {
                                                                 )}
                                                             </div>
                                                         </div>
-                                                        <div className="col-12 col-sm-4 imgageupload">
-                                                            <p><b>Video</b></p>
-                                                            <div className="container-exam">
-                                                                {error1 && <p className="errorMsg">File not supported</p>}
-                                                                <div className="imgPreview">
-                                                                    {/* Show video preview if available */}
-                                                                    {videoPreviewId ? (
-                                                                        <video 
-                                                                            controls 
-                                                                            src={videoPreviewId} 
-                                                                            style={{
-                                                                                width: "100%",       // Ensure the video takes up full container width
-                                                                                height: "100%",      // Ensure the video takes up full container height
-                                                                                objectFit: "cover",  // Apply cover style (scale and crop)
-                                                                            }}
-                                                                        />
-                                                                    ) : (
-                                                                        <>
-                                                                            {/* Show file upload button if no video is selected */}
-                                                                            <label htmlFor="fileUpload2" className="customFileUpload">
-                                                                                Add Video
-                                                                            </label>
-                                                                            <input 
-                                                                                type="file" 
-                                                                                id="fileUpload2"  
-                                                                                accept="video/*"
-                                                                                onChange={(e) => {
-                                                                                    handleVideoChangeId(e);
-                                                                                    uploadVideo(e);
-                                                                                }}
-                                                                            />
-                                                                        </>
-                                                                    )}
-                                                                </div>
-                                                                {videoPreviewId && (
-                                                                    <button className="btn-exam" onClick={() => setVideoPreviewId(null)}>
-                                                                        Remove
-                                                                    </button>
-                                                                )}
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                     <div className="form-row mb-4">
                                                         <div className="col-sm-4">
@@ -1041,14 +1026,12 @@ const Quizedit = () => {
                                                         <div className="col-sm-4">
 
                                                             <p><b>Title</b><span className="required text-danger">*</span></p>
-                                                            <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Quiz title" onChange={(e) => setTitle(e.target.value)} value={title}></input>
+                                                            <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Battle title" onChange={(e) => setTitle(e.target.value)} value={title}></input>
                                                         </div>
                                                         <div className="col-sm-4">
-                                                            <p><b>Video length</b></p>
-                                                            <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Video length" onChange={(e) => { setvideoAdLength(e.target.valueAsNumber || e.target.value); }} value={videoAdLength}></input>
-                                                            {/* <div><p className="studentlimitError" style={{ color: "red", fontWeight: 'bold' }}></p></div> */}
+                                                            <p><b>Student limit</b><span className="required text-danger">*</span></p>
+                                                            <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Student limit" onChange={(e) => { setStudentLimit(e.target.valueAsNumber || e.target.value) }} value={studentLimit}></input>
                                                         </div>
-                                                       
 
                                                     </div>
 
@@ -1155,10 +1138,6 @@ const Quizedit = () => {
                                                             <Multiselect options={city} selectedValues={ExamCity} onSelect={setExamCity} emptyRecordMsg={"No City Found"} displayValue="city" class="form-control" id="exampleFormControlInput1" >
                                                             </Multiselect>
                                                         </div>
-                                                        <div className="col-sm-4">
-                                                            <p><b>Student limit</b><span className="required text-danger">*</span></p>
-                                                            <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Student limit" onChange={(e) => { setStudentLimit(e.target.valueAsNumber || e.target.value) }} value={studentLimit}></input>
-                                                        </div>
                                                     </div>
 
                                                     <div className="form-row mb-4">
@@ -1253,6 +1232,12 @@ const Quizedit = () => {
                                                                     <table className="table table-centered datatable dt-responsive nowrap" style={{ borderCollapse: 'collapse', borderSpacing: 0, width: '100%' }}>
                                                                         <thead className="thead-light">
                                                                             <tr>
+                                                                                {/* <th style={{ width: 20 }}>
+                                                                                <div className="form-check">
+                                                                                    <input type="checkbox" className="form-check-input" id="customercheck" />
+                                                                                    <label className="form-check-label mb-0" htmlFor="customercheck">&nbsp;</label>
+                                                                                </div>
+                                                                            </th> */}
                                                                                 <th>Question</th>
                                                                                 <th>Sub category</th>
                                                                                 <th>Options</th>
@@ -1409,34 +1394,7 @@ const Quizedit = () => {
                                                                             <td><input type="number" className="form-control" disabled onChange={(e) => { setPrizeNumber0(parseInt(e.target.value)) }} value={prizeNumber0}></input></td>
                                                                             <td><input type="number" name="exam_ranking_factor_point[]" className="form-control" placeholder="Price" onChange={(e) => { setPrizeAmount0(parseInt(e.target.value)) }} value={prizeAmount0} /></td>
                                                                         </tr>
-                                                                        <tr className="exam-ranking-factor-tr-3">
-                                                                            <td><input type="number" className="form-control" disabled onChange={(e) => { setPrizeNumber1(parseInt(e.target.value)) }} value={prizeNumber1}></input></td>
-                                                                            <td><input type="number" name="exam_ranking_factor_point[]" className="form-control" placeholder="Price" onChange={(e) => { setPrizeAmount1(parseInt(e.target.value)) }} value={prizeAmount1} /></td>
-                                                                        </tr>
-                                                                        <tr className="exam-ranking-factor-tr-3">
-                                                                            <td><input type="number" className="form-control" disabled onChange={(e) => { setPrizeNumber2(parseInt(e.target.value)) }} value={prizeNumber2}></input></td>
-                                                                            <td><input type="number" name="exam_ranking_factor_point[]" className="form-control" placeholder="Price" onChange={(e) => { setPrizeAmount2(parseInt(e.target.value)) }} value={prizeAmount2} /></td>
-                                                                        </tr>
-                                                                        <tr className="exam-ranking-factor-tr-3">
-                                                                            <td><input type="number" className="form-control" disabled onChange={(e) => { setPrizeNumber3(parseInt(e.target.value)) }} value={prizeNumber3}></input></td>
-                                                                            <td><input type="number" name="exam_ranking_factor_point[]" className="form-control" placeholder="Price" onChange={(e) => { setPrizeAmount3(parseInt(e.target.value)) }} value={prizeAmount3} /></td>
-                                                                        </tr>
-                                                                        <tr className="exam-ranking-factor-tr-3">
-                                                                            <td><input type="number" className="form-control" disabled onChange={(e) => { setPrizeNumber4(parseInt(e.target.value)) }} value={prizeNumber4}></input></td>
-                                                                            <td><input type="number" name="exam_ranking_factor_point[]" className="form-control" placeholder="Price" onChange={(e) => { setPrizeAmount4(parseInt(e.target.value)) }} value={prizeAmount4} /></td>
-                                                                        </tr>
-                                                                        <tr className="exam-ranking-factor-tr-3">
-                                                                            <td><input type="number" className="form-control" disabled onChange={(e) => { setPrizeNumber5(parseInt(e.target.value)) }} value={prizeNumber5}></input></td>
-                                                                            <td><input type="number" name="exam_ranking_factor_point[]" className="form-control" placeholder="Price" onChange={(e) => { setPrizeAmount5(parseInt(e.target.value)) }} value={prizeAmount5} /></td></tr>
-                                                                        <tr className="exam-ranking-factor-tr-3">
-                                                                            <td><input type="number" className="form-control" disabled onChange={(e) => { setPrizeNumber6(parseInt(e.target.value)) }} value={prizeNumber6}></input></td>
-                                                                            <td><input type="number" name="exam_ranking_factor_point[]" className="form-control" placeholder="Price" onChange={(e) => { setPrizeAmount6(parseInt(e.target.value)) }} value={prizeAmount6} /></td></tr>
-                                                                        <tr className="exam-ranking-factor-tr-3">
-                                                                            <td><input type="number" className="form-control" disabled onChange={(e) => { setPrizeNumber7(parseInt(e.target.value)) }} value={prizeNumber7}></input></td>
-                                                                            <td><input type="number" name="exam_ranking_factor_point[]" className="form-control" placeholder="Price" onChange={(e) => { setPrizeAmount7(parseInt(e.target.value)) }} value={prizeAmount7} /></td></tr>
-                                                                        <tr className="exam-ranking-factor-tr-3">
-                                                                            <td><input type="number" className="form-control" disabled onChange={(e) => { setPrizeNumber8(parseInt(e.target.value)) }} value={prizeNumber8}></input></td>
-                                                                            <td><input type="number" name="exam_ranking_factor_point[]" className="form-control" placeholder="Price" onChange={(e) => { setPrizeAmount8(parseInt(e.target.value)) }} value={prizeAmount8} /></td> </tr>
+                                                                       
                                                                     </tbody>
 
                                                                 </table>
@@ -1473,10 +1431,10 @@ const Quizedit = () => {
                                                                     </fieldset>
                                                                 );
                                                             })}
-
+{/* 
                                                             <button type="button" className="btn btn-sm btn-warning mt-2" onClick={addRank}>
                                                                 Add more
-                                                            </button>
+                                                            </button> */}
                                                         </form>
                                                     </div>
 
@@ -1548,7 +1506,7 @@ const Quizedit = () => {
                                                             }
                                                             Save
                                                         </button>
-                                                        <Link to="/Quiz"><button type="button" class="btn">Cancel</button></Link>
+                                                        <Link to="/Battle"><button type="button" class="btn">Cancel</button></Link>
                                                     </div>
                                                 </form>
                                             </div>

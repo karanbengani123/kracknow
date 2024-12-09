@@ -20,6 +20,8 @@ function Keywordadd() {
     let navigate = useNavigate()
 
     const [attribute, setAttribute] = useState('')
+    const [icon, setIcon] = useState('')
+    const [description,setDescription] = useState('')
     const [status, setStatus] = useState('')
     const [show, setShow] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
@@ -30,7 +32,47 @@ function Keywordadd() {
     const [attributeErr, setAttributeErr] = useState('')
     const [statusErr, setStatusErr] = useState('')
 
+    async function uploadProfile(file) {
+        // try {
+        const fileObj = file.target.files[0];
+        const fileName = fileObj.name;
+        const fileExtension = fileName.match(/[a-zA-Z]{2,4}$/)[0];
+        console.log(fileName, fileExtension)
+        const response = await fetch(`${Environment.server_url}/common/filesupload`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            },
+            body: JSON.stringify({
+                "for": "Superadmin",
+                "files": [
+                    {
+                        "extension": fileExtension,
+                        "contentType": "image",
+                        "fileName": fileName
+                    }
+                ]
+            })
 
+        });
+
+        const result = await response.json();
+        const { signedUrl, fileUrl } = result.payload.signedUrls[0];
+        setIcon(fileUrl);
+
+
+        await fetch(signedUrl, {
+            method: "PUT",
+            // headers: {
+            //     "Content-Type": "application/json",
+            //     Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            // },
+            body: fileObj,
+        });
+        console.log("file url", fileUrl)
+        // } catch { }
+    }
 
     //URL For The Add-Keyword......
     const saveKeyword = async () => {
@@ -39,6 +81,20 @@ function Keywordadd() {
         }
         else {
             document.getElementsByClassName('keywordNameError')[0].innerText = ""
+        }
+
+        if (description === '') {
+            document.getElementsByClassName('descriptionError')[0].innerText = "This field is required"
+        }
+        else {
+            document.getElementsByClassName('descriptionError')[0].innerText = ""
+        }
+
+        if (icon === '') {
+            document.getElementsByClassName('keywordIconError')[0].innerText = "This field is required"
+        }
+        else {
+            document.getElementsByClassName('keywordIconError')[0].innerText = ""
         }
 
         if (status === '') {
@@ -55,7 +111,7 @@ function Keywordadd() {
         }, 5000);
         const catdata = await fetch(`${Environment.server_url}/keywords`, {
             method: "POST",
-            body: JSON.stringify({ attribute, status }),
+            body: JSON.stringify({ attribute, status,icon,description }),
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
@@ -84,6 +140,14 @@ function Keywordadd() {
     }
     const keywordStatusSelected = () => {
         document.getElementsByClassName('keywordStatusError')[0].innerText = ""
+    }
+
+    const KeywordDescriptionSelected = () => {
+        document.getElementsByClassName('descriptionError')[0].innerText = ""
+    }
+
+    const KeywordIconSelected = () => {
+        document.getElementsByClassName('keywordIconError')[0].innerText = ""
     }
 
     if (show === true) {
@@ -143,6 +207,19 @@ function Keywordadd() {
                                                             <div><p className="keywordNameError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
                                                         </div>
                                                         <div className="col-12 col-sm-4">
+                                                            <p><b>Icon</b></p>
+                                                            <div className="choose-file">
+                                                                <input type="file" className="form-control form-control-prepended" id="fileUpload"
+                                                                    onChange={(e) => { uploadProfile(e);KeywordIconSelected() }}
+                                                                // value={icon}
+                                                                
+                                                                />
+                                                            <div><p className="keywordIconError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
+
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div className="col-12 col-sm-4">
                                                             <p><b>Status<span class="required text-danger">*</span></b></p>
                                                             {/* <select name="status" onChange={(e)=>{setStatus(e.target.value)}} className="form-select form-select mb-2 form-control valid" aria-label="Default select example">
                                                             <option value={true} selected>Active</option>
@@ -156,6 +233,12 @@ function Keywordadd() {
                                                                 <option value={false} >In-Active</option>
                                                             </select>
                                                             <div><p className="keywordStatusError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
+                                                        </div>
+                                                        <div className="col-12 col-sm-4">
+                                                            <p><b>Description</b></p>
+                                                            <textarea className="form-control" id="exampleFormControlTextarea1" rows="4" onChange={(e) => { setDescription(e.target.value); KeywordDescriptionSelected() }}></textarea>
+                                                            {/* {<div><p className="ErrorMessage">{description === "" ? (descriptionErr) : ("")}</p></div>} */}
+                                                            <div><p className="descriptionError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
                                                         </div>
                                                     </div>
                                                     <div className="button">

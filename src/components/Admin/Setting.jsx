@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../CssFile/Student.css";
 import { Link } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
 import SideNav from "./SideNav";
 import Environment from "./Environment";
+import { Editor } from "@tinymce/tinymce-react";
 
 //testind pending for update record
 
 function Setting() {
   const [amount, setAmount] = useState("");
+  const [rupeeAmount, setRupeeAmount] = useState("");
+  const [coinAmount, setCoinAmount] = useState("");
+  const [conversionRate, setConversionRate] = useState({ coin: "", rupee: "" });
   const [minamount, setMinamount] = useState("");
   const [maxamount, setMaxamount] = useState("");
   const [upi, setUpi] = useState("");
@@ -33,6 +37,8 @@ function Setting() {
   const [newEntry, setNewEntry] = useState(false);
   const [selectedId, setSelectedId] = useState("");
   const [updateErr, setUpdateErr] = useState("");
+
+  const [title, setTitle] = useState("");
   if (show === true) {
     setTimeout(() => setShow(false), 5000);
   }
@@ -41,6 +47,7 @@ function Setting() {
   }
   useEffect(() => {
     getStudent();
+    getConversionRates();
     fetchbankDetails();
     getWithdrawal();
   }, []);
@@ -255,16 +262,8 @@ function Setting() {
       }
     }
   };
-  console.log("error", error);
 
   const updateStudent = async () => {
-    // setStartExamDisable(true)
-    // setShowLoaderShow(true)
-    // setTimeout(() => {
-    //     setStartExamDisable(false);
-    //     setShowLoaderShow(false);
-    // }, 5000);
-
     let result = await fetch(
       `${Environment.server_url}/students/amount/initialamount`,
       {
@@ -308,12 +307,11 @@ function Setting() {
     setAmount(result.payload.intValue);
   };
   const updateWithdrawal = async () => {
-
     let result = await fetch(
       `${Environment.server_url}/students/amount/withdrawallimit`,
       {
         method: "PUT",
-        body: JSON.stringify({ minamount , maxamount }),
+        body: JSON.stringify({ minamount, maxamount }),
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
@@ -322,8 +320,8 @@ function Setting() {
     )
       .then((catdata) => {
         if (catdata.status === 200) {
-          setMinamount('')
-          setMaxamount('')
+          setMinamount("");
+          setMaxamount("");
           setShowSuccess(true);
           setTimeout(() => {
             getWithdrawal();
@@ -351,11 +349,134 @@ function Setting() {
       }
     );
     result = await result.json();
-    console.log(result.payload)
-    setMinamount(result.payload.minval)
-    setMaxamount(result.payload.maxval)
+    console.log(result.payload);
+    setMinamount(result.payload.minval);
+    setMaxamount(result.payload.maxval);
     // setAmount(result.payload.intValue);
   };
+  const updateConversionRate = async () => {
+    let result = await fetch(
+      `${Environment.server_url}/students/amount/conversionrates`,
+      {
+        method: "PUT",
+        body: JSON.stringify({ coin: coinAmount, rupee: rupeeAmount }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+        },
+      }
+    )
+      .then((catdata) => {
+        if (catdata.status === 200) {
+          setMinamount("");
+          setMaxamount("");
+          setShowSuccess(true);
+          setTimeout(() => {
+            getConversionRates();
+          }, 1000);
+          // navigate('../Exam');
+          return catdata.json();
+        } else {
+          setShow(true);
+          return catdata.json();
+        }
+      })
+      .then((catdata) => {
+        setErrorMessage(catdata.message);
+      });
+  };
+
+  const getConversionRates = async () => {
+    let result = await fetch(
+      `${Environment.server_url}/students/amount/conversionrates`, // Adjust the endpoint as needed
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+        },
+      }
+    );
+
+    if (result.ok) {
+      const data = await result.json();
+      // setConversionRate(data.payload); // Expecting payload to have { coin, rupee }
+      setRupeeAmount(data.payload.rupee);
+      setCoinAmount(data.payload.coin);
+    } else {
+      const errorData = await result.json();
+      setErrorMessage(errorData.message);
+    }
+  };
+
+  const editorRef = useRef(null);
+  const log = () => {
+    if (editorRef.current) {
+      // console.log(editorRef.current.getContent());
+    }
+  };
+
+  const onEditorStateChange = (title) => {
+    document.getElementsByClassName("titleError")[0].innerText = "";
+    return setTitle(title);
+  };
+
+  const uploadFileToS3 = async (blobInfo) => {
+    const fileName = Date.now() + "-" + blobInfo.filename();
+    const fileExtension = fileName.match(/[a-zA-Z]{2,4}$/)[0];
+
+    const response = await fetch(
+      `${Environment.server_url}/common/filesupload`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+        },
+        body: JSON.stringify({
+          for: "Superadmin",
+          files: [
+            {
+              extension: fileExtension,
+              contentType: "image",
+              fileName: fileName,
+            },
+          ],
+        }),
+      }
+    );
+
+    const result = await response.json();
+    const { signedUrl, fileUrl } = result.payload.signedUrls[0];
+    const file = new File([blobInfo.blob()], fileName);
+
+    await fetch(signedUrl, {
+      method: "PUT",
+      body: file,
+    });
+
+    return fileUrl;
+  };
+
+  const tinyEditorUploadHandler = (blobInfo, progress) =>
+    new Promise((resolve, reject) => {
+      uploadFileToS3(blobInfo).then((url) => {
+        progress(url);
+        resolve(url);
+      });
+    });
+
+  const handleEditorChange = (e) => {
+    setTitle(e.target.getContent());
+
+    document.getElementsByClassName("titleError")[0].innerText = "";
+
+    // console.log(
+    //   'Content was updated:',
+    //   e.target.getContent()
+    // );
+  };
+
   return (
     <>
       <Header />
@@ -627,6 +748,123 @@ function Setting() {
                           {!newEntry ? "Update" : "Add"}
                         </button>
                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-lg-12">
+                  <div className="card">
+                    <div className="card-body">
+                      <div className="row">
+                        <div className="col-sm-4">
+                          <h6>
+                            <b>Rupee </b>
+                          </h6>
+                          <input
+                            type={"number"}
+                            placeholder={"Enter Rupee"}
+                            value={rupeeAmount}
+                            onChange={(e) =>
+                              setRupeeAmount(e.target.valueAsNumber)
+                            }
+                            className="form-control"
+                          />
+                        </div>
+                        <div className="col-sm-4">
+                          <h6>
+                            <b>Coin</b>
+                          </h6>
+                          <input
+                            type={"number"}
+                            placeholder={"Enter Coin"}
+                            value={coinAmount}
+                            onChange={(e) =>
+                              setCoinAmount(e.target.valueAsNumber)
+                            }
+                            className="form-control"
+                          />
+                        </div>
+                        <div className="col-sm-3 sendmoneybtn">
+                          <button
+                            type="button"
+                            className="ml-2 btn btn-success sendMoneyButton"
+                            onClick={() => updateConversionRate()}
+                          >
+                            {" "}
+                            Save{" "}
+                          </button>
+                        </div>
+                      </div>
+                      {/* {errorMessage && <div className="alert alert-danger">{errorMessage}</div>} */}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-lg-12">
+                  <div className="card">
+                    <div className="card-body">
+                      <div className="row">
+                        <p>
+                          <b>Terms & Policies</b>
+                        </p>
+                        <div>
+                          <Editor
+                            apiKey=""
+                            onInit={(evt, editor) =>
+                              (editorRef.current = editor)
+                            }
+                            onEditorStateChange={(event) =>
+                              onEditorStateChange(event)
+                            }
+                            editorState={title}
+                            init={{
+                              branding: false,
+                              height: 500,
+                              menubar:
+                                "file edit insert format table tools help",
+                              plugins: ["paste image help wordcount"],
+                              toolbar:
+                                "undo redo | formatselect | " +
+                                "bold italic backcolor | alignleft aligncenter " +
+                                "alignright alignjustify | bullist numlist outdent indent | " +
+                                "removeformat | help | image | wordcount",
+                              content_style:
+                                "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                              file_picker_types: "image",
+                              image_title: true,
+                              automatic_uploads: true,
+                              selector: "textarea#file-picker",
+                              images_upload_handler: tinyEditorUploadHandler,
+
+                              // images_upload_url: `${Environment.server_url}/common/filesupload`,
+                            }}
+                            onChange={handleEditorChange}
+                          />
+                          <div>
+                            <p
+                              className="titleError"
+                              style={{ color: "red", fontWeight: "bold" }}
+                            ></p>
+                          </div>
+                          <div
+                            className="sendmoneybtn"
+                            style={{ display: "flex", justifyContent: "end" }}
+                          >
+                            <button
+                              type="button"
+                              className="ml-2 btn btn-success sendMoneyButton"
+                              onClick={() => addBankDetails()}
+                            >
+                              {!newEntry ? "Update" : "Add"}
+                            </button>
+                          </div>
+                          {/* onChange={(e) => { setQuestionTitle(log) }} */}
+                          {/* <button onClick={log}>Log editor content</button> */}
+                        </div>
+                      </div>
+                      {/* {errorMessage && <div className="alert alert-danger">{errorMessage}</div>} */}
                     </div>
                   </div>
                 </div>

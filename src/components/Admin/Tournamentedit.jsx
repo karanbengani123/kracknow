@@ -28,6 +28,8 @@ const Tournamentedit = () => {
     const [text, setText] = useState("");
     const [isfreecheckboxcheck, setIsFreeCheckBoxCheck] = useState(false)
     const [perquestiontimelimitcheckboxcheck, setPerQuestionTimeLimitcheckboxcheck] = useState(false)
+    const [videoAdUrl, setvideoAdUrl] = useState('');     
+    const [adViewDuration, setVideoDuration] = useState(null);  
 
     const [inputList, setInputList] = useState([{ firstName: "" }]);
 
@@ -52,9 +54,6 @@ const Tournamentedit = () => {
         setInputList([...inputList, { firstName: "" }]);
     };
     const navigate = useNavigate()
-
-
-
 
     const handleImageChange = (e) => {
         setError(false);
@@ -89,6 +88,35 @@ const Tournamentedit = () => {
         }
     };
 
+    const [videoPreviewId, setVideoPreviewId] = useState(null);
+    const [error2, setError2] = useState(false);
+
+
+    const handleVideoChangeId = (e) => {
+        setError2(false);
+        const selected = e.target.files[0];
+        const ALLOWED_TYPES = ["video/mp4", "video/webm", "video/ogg"];
+        if (selected && ALLOWED_TYPES.includes(selected.type)) {
+            let reader = new FileReader();
+            reader.onloadend = () => {
+                setVideoPreviewId(reader.result);
+            };
+            reader.readAsDataURL(selected);
+    
+            // Get video duration in seconds
+            const videoElement = document.createElement("video");
+            videoElement.src = URL.createObjectURL(selected);
+            videoElement.onloadedmetadata = () => {
+                const videoDuration = videoElement.duration;  // Duration in seconds
+                console.log("Video duration: ", videoDuration, "seconds");
+                setVideoDuration(videoDuration); // Store video duration in state
+            };
+        } else {
+            setError2(true);
+            console.log("File not supported");
+        }
+    };
+
 
     const [formValues, setFormValues] = useState([{}])
     let handleChange = (i, e) => {
@@ -110,7 +138,7 @@ const Tournamentedit = () => {
 
 
     const params = useParams('')
-
+    const [videoAdLength, setvideoAdLength] = useState(null);
     const [banner, setBanner] = useState('');
     const [title, setTitle] = useState('');
     const [studentLimit, setStudentLimit] = useState('')
@@ -467,8 +495,53 @@ const Tournamentedit = () => {
         });
     }
 
+    async function uploadVideo(file) {
+        // try {
+        const fileObj = file.target.files[0];
+        const fileName = fileObj.name;
+        console.log(fileName)
+        const fileExtensionMatch = fileName.match(/\.([a-zA-Z0-9]{2,4})$/i); 
+
+        
+        const fileExtension = fileExtensionMatch[1]; 
+            
+        const response = await fetch(`${Environment.server_url}/common/filesupload`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            },
+            body: JSON.stringify({
+                "for": "Superadmin",
+                "files": [
+                    {
+                        "extension": fileExtension,
+                        "contentType": "video",
+                        "fileName": fileName
+                    }
+                ]
+            })
+
+        });
+
+        const result = await response.json();
+
+        const { signedUrl, fileUrl } = result.payload.signedUrls[0];
+
+        setvideoAdUrl(fileUrl);
 
 
+        await fetch(signedUrl, {
+            method: "PUT",
+            // headers: {
+            //     "Content-Type": "application/json",
+            //     Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            // },
+            body: fileObj,
+        });
+        console.log("file url", fileUrl)
+        // } catch { }
+    }
 
     const [prizeAmount, setPrizeAmount] = useState([]);
     const getExamDetails = async () => {
@@ -484,10 +557,14 @@ const Tournamentedit = () => {
             });
         result = await result.json();
         // setBanner(result.payload.response.banner)
+        
         setWebBanner(result.payload.response.webBanner)
         setphoneBanner(result.payload.response.phoneBanner)
         setImgPreview(result.payload.response.webBanner)
         setImgPreviewId(result.payload.response.phoneBanner)
+        console.log(result.payload.response.videoAdUrl)
+        setVideoPreviewId(result.payload.response.videoAdUrl)
+        setvideoAdLength(result.payload.response.videoAdLength)
         setcategoryUUID(result.payload.response.categoryUUID)
         setTitle(result.payload.response.title)
         setStudentLimit(result.payload.response.studentLimit)
@@ -656,7 +733,7 @@ const Tournamentedit = () => {
 
         let result = await fetch(`${Environment.server_url}/tournaments/${params.uuid}`, {
             method: "PUT",
-            body: JSON.stringify({ categoryUUID, webBanner, phoneBanner, tournamentCities, tournamentKeywords, tournamentPrize: dataBundle, tournamentExams: tournamentExams, allowPrimarySelection, allowSecondarySelection, description, isFeatured, isFree, joinDelay, joinFee, marksPerQuestion, timePerQuestion, studentLimit, title, winningPrice, tournamentRankingFactor: dataBundle1 }),
+            body: JSON.stringify({ videoAdUrl,videoAdLength,categoryUUID, webBanner, phoneBanner, tournamentCities, tournamentKeywords, tournamentPrize: dataBundle, tournamentExams: tournamentExams, allowPrimarySelection, allowSecondarySelection, description, isFeatured, isFree, joinDelay, joinFee, marksPerQuestion, timePerQuestion, studentLimit, title, winningPrice, tournamentRankingFactor: dataBundle1 }),
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
@@ -785,7 +862,7 @@ const Tournamentedit = () => {
                                             <div className="form">
                                                 <form>
                                                     <div className="form-row mb-4">
-                                                        <div className="col-12 col-sm-6 imgageupload">
+                                                        <div className="col-12 col-sm-4 imgageupload">
                                                             <p><b>Web Banner</b></p>
                                                             <div className="container-exam">
                                                                 {error && <p className="errorMsg">File not supported</p>}
@@ -817,7 +894,7 @@ const Tournamentedit = () => {
                                                                 )}
                                                             </div>
                                                         </div>
-                                                        <div className="col-12 col-sm-6 imgageupload">
+                                                        <div className="col-12 col-sm-4 imgageupload">
                                                             <p><b>Phone Banner</b></p>
                                                             <div className="container-exam">
                                                                 {error1 && <p className="errorMsg">File not supported</p>}
@@ -831,9 +908,7 @@ const Tournamentedit = () => {
                                                                     {!imgPreviewId && (
                                                                         <>
                                                                             {/* <p>ID Proof</p> */}
-                                                                            <label htmlFor="fileUpload1" className="customFileUpload">
-                                                                                Add banner
-                                                                            </label>
+                                                                            <label htmlFor="fileUpload1" className="customFileUpload"> Add banner </label>
                                                                             <input type="file"
                                                                                 id="fileUpload1"
                                                                                 onChange={(e) => {
@@ -846,6 +921,47 @@ const Tournamentedit = () => {
                                                                 </div>
                                                                 {imgPreviewId && (
                                                                     <button className="btn-exam" onClick={() => setImgPreviewId(null)}>Remove</button>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        <div className="col-12 col-sm-4 imgageupload">
+                                                            <p><b>Video</b></p>
+                                                            <div className="container-exam">
+                                                                {error1 && <p className="errorMsg">File not supported</p>}
+                                                                <div className="imgPreview">
+                                                                    {/* Show video preview if available */}
+                                                                    {videoPreviewId ? (
+                                                                        <video 
+                                                                            controls 
+                                                                            src={videoPreviewId} 
+                                                                            style={{
+                                                                                width: "100%",       // Ensure the video takes up full container width
+                                                                                height: "100%",      // Ensure the video takes up full container height
+                                                                                objectFit: "cover",  // Apply cover style (scale and crop)
+                                                                            }}
+                                                                        />
+                                                                    ) : (
+                                                                        <>
+                                                                            {/* Show file upload button if no video is selected */}
+                                                                            <label htmlFor="fileUpload2" className="customFileUpload">
+                                                                                Add Video
+                                                                            </label>
+                                                                            <input 
+                                                                                type="file" 
+                                                                                id="fileUpload2"  
+                                                                                accept="video/*"
+                                                                                onChange={(e) => {
+                                                                                    handleVideoChangeId(e);
+                                                                                    uploadVideo(e);
+                                                                                }}
+                                                                            />
+                                                                        </>
+                                                                    )}
+                                                                </div>
+                                                                {videoPreviewId && (
+                                                                    <button className="btn-exam" onClick={() => setVideoPreviewId(null)}>
+                                                                        Remove
+                                                                    </button>
                                                                 )}
                                                             </div>
                                                         </div>
@@ -865,10 +981,12 @@ const Tournamentedit = () => {
                                                             <p><b>Title</b><span className="required text-danger">*</span></p>
                                                             <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Exam title" onChange={(e) => setTitle(e.target.value)} value={title}></input>
                                                         </div>
-                                                        <div className="col-sm-4">
-                                                            <p><b>Student limit</b><span className="required text-danger">*</span></p>
-                                                            <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Student limit" onChange={(e) => { setStudentLimit(e.target.valueAsNumber || e.target.value) }} value={studentLimit}></input>
+                                                         <div className="col-sm-4">
+                                                            <p><b>Video length</b></p>
+                                                            <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Video length" onChange={(e) => { setvideoAdLength(e.target.valueAsNumber || e.target.value) }} value={videoAdLength}></input>
+                                                            {/* <div><p className="studentlimitError" style={{ color: "red", fontWeight: 'bold' }}></p></div> */}
                                                         </div>
+                                                        
 
                                                     </div>
 
@@ -919,7 +1037,6 @@ const Tournamentedit = () => {
                                                         </div>
                                                     </div>
 
-
                                                     <div className="form-row mb-4">
                                                         <div className="col-12 col-sm-4">
                                                             <div className="form-group">
@@ -949,6 +1066,7 @@ const Tournamentedit = () => {
                                                             </select>
                                                         </div>
                                                     </div>
+
                                                     <div className="form-row mb-4">
                                                         {
                                                             allowPrimarySelection &&
@@ -974,6 +1092,11 @@ const Tournamentedit = () => {
                                                             <Multiselect options={city} selectedValues={tournamentCities} onSelect={setExamCity} emptyRecordMsg={"No City Found"} displayValue="city" class="form-control" id="exampleFormControlInput1" >
                                                             </Multiselect>
                                                         </div>
+                                                    </div>
+
+                                                    <div className="col-sm-4">
+                                                        <p><b>Student limit</b><span className="required text-danger">*</span></p>
+                                                        <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Student limit" onChange={(e) => { setStudentLimit(e.target.valueAsNumber || e.target.value) }} value={studentLimit}></input>
                                                     </div>
 
                                                     <div className="form-row mb-4">

@@ -92,6 +92,35 @@ const Mocktestedit = () => {
     };
 
 
+    const [videoPreviewId, setVideoPreviewId] = useState(null);
+    const [error2, setError2] = useState(false);
+
+
+    const handleVideoChangeId = (e) => {
+        setError2(false);
+        const selected = e.target.files[0];
+        const ALLOWED_TYPES = ["video/mp4", "video/webm", "video/ogg"];
+        if (selected && ALLOWED_TYPES.includes(selected.type)) {
+            let reader = new FileReader();
+            reader.onloadend = () => {
+                setVideoPreviewId(reader.result);
+            };
+            reader.readAsDataURL(selected);
+    
+            // Get video duration in seconds
+            const videoElement = document.createElement("video");
+            videoElement.src = URL.createObjectURL(selected);
+            videoElement.onloadedmetadata = () => {
+                const videoDuration = videoElement.duration;  // Duration in seconds
+                console.log("Video duration: ", videoDuration, "seconds");
+                setVideoDuration(videoDuration); // Store video duration in state
+            };
+        } else {
+            setError2(true);
+            console.log("File not supported");
+        }
+    };
+
     const [formValues, setFormValues] = useState([{}])
     let handleChange = (i, e) => {
         let newFormValues = [...formValues];
@@ -117,13 +146,13 @@ const Mocktestedit = () => {
 
 
 
-    const params = useParams('')
-
+    const params = useParams('')    
+    const [adViewDuration, setVideoDuration] = useState(null);  
+    const [videoAdLength, setvideoAdLength] = useState(null);
+    const [videoAdUrl, setvideoAdUrl] = useState(''); 
     const [banner, setBanner] = useState('');
     const [title, setTitle] = useState('');
     const [studentLimit, setStudentLimit] = useState('')
-    // const [starttime, setStartTime] = useState('')
-    // const [endtime, setEndTime] = useState('')
     const [isFree, setIsFree] = useState(false)
     const [joinFee, setJoinFee] = useState(0)
     const [marksPerQuestion, setMarksPerQuestion] = useState(0)
@@ -167,19 +196,6 @@ const Mocktestedit = () => {
     const [category, setCategory] = useState();
     const [sincategory, setSincategory] = useState([]);
 
-
-
-    // const [title, setTitle] = useState();
-    // const [studentLimit, setStudentLimit] = useState();
-    // const [description, setDescription] = useState();
-    // const [isFeatured, setIsFeatured] = useState();
-    // const [ExamBanner, setExamBanner] = useState();
-    // const [isFree, setIsFree] = useState();
-
-    // const [joinDelay, setJoinDelay] = useState();
-    // const [city, setCity] = useState([]);
-    // const [ExamCity, setExamCity] = useState([]);
-
     const [questionType, setQuestionType] = useState()
     const [titile, setTitile] = useState()
     const [time, setTime] = useState()
@@ -189,7 +205,6 @@ const Mocktestedit = () => {
     const [getcategory, setGetcategory] = useState([])
     const [getsubcategory, setGetSubcategory] = useState([])
 
-    //new winning price
     const [prizeNumber0, setPrizeNumber0] = useState(1)
     const [prizeAmount0, setPrizeAmount0] = useState('')
 
@@ -202,7 +217,6 @@ const Mocktestedit = () => {
     const [prizeFromNumber6, setPrizeFromNumber6] = useState('')
     const [prizeFromNumber7, setPrizeFromNumber7] = useState('')
     const [prizeFromNumber8, setPrizeFromNumber8] = useState('')
-
 
 
     const [prizeNumber1, setPrizeNumber1] = useState(2)
@@ -231,33 +245,13 @@ const Mocktestedit = () => {
 
     const [profilePic, setProfilePic] = useState('')
 
-
-
-
-
-    // const getSinCategory = async () => {
-    //     let result = await fetch(`${Environment.server_url}/categories`, {
-    //         method: "GET",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //             Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
-    //         }
-    //     });
-    //     result = await result.json();
-    //     setSincategory(result.payload.lists.rows);
-    // }
-
     useEffect(() => {
-        // getSinCategory();
         getCategory();
         getExamDetails();
         getKeyword();
         getCities();
         getQuestionlist(currentPage);
     }, [])
-
-    // const [Attribute, setAttribute] = useState('')
-
 
     //getKeyword Api Starts....
     const getKeyword = async () => {
@@ -316,15 +310,8 @@ const Mocktestedit = () => {
     const updateSubcategoryHandler = (id) => {
         getSubcategory(id);
         setcategoryUUID(id)
-        // setFilterCategory(id);
     };
 
-    const questionCheckHandler = (id) => {
-
-    }
-
-    // console.warn(categoryUUID,"catehoryUUISSS")
-    //get all questions and search and pagination start...
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [totalPage, setTotalPage] = useState(0)
@@ -333,8 +320,6 @@ const Mocktestedit = () => {
     const [totalcount, setTotalcount] = useState()
     const [totalLength, setTotalLength] = useState('')
     const [question, setQuestion] = useState([]);
-
-    // const [optionss, setOptionss] = useState('')
 
     const getQuestionlist = async (page) => {
         let result = await fetch(`${Environment.server_url}/questions?limit=${itemsPerPage}&page=${page}&category=${categoryUUID}&subCategory=${filtersubCategory}&startDate=${filterstartDate}&endDate=${filterendDate}&usageCount=${filterusagecount}`, {
@@ -505,14 +490,48 @@ const Mocktestedit = () => {
     }
 
 
+    async function uploadVideo(file) {
+        // try {
+        const fileObj = file.target.files[0];
+        const fileName = fileObj.name;
+        console.log(fileName)
+        const fileExtensionMatch = fileName.match(/\.([a-zA-Z0-9]{2,4})$/i); 
 
+        
+        const fileExtension = fileExtensionMatch[1]; 
+            
+        const response = await fetch(`${Environment.server_url}/common/filesupload`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            },
+            body: JSON.stringify({
+                "for": "Superadmin",
+                "files": [
+                    {
+                        "extension": fileExtension,
+                        "contentType": "video",
+                        "fileName": fileName
+                    }
+                ]
+            })
+
+        });
+
+        const result = await response.json();
+
+        const { signedUrl, fileUrl } = result.payload.signedUrls[0];
+
+        setvideoAdUrl(fileUrl);
+        await fetch(signedUrl, {
+            method: "PUT",
+            body: fileObj,
+        });
+    }
 
     const [prizeAmount, setPrizeAmount] = useState([]);
     const getExamDetails = async () => {
-
-        // console.log("data bundle1 ", dataBundle1)
-
-        // console.warn(params)
         let result = await fetch(`${Environment.server_url}/exams/${params.uuid}`,
             {
                 headers: {
@@ -520,11 +539,12 @@ const Mocktestedit = () => {
                 }
             });
         result = await result.json();
-        // setBanner(result.payload.response.banner)
         setWebBanner(result.payload.response.banner)
         setphoneBanner(result.payload.response.phoneBanner)
         setImgPreview(result.payload.response.banner)
         setImgPreviewId(result.payload.response.phoneBanner)
+        setVideoPreviewId(result.payload.response.videoAdUrl)
+        setvideoAdLength(result.payload.response.videoAdLength)
         setcategoryUUID(result.payload.response.categoryUUID)
         setTitle(result.payload.response.title)
         setStudentLimit(result.payload.response.studentLimit)
@@ -545,22 +565,8 @@ const Mocktestedit = () => {
             };
         });
         setQuestions(Updatelist)
-        // setQuestions(result.payload.response.questions)
         setIsFree(result.payload.response.isFree)
         settimePerQuestion(result.payload.response.timePerQuestion)
-        // setQuestionCheck(result.payload.reponse.)
-        // setPerQuestionTimeLimit(result.payload.response.timePerQuestion)
-        // setRanks(result.payload.response.rankingFactor)
-        // rank.map((item)=>
-        // <>
-        // <span>{setRankType(item.type)}</span>
-        // <span>{setRankPoint(item.point)}</span>
-        // <span>{setRankTime(item.time)}</span>
-        // <span>{setRankTitle(item.title)}</span>
-        // </>
-        // )
-        // setRankingFactor(result.payload.response.rankingFactor)
-
         setPrizeAmount0(result.payload.response.priceRatio[0].amount)
         setPrizeAmount1(result.payload.response.priceRatio[1].amount)
         setPrizeAmount2(result.payload.response.priceRatio[2].amount)
@@ -575,31 +581,11 @@ const Mocktestedit = () => {
         setRankingFactor(result.payload.response.rankingFactor)
     }
 
-    // console.warn(category,"repopulated category")
-    // useEffect(() => {
-    //     console.log("values ", prizeAmount)
-    //     if (prizeAmount.length) {
-    //         console.log("length true")
-
-    //         prizeAmount.map(value => {
-    //             Array.from(document.getElementsByClassName('rankList')).map(currObj => {
-    //                 currObj.getElementsByTagName("input")[0].value = value.fromValue
-    //                 currObj.getElementsByTagName("input")[0].value = value.toValue
-    //                 currObj.getElementsByTagName("input")[2].value = value.amount
-    //                 console.log(currObj.getElementsByTagName("input")[0])
-    //             })
-    //         })
-    //     }
-    //     setIndexes(prizeAmount)
-    // }, [prizeAmount])
-
     useEffect(() => {
         if (prizeAmount.length) {
             console.log("length true", document.getElementsByClassName('rankList'))
 
             Array.from(document.getElementsByClassName('rankList')).map((currObj, index) => {
-                // console.log("***************************",prizeAmount[index])
-                // currObj.getElementsByTagName("input")[0].value = 786
                 currObj.getElementsByTagName("input")[0].value = prizeAmount[index].fromValue
                 currObj.getElementsByTagName("input")[1].value = prizeAmount[index].toValue
                 currObj.getElementsByTagName("input")[2].value = prizeAmount[index].amount
@@ -607,59 +593,24 @@ const Mocktestedit = () => {
             })
 
         }
-        // useEffect(() => {
-        //     // value={prizeAmount[num]?.fromValue || 0}
-        //     // value={prizeAmount[num]?.toValue || 0}
-        //     // value={prizeAmount[num]?.amount || 0}
-        //     Array.from(document.getElementsByClassName("rankList")).map(obj => {
-        //         Array.from(document.getElementsByTagName("input")).map(inputObj=>{
-        //             console.log("inval",inputObj)
-        //         })
-        //     })
-        // // }, [indexes])
+
 
     }, [prizeAmount])
 
     useEffect(() => {
         if (rankingFactor.length) {
-            // console.log("length true", document.getElementsByClassName('examList'))
-
             Array.from(document.getElementsByClassName('examList')).map((currObj, index) => {
-                // console.log("***",prizeAmount[index])
-                // currObj.getElementsByTagName("input")[0].value = 786
                 currObj.getElementsByTagName("select")[0].value = rankingFactor[index].type
                 currObj.getElementsByTagName("input")[0].value = rankingFactor[index].title ? rankingFactor[index].title : ''
                 currObj.getElementsByTagName("input")[2].value = rankingFactor[index].points
                 currObj.getElementsByTagName("input")[1].value = rankingFactor[index].time
                 currObj.getElementsByTagName("input")[3].value = rankingFactor[index].coins
-                // console.log("///////",rankingFactor[index].type)
-                // console.log("#######",rankingFactor[index].title)
-                // console.log("#######",rankingFactor[index].time)
-                // console.log("#######",rankingFactor[index].points)
 
                 //     index+=1;
             })
 
         }
     }, [rankingFactor])
-
-    // useEffect(()=>{
-    //     console.log("values ",rankingFactor)
-    //     if(rankingFactor.length){
-    //         console.log("length 1 true")
-
-    //         rankingFactor.map(value => {
-    //             Array.from(document.getElementsByClassName('examList')).map(currObj => {
-    //                 currObj.getElementsByTagName("select")[0].value = value.type
-    //                 currObj.getElementsByTagName("input")[1].value = value.title
-    //                 currObj.getElementsByTagName("input")[2].value = value.time
-    //                 currObj.getElementsByTagName("input")[3].value = value.point
-    //                 console.log(currObj.getElementsByTagName("input")[0])
-    //             })
-    //         })
-    //     }
-    //     setIndexes1(rankingFactor)
-    // },[rankingFactor])
 
 
     // Edit Exam by UUID...
@@ -752,7 +703,6 @@ const Mocktestedit = () => {
             dataBundle1.push(val)
         })
 
-        // setStartExamDisable(true)
         setShowLoaderShow(true)
         setTimeout(() => {
             setStartExamDisable(false);
@@ -761,13 +711,12 @@ const Mocktestedit = () => {
 
         let result = await fetch(`${Environment.server_url}/exams/${params.uuid}`, {
             method: "PUT",
-            body: JSON.stringify({ categoryUUID, webBanner, phoneBanner, ExamCity, ExamKeyword, ExamPrice: dataBundle, ExamQuestion: questions, allowPrimarySelection, allowSecondarySelection, description, isFeatured, isFree, joinDelay, joinFee, marksPerQuestion, timePerQuestion, studentLimit, title, totalWinningPrize, ExamRankingFactor: dataBundle1 }),
+            body: JSON.stringify({ videoAdUrl,adViewDuration,videoAdLength,categoryUUID, webBanner, phoneBanner, ExamCity, ExamKeyword, ExamPrice: dataBundle, ExamQuestion: questions, allowPrimarySelection, allowSecondarySelection, description, isFeatured, isFree, joinDelay, joinFee, marksPerQuestion, timePerQuestion, studentLimit, title, totalWinningPrize, ExamRankingFactor: dataBundle1 }),
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
             }
         }).then(catdata => {
-            // console.warn(catdata.status)
             if (catdata.status === 200) {
                 setShowSuccess(true);
                 setTimeout(() => {
@@ -831,29 +780,6 @@ const Mocktestedit = () => {
         }
     };
 
-
-    // useEffect(() => {
-    //     viewExamDetails();
-    // }, []);
-
-    // const viewExamDetails = async () => {
-    //     console.warn(params);
-
-    //     let result = await fetch(`${Environment.server_url}/exams/${params.uuid}`,
-    //         {
-    //             method: "GET",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
-    //             }
-    //         });
-    //     result = await result.json();
-    //     console.warn("view", result.payload.response)
-
-
-    //     setProfilePic(result.payload.response.banner)
-
-    // }
     function handleDisabledCheck() {
         if (joinFee > 0) {
             document.getElementById("is_free").style.pointerEvents = "none"
@@ -864,17 +790,6 @@ const Mocktestedit = () => {
     useEffect(() => {
         handleDisabledCheck();
     }, [joinFee])
-
-    // function handleDisableCheck() {
-    //     if (timePerQuestion < 0) {
-    //         document.getElementById("marksper_question").style.pointerEvents = "none"
-    //     } else {
-    //         document.getElementById("marksper_question").style.pointerEvents = "auto"
-    //     }
-    // }
-    // useEffect(() => {
-    //     handleDisableCheck();
-    // }, [timePerQuestion])
 
     if (show === true) {
         setTimeout(() => setShow(false), 3000);
@@ -924,22 +839,8 @@ const Mocktestedit = () => {
                                         <div className="card-body">
                                             <div className="form">
                                                 <form>
-                                                    {/* <div className="form-row mb-4">
-                                                        <div className="col-12 col-sm-6">
-                                                            <p><b>Previous Banner</b></p>
-                                                            <div >
-                                                                <img className="editexamimage" src={profilePic || 'Placeholder.jpg'} alt="" />
-                                                            </div>
-                                                        </div>
-                                                    </div> */}
                                                     <div className="form-row mb-4">
-                                                        {/* <Popup trigger={<button className="popupbtn" type="button">+ Add Banner</button>}
-                                                            position="right center">
-                                                            <div className="row d-flex flex-column justify-content-center align-items-center">
-                                                                <button className="popupbtn2">Upload from Banner gallery</button>
-                                                            </div>
-                                                        </Popup> */}
-                                                        <div className="col-12 col-sm-6 imgageupload">
+                                                        <div className="col-12 col-sm-4 imgageupload">
                                                             <p><b>Web Banner</b></p>
                                                             <div className="container-exam">
                                                                 {error && <p className="errorMsg">File not supported</p>}
@@ -979,7 +880,7 @@ const Mocktestedit = () => {
                                                                 )}
                                                             </div>
                                                         </div>
-                                                        <div className="col-12 col-sm-6 imgageupload">
+                                                        <div className="col-12 col-sm-4 imgageupload">
                                                             <p><b>Phone Banner</b></p>
                                                             <div className="container-exam">
                                                                 {error1 && <p className="errorMsg">File not supported</p>}
@@ -1011,6 +912,47 @@ const Mocktestedit = () => {
                                                                 )}
                                                             </div>
                                                         </div>
+                                                        <div className="col-12 col-sm-4 imgageupload">
+                                                            <p><b>Video</b></p>
+                                                            <div className="container-exam">
+                                                                {error1 && <p className="errorMsg">File not supported</p>}
+                                                                <div className="imgPreview">
+                                                                    {/* Show video preview if available */}
+                                                                    {videoPreviewId ? (
+                                                                        <video 
+                                                                            controls 
+                                                                            src={videoPreviewId} 
+                                                                            style={{
+                                                                                width: "100%",       // Ensure the video takes up full container width
+                                                                                height: "100%",      // Ensure the video takes up full container height
+                                                                                objectFit: "cover",  // Apply cover style (scale and crop)
+                                                                            }}
+                                                                        />
+                                                                    ) : (
+                                                                        <>
+                                                                            {/* Show file upload button if no video is selected */}
+                                                                            <label htmlFor="fileUpload2" className="customFileUpload">
+                                                                                Add Video
+                                                                            </label>
+                                                                            <input 
+                                                                                type="file" 
+                                                                                id="fileUpload2"  
+                                                                                accept="video/*"
+                                                                                onChange={(e) => {
+                                                                                    handleVideoChangeId(e);
+                                                                                    uploadVideo(e);
+                                                                                }}
+                                                                            />
+                                                                        </>
+                                                                    )}
+                                                                </div>
+                                                                {videoPreviewId && (
+                                                                    <button className="btn-exam" onClick={() => setVideoPreviewId(null)}>
+                                                                        Remove
+                                                                    </button>
+                                                                )}
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div className="form-row mb-4">
                                                         <div className="col-sm-4">
@@ -1028,14 +970,13 @@ const Mocktestedit = () => {
                                                             <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Mocktest title" onChange={(e) => setTitle(e.target.value)} value={title}></input>
                                                         </div>
                                                         <div className="col-sm-4">
-                                                            <p><b>Student limit</b><span className="required text-danger">*</span></p>
-                                                            <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Student limit" onChange={(e) => { setStudentLimit(e.target.valueAsNumber || e.target.value) }} value={studentLimit}></input>
+                                                            <p><b>Video length</b></p>
+                                                            <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Video length" onChange={(e) => { setvideoAdLength(e.target.valueAsNumber || e.target.value); }} value={videoAdLength}></input>
                                                         </div>
-
+                                                        
                                                     </div>
 
                                                     <div className="form-row mb-4">
-
                                                         <div className="col-12 col-sm-4">
                                                             <p><b>Is free?</b></p>
                                                             <div className="input-group">
@@ -1060,7 +1001,6 @@ const Mocktestedit = () => {
                                                             <p><b>Marks per question</b><span className="required text-danger">*</span></p>
                                                             <input type="number" placeholder="Marks per question" className="form-control" id="exampleFormControlInput1" onChange={(e) => setMarksPerQuestion(e.target.valueAsNumber || e.target.value)} value={marksPerQuestion}></input>
                                                         </div>
-
                                                         <div className="col-12 col-sm-4 column">
                                                             <p><b>Per question time-limit in seconds?</b></p>
                                                             <div className="input-group">
@@ -1081,7 +1021,6 @@ const Mocktestedit = () => {
                                                             </div>
                                                         </div>
                                                     </div>
-
 
                                                     <div className="form-row mb-4">
                                                         <div className="col-12 col-sm-4">
@@ -1137,6 +1076,10 @@ const Mocktestedit = () => {
                                                             <Multiselect options={city} selectedValues={ExamCity} onSelect={setExamCity} emptyRecordMsg={"No City Found"} displayValue="city" class="form-control" id="exampleFormControlInput1" >
                                                             </Multiselect>
                                                         </div>
+                                                        <div className="col-sm-4">
+                                                            <p><b>Student limit</b><span className="required text-danger">*</span></p>
+                                                            <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Student limit" onChange={(e) => { setStudentLimit(e.target.valueAsNumber || e.target.value) }} value={studentLimit}></input>
+                                                        </div>
                                                     </div>
 
                                                     <div className="form-row mb-4">
@@ -1154,20 +1097,6 @@ const Mocktestedit = () => {
                                                         <p><b>Questions</b></p>
                                                         <div className="option-section">
                                                             <div className="form-row mb-4">
-                                                                {/* <div className="col-sm">
-                                                                    <p><b>Category</b></p>
-
-                                                                    <select className="form-select form-select mb-2" aria-label="Default select example" onClick={getQuestionlist} onChange={(e) => { updateSubcategoryHandler(e.target.value) }}>
-                                                                        <option value={""}>Select category</option>
-                                                                        {
-                                                                            getcategory.map((item) =>
-                                                                                <>
-                                                                                    <option value={item.uuid}>{item.label}</option>
-                                                                                </>
-                                                                            )
-                                                                        }
-                                                                    </select>
-                                                                </div> */}
                                                                 <div className="col-sm">
                                                                     <p><b>Sub-Category</b></p>
                                                                     <select className="form-select form-select mb-2" aria-label="Default select example" onClick={getQuestionlist} onChange={(e) => { setFilterSubCategory(e.target.value) }}>
@@ -1231,12 +1160,6 @@ const Mocktestedit = () => {
                                                                     <table className="table table-centered datatable dt-responsive nowrap" style={{ borderCollapse: 'collapse', borderSpacing: 0, width: '100%' }}>
                                                                         <thead className="thead-light">
                                                                             <tr>
-                                                                                {/* <th style={{ width: 20 }}>
-                                                                                <div className="form-check">
-                                                                                    <input type="checkbox" className="form-check-input" id="customercheck" />
-                                                                                    <label className="form-check-label mb-0" htmlFor="customercheck">&nbsp;</label>
-                                                                                </div>
-                                                                            </th> */}
                                                                                 <th>Question</th>
                                                                                 <th>Sub category</th>
                                                                                 <th>Options</th>
@@ -1274,13 +1197,10 @@ const Mocktestedit = () => {
                                                                                                         setQuestion(questionList);
                                                                                                         if (e.target.checked) {
                                                                                                             questions.push({ questionUUID: item.uuid })
-                                                                                                            // console.warn(questions,"QuestionList inside the onchange")
                                                                                                         } else {
                                                                                                             const idx = questions.indexOf((obj) => obj.questionUUID === item.uuid) > -1;
                                                                                                             questions.splice(idx, 1);
                                                                                                         }
-                                                                                                        // ExamQuestion.push({ questionUUID: item.uuid })
-                                                                                                        // setExamQuestion(ExamQuestion);
                                                                                                     }}
                                                                                                     checked={item.checked}
                                                                                                 />
@@ -1320,60 +1240,10 @@ const Mocktestedit = () => {
                                                                         activeClassName="active"
                                                                     />
                                                                 </div>
-                                                                {/* <div className="col-sm-2">
-                                                                    <div className="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
-                                                                        <ul className="pagination pagination-rounded">
-                                                                            <li className="paginate_button page-item previous disabled" id="DataTables_Table_0_previous">
-                                                                                <a aria-controls="DataTables_Table_0" data-dt-idx="0" tabIndex="0" className="page-link">
-                                                                                    <i className="mdi mdi-chevron-left" />
-                                                                                </a>
-                                                                            </li>
-                                                                            <li className="paginate_button page-item active">
-                                                                                <a aria-controls="DataTables_Table_0" data-dt-idx="1" tabIndex="0" className="page-link">1</a>
-                                                                            </li>
-                                                                            <li className="paginate_button page-item ">
-                                                                                <a aria-controls="DataTables_Table_0" data-dt-idx="2" tabIndex="0" className="page-link">2</a>
-                                                                            </li>
-                                                                            <li className="paginate_button page-item next" id="DataTables_Table_0_next">
-                                                                                <a aria-controls="DataTables_Table_0" data-dt-idx="3" tabIndex="0" className="page-link"><i className="mdi mdi-chevron-right" /></a>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div> */}
                                                             </div>
 
                                                         </div>
                                                     </div>
-
-                                                    {/* <div className="mb-4">
-                                                        <p><b>Winning Price</b></p>
-                                                        {inputList.map((x, i) => {
-                                                            return (
-                                                                <div className="form-group">
-                                                                    <div className="table-responsive controls">
-                                                                        <table className="table table-centered datatable dt-responsive nowrap" style={{ borderCollapse: 'collapse', borderSpacing: 0, width: '100%' }}>
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th>Price</th>
-                                                                                    <th>Action</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                <tr className="exam-ranking-factor-tr-3">
-                                                                                    <td><input type="number" name="exam_ranking_factor_point[]" className="form-control" placeholder="Price" /></td>
-                                                                                    <td>
-                                                                                        {inputList.length !== 1 && <button type="button" class="btn btn-danger btn-sm"
-                                                                                            onClick={() => handleRemoveClick(i)}>x</button>}
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                    {inputList.length - 1 === i && <button type="button" className="btn btn-warning" onClick={handleAddClick}>Add Winning Price</button>}
-                                                                </div>
-                                                            );
-                                                        })}
-                                                    </div> */}
 
                                                     <div className="mb-4">
                                                         <p><b>Winning Price</b></p>
@@ -1384,7 +1254,6 @@ const Mocktestedit = () => {
                                                                         <tr>
                                                                             <th>Rank</th>
                                                                             <th>Price</th>
-
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -1475,8 +1344,6 @@ const Mocktestedit = () => {
                                                                                 <option value={"ON_CORRECT_ANSWER"}>On answer correct</option>
                                                                                 <option value={"ON_INCORRECT_ANSWER"}>On answer In-correct</option>
                                                                                 <option value={"TIME_LIMIT"}>Time limit</option>
-                                                                                {/* <option value={"SECONDARY"}>Primary</option>
-                                                                                <option value={"PRIMARY"}>Secondary</option> */}
                                                                                 {
                                                                                     allowPrimarySelection && <option value={"PRIMARY"}>Primary</option>
                                                                                 }

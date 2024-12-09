@@ -54,6 +54,9 @@ function SideNav() {
                                     <NavLink to="/Tournament" className="nav-link"><i className="nav-icon fas fa-medal" /><p>Tournament</p></NavLink>
                                 </li>
                                 <li className="nav-item">
+                                    <NavLink to="/Battle" className="nav-link"><i className="nav-icon fas fa-trophy" /><p>Battle</p></NavLink>
+                                </li>
+                                <li className="nav-item">
                                     <NavLink to="/Banner" className="nav-link"><i className="nav-icon fas fa-image" /><p>Banner</p></NavLink>
                                 </li>
                                 <li className={activate ? "nav-item menu-is-opening menu-open" : "nav-item"}>
@@ -80,6 +83,11 @@ function SideNav() {
                                             </Link> */}
                                         </li>
                                         <li className="nav-item">
+                                            <Link to="/Videofree" className="nav-link">
+                                                <i className="far fa-circle nav-icon" /><p>Video Ad Overview</p>
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
                                             <Link to="/payoutrequest" className="nav-link">
                                                 <i className="far fa-circle nav-icon" />
                                                 <p>Deposit Request </p>
@@ -95,6 +103,12 @@ function SideNav() {
                                         <li className="nav-item">
                                             <Link to="/Setting" className="nav-link">
                                                 <i className="far fa-circle nav-icon" /> <p>Settings</p>
+                                            </Link>
+                                        </li>
+
+                                        <li className="nav-item">
+                                            <Link to="/Bundle" className="nav-link">
+                                                <i className="far fa-circle nav-icon" /> <p>Bundle</p>
                                             </Link>
                                         </li>
                                         {/* <li className="nav-item">

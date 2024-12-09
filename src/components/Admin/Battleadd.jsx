@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect, useRef } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from 'react-router-dom';
 import SideNav from "./SideNav";
@@ -14,18 +14,15 @@ import 'react-medium-image-zoom/dist/styles.css';
 import ReactPaginate from "react-paginate";
 import { debounce } from 'lodash';
 import { useStateManager } from "react-select";
-import ScrollToTop from "react-scroll-to-top";
 import Environment from "./Environment";
-import { useSelector } from "react-redux";
 
 
-const Tournamentadd = () => {
-    const myRef = useRef(null)
-    const scrollToRef = (ref) => window.scrollTo(0, ref.current.offsetTop)
-    const executeScroll = () => scrollToRef(myRef)
-
+const Battleadd = () => {
     const [imgPreview, setImgPreview] = useState(null);
     const [error, setError] = useState(false);
+
+
+    const [banner, setBanner] = useState();
 
     const handleImageChange = (e) => {
         setError(false);
@@ -63,51 +60,6 @@ const Tournamentadd = () => {
         }
     };
 
-    const [videoPreviewId, setVideoPreviewId] = useState(null);
-    const [error2, setError2] = useState(false);
-
-    // const handleVideoChangeId = (e) => {
-    //     setError2(false);
-    //     const selected = e.target.files[0];
-    //     const ALLOWED_TYPES = ["video/mp4", "video/webm", "video/ogg"];
-    //     if (selected && ALLOWED_TYPES.includes(selected.type)) {
-    //         let reader = new FileReader();
-    //         reader.onloadend = () => {
-    //             setVideoPreviewId(reader.result);
-    //         }
-    //         reader.readAsDataURL(selected);
-    //     } else {
-    //         setError2(true);
-    //         console.log("file not supported");
-
-    //     }
-    // };
-
-    const handleVideoChangeId = (e) => {
-        setError2(false);
-        const selected = e.target.files[0];
-        const ALLOWED_TYPES = ["video/mp4", "video/webm", "video/ogg"];
-        if (selected && ALLOWED_TYPES.includes(selected.type)) {
-            let reader = new FileReader();
-            reader.onloadend = () => {
-                setVideoPreviewId(reader.result);
-            };
-            reader.readAsDataURL(selected);
-    
-            // Get video duration in seconds
-            const videoElement = document.createElement("video");
-            videoElement.src = URL.createObjectURL(selected);
-            videoElement.onloadedmetadata = () => {
-                const videoDuration = videoElement.duration;  // Duration in seconds
-                console.log("Video duration: ", videoDuration, "seconds");
-                setVideoDuration(videoDuration); // Store video duration in state
-            };
-        } else {
-            setError2(true);
-            console.log("File not supported");
-        }
-    };
-
     const navigate = useNavigate()
     const [show, setShow] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
@@ -115,41 +67,44 @@ const Tournamentadd = () => {
     const [startExamDisable, setStartExamDisable] = useState(false);
     const [showLoaderShow, setShowLoaderShow] = useState(false);
 
-    const [adViewDuration, setVideoDuration] = useState(null);
-    const [videoAdLength, setvideoAdLength] = useState(null);
     const [title, setTitle] = useState('');
-    const [studentLimit, setStudentLimit] = useState('')
+    const [studentLimit, setStudentLimit] = useState(2); // Default to 2
+    // const [starttime, setStartTime] = useState('')
+    // const [endtime, setEndTime] = useState('')
     const [isFree, setIsFree] = useState(false)
-    const [enableAd, setenableAd] = useState(false)
     const [joinFee, setJoinFee] = useState(0)
     const [marksPerQuestion, setMarksPerQuestion] = useState('')
     const [timePerQuestion, settimePerQuestion] = useState(0)
     const [perQuestionlimitcheck, setPerQuestionLimitCheck] = useState('')
-    const [winningPrice, settotalWinningPrize] = useState('')
+    const [totalWinningPrize, settotalWinningPrize] = useState('')
     const [isFeatured, setIsFeatured] = useState('')
     const [allowPrimarySelection, setAllowPrimarySelection] = useState('')
-    const [allowSecondarySelection, setAllowSecondarySelection] = useState(false)
+    const [allowSecondarySelection, setAllowSecondarySelection] = useState('')
     const [joinDelay, setJoinDelay] = useState(0)
-    const [tournamentKeywords, setExamKeyword] = useState([])
+    const [numberOfQuestion, setNumberOfQuestion] = useState(0)
+    const [ExamKeyword, setExamKeyword] = useState([])
     const [description, setDescription] = useState('')
     const [categoryUUID, setcategoryUUID] = useState('');
-    const [webBanner, setExamBanner] = useState('');
+    const [ExamBanner, setExamBanner] = useState('');
     const [phoneBanner, setphoneBanner] = useState('');
-    const [videoAdUrl, setvideoAdUrl] = useState('');
-    const [tournamentExams, setExamQuestion] = useState([]);
-    const [tournamentExamsList, setExamQuestionList] = useState([]);
+    const [ExamQuestion, setExamQuestion] = useState([]);
     const [city, setCity] = useState([]);
-    const [tournamentCities, setExamCity] = useState([]);
-    const [type, setType] = useState("EXAM")
+    const [ExamCity, setExamCity] = useState([]);
+    const [type, setType] = useState("BATTLE")
+
+    // const [toValue, settoValue] = useState('');
+    // const [fromValue, setFromValue] = useState('');
+    // const [price, setPrice] = useState('');
 
     const [questionType, setQuestionType] = useState()
     const [titile, setTitile] = useState()
     const [time, setTime] = useState(0)
     const [points, setPoints] = useState()
-    const [coin, setCoins] = useState(0)
+    const [coin, setCoins] = useState()
 
     const [ExamPrice, setExamPrice] = useState([])
     const [ExamRankingFactor, setExamRankingFactor] = useState([])
+
 
     const [questionChecked, setQuestionChecked] = useState(false);
     const [checked, setChecked] = useState(false);
@@ -157,9 +112,6 @@ const Tournamentadd = () => {
 
     const [checked1, setChecked1] = useState(false);
     const [text1, setText1] = useState("");
-
-    const [checked2, setChecked2] = useState(false);
-    const [text2, setText2] = useState("");
 
     const [filterCategory, setFilterCategory] = useState('')
     const [filtersubCategory, setFilterSubCategory] = useState('')
@@ -175,6 +127,8 @@ const Tournamentadd = () => {
     const [isFeaturedErr, setIsFeaturedErr] = useState('');
     const [marksPerQuestionErr, setMarksPerQuestionErr] = useState('');
 
+
+    //new winning price
     const [prizeNumber0, setPrizeNumber0] = useState(1)
     const [prizeAmount0, setPrizeAmount0] = useState(0)
 
@@ -187,6 +141,8 @@ const Tournamentadd = () => {
     const [prizeFromNumber6, setPrizeFromNumber6] = useState(0)
     const [prizeFromNumber7, setPrizeFromNumber7] = useState(0)
     const [prizeFromNumber8, setPrizeFromNumber8] = useState(0)
+
+
 
     const [prizeNumber1, setPrizeNumber1] = useState(2)
     const [prizeAmount1, setPrizeAmount1] = useState(0)
@@ -216,8 +172,13 @@ const Tournamentadd = () => {
     const [prizeAmount9, setPrizeAmount9] = useState('')
     const [prizeNumberFrom9, setPrizeNumberFrom9] = useState('')
 
+
+
     const [getcategory, setGetcategory] = useState([])
     const [getsubcategory, setGetSubcategory] = useState([])
+
+    const [questionListitem, setQuestionList] = useState([]);
+
     useEffect(() => {
         getCategory();
         getSubcategory();
@@ -294,16 +255,14 @@ const Tournamentadd = () => {
     const [totalcount, setTotalcount] = useState()
     const [totalLength, setTotalLength] = useState()
 
-    const [examList, setExamList] = useState([]);
-
-    // const [optionss, setOptionss] = useState('')
+    const [question, setQuestion] = useState([]);
 
     useEffect(() => {
-        getExamlist(currentPage);
+        getQuestionlist(currentPage);
     }, [])
 
-    const getExamlist = async (page) => {
-        let result = await fetch(`${Environment.server_url}/exams?type=EXAM&limit=${itemsPerPage}&page=${page}&categories=${categoryUUID}`, {
+    const getQuestionlist = async (page) => {
+        let result = await fetch(`${Environment.server_url}/questions?limit=${itemsPerPage}&page=${page}&category=${categoryUUID}&subCategory=${filtersubCategory}&startDate=${filterstartDate}&endDate=${filterendDate}&usageCount=${filterusagecount}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -312,32 +271,47 @@ const Tournamentadd = () => {
         });
 
         result = await result.json();
-        const list = result.payload.response.map((obj) => {
+        const list = result.payload.list.map((obj) => {
             return {
                 ...obj,
-                checked: tournamentExams.findIndex((item) => item.examUUID === obj.uuid) > -1
+                checked: questionListitem.findIndex((item) => item.questionUUID === obj.uuid) > -1
             };
         })
-        // console.warn(list,"List after set te checked part")
-        setExamList(list);
+        setQuestion(list);
         setTotalPage(Math.ceil(result.payload.count / itemsPerPage));
         setTotalcount(result.payload.count);
-        try {
-            setTotalLength(result.payload.students.rows.length);
-        } catch { }
+        setTotalLength(result.payload.students.rows.length);
     }
-    // console.warn(tournamentExams,"outside the gettournamet")
-    // console.warn(examList,"outside the gettournamet(((((((((((((((99999")
 
+    const handleNumberOfQuestionsChange = (e) => {
+        const value = e.target.valueAsNumber || 0;
+        setNumberOfQuestion(value);
+        const updatedQuestions = [...question];
+        let selectedCount = 0;
+
+        updatedQuestions.forEach((q, idx) => {
+            if (selectedCount < value) {
+                updatedQuestions[idx].checked = true;
+                selectedCount++;
+            } else {
+                updatedQuestions[idx].checked = false;
+            }
+        });
+
+        setQuestion(updatedQuestions); 
+
+        const selectedQuestions = updatedQuestions.slice(0, value).map(q => ({ questionUUID: q.uuid }));
+        setQuestionList(selectedQuestions);
+    };
 
     const handlePageChange = async (data) => {
         setCurrentPage(data.selected + 1);
-        const questionFromServer = await getExamlist(data.selected + 1);
+        const questionFromServer = await getQuestionlist(data.selected + 1);
         setItems(questionFromServer);
     }
 
     const paginationCount = () => {
-        if (examList.length === 0) {
+        if (question.length === 0) {
             return (currentPage === 1
                 ? totalcount ? 1 : 0
                 : itemsPerPage * (currentPage - 1) + 1
@@ -374,8 +348,7 @@ const Tournamentadd = () => {
 
     const handler = useCallback(debounce((event) => searchtable(event.target.value), 500), []);
     const searchtable = async (key) => {
-        // const url=key&&`?q=${key}`
-        let result = await fetch(`${Environment.server_url}/exams?q=${key}`,
+        let result = await fetch(`${Environment.server_url}/questions?q=${key}`,
             {
                 method: "GET",
                 headers: {
@@ -385,22 +358,15 @@ const Tournamentadd = () => {
             })
         result = await result.json();
         if (result) {
-            setExamList(result.payload.response);
+            setQuestion(result.payload.list);
             setTotalPage(Math.ceil(result.payload.count / itemsPerPage));
             setTotalcount(result.payload.count);
             setTotalLength(result.payload.list.length);
         }
     }
 
-    // console.warn("Updated ExamKEyword",ExamKeyword)
-
-    var ExamSList;
-    const goToBtn = () => {
-        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-        console.warn("Scroll called ")
-    };
-    const AddTournament = () => {
-        if (webBanner === '') {
+    const Addexam = async () => {
+        if (ExamBanner === '') {
             document.getElementsByClassName('bannerError')[0].innerText = "This field is required"
         }
         else {
@@ -448,7 +414,7 @@ const Tournamentadd = () => {
         // else {
         //     document.getElementsByClassName('examcityError')[0].innerText = ""
         // }
-        if (tournamentKeywords.length === 0) {
+        if (ExamKeyword.length === 0) {
             document.getElementsByClassName('examkeywordError')[0].innerText = "This field is required"
         }
         // else {
@@ -462,18 +428,12 @@ const Tournamentadd = () => {
             document.getElementsByClassName('studentlimitError')[0].innerText = ""
         }
 
-        if (winningPrice === '') {
+
+        if (totalWinningPrize === '') {
             document.getElementsByClassName('totalwinningprizeError')[0].innerText = "This field is required"
         }
         else {
             document.getElementsByClassName('totalwinningprizeError')[0].innerText = ""
-        }
-
-        if (joinDelay === '') {
-            document.getElementsByClassName('joinDelayError')[0].innerText = "This field is required"
-        }
-        else {
-            document.getElementsByClassName('joinDelayError')[0].innerText = ""
         }
 
         if (phoneBanner === '') {
@@ -483,14 +443,14 @@ const Tournamentadd = () => {
             document.getElementsByClassName('phonebannerError')[0].innerText = ""
         }
 
-        if (tournamentKeywords.length === 0) {
+        if (ExamKeyword.length === 0) {
             document.getElementsByClassName('examkeywordError')[0].innerText = "This field is required"
         }
         else {
             document.getElementsByClassName('examkeywordError')[0].innerText = ""
         }
 
-        if (webBanner === '' && categoryUUID === '' && title === '' && isFeatured === '' && marksPerQuestion === '' && allowPrimarySelection === '' && tournamentCities.length === 0 && tournamentKeywords.length === 0 && studentLimit === '' && winningPrice === '' && phoneBanner === '') {
+        if (ExamBanner === '' && categoryUUID === '' && title === '' && isFeatured === '' && marksPerQuestion === '' && allowPrimarySelection === '' && ExamCity.length === 0 && ExamKeyword.length === 0 && studentLimit === '' && totalWinningPrize === '' && phoneBanner === '') {
             document.getElementsByClassName('allfieldError')[0].innerText = "Please fill all required field"
         } else {
             document.getElementsByClassName('allfieldError')[0].innerText = ""
@@ -502,48 +462,48 @@ const Tournamentadd = () => {
         rank.push({
             "toValue": prizeNumber0,
             "fromValue": prizeFromNumber0,
-            "amount": prizeAmount0,
+            "price": prizeAmount0,
         })
         rank.push({
             "toValue": prizeNumber1,
             "fromValue": prizeFromNumber1,
-            "amount": prizeAmount1,
+            "price": prizeAmount1,
         })
         rank.push({
             "toValue": prizeNumber2,
             "fromValue": prizeFromNumber2,
-            "amount": prizeAmount2,
+            "price": prizeAmount2,
         })
         rank.push({
             "toValue": prizeNumber3,
             "fromValue": prizeFromNumber3,
-            "amount": prizeAmount3,
+            "price": prizeAmount3,
         })
         rank.push({
             "toValue": prizeNumber4,
             "fromValue": prizeFromNumber4,
-            "amount": prizeAmount4,
+            "price": prizeAmount4,
         })
         rank.push({
             "toValue": prizeNumber5,
             "fromValue": prizeFromNumber5,
-            "amount": prizeAmount5,
+            "price": prizeAmount5,
         })
         rank.push({
             "toValue": prizeNumber6,
             "fromValue": prizeFromNumber6,
-            "amount": prizeAmount6,
+            "price": prizeAmount6,
         })
         rank.push({
             "toValue": prizeNumber7,
             "fromValue": prizeFromNumber7,
-            "amount": prizeAmount7,
+            "price": prizeAmount7,
 
         })
         rank.push({
             "toValue": prizeNumber8,
             "fromValue": prizeFromNumber8,
-            "amount": prizeAmount8,
+            "price": prizeAmount8,
 
         })
 
@@ -563,7 +523,7 @@ const Tournamentadd = () => {
         rankList.map((val, index) => {
             if (val[1] && val[0] && val[2])
                 parsedValue.push({ toValue: parseInt(val[1]), fromValue: val[0], price: parseInt(val[2]) })
-            // parsedValue.push({ toValue: parseInt(val[1]), fromValue: val[0], amount: parseInt(val[2]) })
+            // parsedValue.push({ toValue: parseInt(val[1]), fromValue: val[0], price: parseInt(val[2]) })
         })
         const dataBundle = [...rank]
         parsedValue.map(val => {
@@ -617,49 +577,42 @@ const Tournamentadd = () => {
         // .filter((item) => item.checked)
         // .map((item) => item.uuid);
 
+        questionListitem.map((item, key) => {
+            item.checked &&
+                ExamQuestion.push({ questionUUID: item.uuid })
+            setExamQuestion(ExamQuestion);
+        }
+        )
+
         //post call start here
-        // const slNumber = tournamentExamsList.map((obj, key) => ({ ...obj, serialNo: key }));
-        // console.warn(tournamentExamsList, "Before the add tournament")
-
-        // tournamentExamsList.map((item, key) => {
-        //     item.checked &&
-        //         tournamentExams.push({ examUUID: item.uuid, serialNo: key })
-        //     setExamQuestion(tournamentExams);
-        // }
-        // )
-
-        // console.warn(tournamentExams, "Inside the add tournament part")
-
-
-        fetch(`${Environment.server_url}/tournaments/addTournament`, {
-        // fetch(`http://localhost:3000/tournaments/addTournament`, {
+        const catdata = await fetch(`${Environment.server_url}/exams/addexam`, {
             method: "POST",
             body: description ?
-                JSON.stringify({ videoAdLength,adViewDuration,categoryUUID, webBanner, phoneBanner,videoAdUrl , title, description, studentLimit, isFree,enableAd, joinFee, joinDelay, tournamentKeywords, winningPrice, isFeatured, tournamentCities, tournamentExams, tournamentPrize: dataBundle, marksPerQuestion, allowPrimarySelection, allowSecondarySelection, tournamentRankingFactor: dataBundle1,timePerQuestion })
+                JSON.stringify({ type, ExamBanner, phoneBanner, title, categoryUUID, description, allowPrimarySelection, allowSecondarySelection, isFeatured, marksPerQuestion, studentLimit, isFree, joinFee, marksPerQuestion, timePerQuestion, totalWinningPrize, joinDelay, ExamKeyword, ExamCity, ExamQuestion:questionListitem, ExamPrice: dataBundle, ExamRankingFactor: dataBundle1 })
                 :
-                JSON.stringify({ videoAdLength,adViewDuration,categoryUUID, webBanner, phoneBanner,videoAdUrl ,title, categoryUUID, allowPrimarySelection, allowSecondarySelection, isFeatured, marksPerQuestion, studentLimit, isFree,enableAd, joinFee, marksPerQuestion, timePerQuestion, winningPrice, joinDelay, tournamentKeywords, tournamentCities, tournamentExams, tournamentPrize: dataBundle, tournamentRankingFactor: dataBundle1 }),
+                JSON.stringify({ type, ExamBanner, phoneBanner, title, categoryUUID, allowPrimarySelection, allowSecondarySelection, isFeatured, marksPerQuestion, studentLimit, isFree, joinFee, marksPerQuestion, timePerQuestion, totalWinningPrize, joinDelay, ExamKeyword, ExamCity, ExamQuestion:questionListitem, ExamPrice: dataBundle, ExamRankingFactor: dataBundle1 }),
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
             }
         })
-        .then(catdata => {
-            if (catdata.status === 200) {
-                setShowSuccess(true);
-                setTimeout(() => {
-                    navigate("/Tournament");
-                }, 5000);
-                // navigate('../Exam');
-                return (catdata.json());
-            }
-            else {
-                setShow(true);
-                return catdata.json();
-            }
-        })
-        .then(catdata => {
-            setErrorMessage(catdata.message)
-        })
+            .then(catdata => {
+                if (catdata.status === 200) {
+                    setShowSuccess(true);
+                    setTimeout(() => {
+                        navigate("/Battle");
+                    }, 5000);
+                    // navigate('../Exam');
+                    return (catdata.json());
+                }
+                else {
+                    setShow(true);
+                    return (catdata.json());
+                }
+            })
+            .then(catdata => {
+                setErrorMessage(catdata.message)
+            })
         window.scrollTo(0, 0)
     }
 
@@ -683,6 +636,10 @@ const Tournamentadd = () => {
     }
     const cityselected = (list, item) => {
         setExamCity(list)
+        // if (list.length === 0)
+        //     document.getElementsByClassName('examcityError')[0].innerText = "This field is Required"
+        // else
+        //     document.getElementsByClassName('examcityError')[0].innerText = ""
     }
     const keywordselected = (list, item) => {
         setExamKeyword(list)
@@ -704,6 +661,8 @@ const Tournamentadd = () => {
         document.getElementsByClassName('allfieldError')[0].innerText = ""
     }
 
+
+    //add or remove the winning price
     const [indexes, setIndexes] = React.useState([]);
     const [counter, setCounter] = React.useState(0);
     const { register, handleSubmit } = useForm();
@@ -722,6 +681,8 @@ const Tournamentadd = () => {
         setCounter(prevCounter => prevCounter - 1);
     };
 
+
+    //add or remove ranking Factor..
     const [indexes1, setIndexes1] = React.useState([]);
     const [counter1, setCounter1] = React.useState(0);
 
@@ -734,12 +695,16 @@ const Tournamentadd = () => {
         setCounter1(prevCounter => prevCounter - 1);
     };
 
+
+
+    //file Upload url
     async function uploadProfile(file) {
         // try {
         const fileObj = file.target.files[0];
         const fileName = fileObj.name;
         const fileExtension = fileName.match(/[a-zA-Z]{2,4}$/)[0];
         console.log(fileName, fileExtension)
+        // const response = await fetch(`${Environment.server_url}/common/filesupload`, {
         const response = await fetch(`${Environment.server_url}/common/filesupload`, {
             method: "POST",
             headers: {
@@ -764,6 +729,7 @@ const Tournamentadd = () => {
         const { signedUrl, fileUrl } = result.payload.signedUrls[0];
 
         setExamBanner(fileUrl);
+
 
         await fetch(signedUrl, {
             method: "PUT",
@@ -818,55 +784,6 @@ const Tournamentadd = () => {
             body: fileObj,
         });
         console.log("file url", fileUrl)
-        // } catch { }
-    }
-
-    async function uploadVideo(file) {
-        // try {
-        const fileObj = file.target.files[0];
-        const fileName = fileObj.name;
-        console.log(fileName)
-        const fileExtensionMatch = fileName.match(/\.([a-zA-Z0-9]{2,4})$/i); 
-
-        
-        const fileExtension = fileExtensionMatch[1]; 
-            
-        const response = await fetch(`${Environment.server_url}/common/filesupload`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
-            },
-            body: JSON.stringify({
-                "for": "Superadmin",
-                "files": [
-                    {
-                        "extension": fileExtension,
-                        "contentType": "video",
-                        "fileName": fileName
-                    }
-                ]
-            })
-
-        });
-
-        const result = await response.json();
-
-        const { signedUrl, fileUrl } = result.payload.signedUrls[0];
-
-        setvideoAdUrl(fileUrl);
-
-
-        await fetch(signedUrl, {
-            method: "PUT",
-            // headers: {
-            //     "Content-Type": "application/json",
-            //     Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
-            // },
-            body: fileObj,
-        });
-        console.log("file url", fileUrl)
-        // } catch { }
     }
 
     function handleDisabledCheck() {
@@ -886,34 +803,6 @@ const Tournamentadd = () => {
     if (showSuccess === true) {
         setTimeout(() => setShowSuccess(false), 5000);
     }
-
-
-    //TimeFormat Code Start
-    const formatAMPM = (date) => {
-        var hours = date.getHours();
-        var minutes = date.getMinutes();
-        var ampm = hours >= 12 ? 'pm' : 'am';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-        minutes = minutes < 10 ? '0' + minutes : minutes;
-        var strTime = hours + ':' + minutes + ' ' + ampm;
-        return strTime;
-    };
-
-    const getDateTime = (dateString) => {
-        const d = dateString;
-        const date = new Date(d);
-        return [
-            date.getDate(),
-            date.toLocaleString('default', { month: 'long' }),
-            date.getFullYear()
-        ].join(' ') +
-            ', ' +
-            formatAMPM(date);
-    };
-    //Time Format Code End
-
-
     return (
         <>
             <Header />
@@ -924,11 +813,11 @@ const Tournamentadd = () => {
                             <div className="row">
                                 <div className="col-12">
                                     <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-                                        <h4 className="mb-sm-0">New Tournament</h4>
+                                        <h4 className="mb-sm-0">New Battle</h4>
                                         <div className="page-title-right">
                                             <ol className="breadcrumb m-0">
-                                                <Link to="/Tournament" className="breadcrumb-item">Tournament</Link>
-                                                <li className="breadcrumb-item active">New Tournament</li>
+                                                <Link to="/Exam" className="breadcrumb-item">Battle</Link>
+                                                <li className="breadcrumb-item active">New Battle</li>
                                             </ol>
                                         </div>
                                     </div>
@@ -936,14 +825,14 @@ const Tournamentadd = () => {
                             </div>
                             {
                                 show &&
-                                <div ref={myRef} className="alert alert-danger alert-dismissible fade show" role="alert">
+                                <div className="alert alert-danger alert-dismissible fade show" role="alert">
                                     <strong className="text-danger">{errorMessage}</strong>
                                     <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close" onClick={() => setShow(false)}></button>
                                 </div>
                             }
                             {
                                 showSuccess &&
-                                <div ref={myRef} className="alert alert-success alert-dismissible fade show" role="alert">
+                                <div className="alert alert-success alert-dismissible fade show" role="alert">
                                     <strong className="text-success">{errorMessage}</strong>
                                     <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close" onClick={() => setShowSuccess(false)}></button>
                                 </div>
@@ -961,8 +850,8 @@ const Tournamentadd = () => {
                                                                 <button className="popupbtn2">Upload from Banner gallery</button>
                                                             </div>
                                                         </Popup> */}
-                                                        <div className="col-12 col-sm-4 imgageupload">
-                                                            <p><b>Web Banner</b><span className="required text-danger">*</span></p>
+                                                        <div className="col-12 col-sm-6 imgageupload">
+                                                            <p><b>Battle Banner</b><span className="required text-danger">*</span></p>
                                                             <div className="container-exam">
                                                                 {error && <p className="errorMsg">File not supported</p>}
                                                                 <div
@@ -1001,7 +890,7 @@ const Tournamentadd = () => {
                                                             {/* {<div><p className="ErrorMessage">{ExamBanner === "" ? (ExamBannerErr) : ("")}</p></div>} */}
                                                             <div><p className="bannerError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
                                                         </div>
-                                                        <div className="col-12 col-sm-4 imgageupload">
+                                                        <div className="col-12 col-sm-6 imgageupload">
                                                             <p><b>Phone Banner</b><span className="required text-danger">*</span></p>
                                                             <div className="container-exam">
                                                                 {error1 && <p className="errorMsg">File not supported</p>}
@@ -1035,43 +924,13 @@ const Tournamentadd = () => {
                                                             </div>
                                                             <div><p className="phonebannerError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
                                                         </div>
-                                                        <div className="col-12 col-sm-4 imgageupload">
-                                                            <p><b>Video Upload</b></p>
-                                                            <div className="container-exam">
-                                                                {error2 && <p className="errorMsg">File not supported</p>}
-                                                                <div className="imgPreview" style={{ background: videoPreviewId ? `url("${videoPreviewId}") no-repeat center/cover` : "#c2c7d0"}}>
-                                                                    {!videoPreviewId ? (
-                                                                        <>
-                                                                            <label htmlFor="videoUpload" className="customFileUpload">
-                                                                                Choose Video
-                                                                            </label>
-                                                                            <input type="file" id="videoUpload" accept="video/*" // Ensures only video files can be selected
-                                                                                onChange={(e) => {
-                                                                                    handleVideoChangeId(e);
-                                                                                    uploadVideo(e); // Make sure this is called after validation in handleVideoChangeId
-
-                                                                                }}
-                                                                            />
-                                                                        </>
-                                                                    ) : (
-                                                                        <video width="100%" controls>
-                                                                            <source src={videoPreviewId} type="video/mp4" />
-                                                                            Your browser does not support the video tag.
-                                                                        </video>
-                                                                    )}
-                                                                </div>
-                                                                    {videoPreviewId && (
-                                                                        <button className="btn-exam" onClick={() => setVideoPreviewId(null)}>Remove</button>
-                                                                    )}
-                                                                </div>
-                                                        </div>
                                                     </div>
 
                                                     <div className="form-row mb-4">
                                                         <div className="col-sm-4">
                                                             <p><b>Category</b><span className="required text-danger">*</span></p>
-                                                            <select className="form-select form-select mb-2" aria-label="Default select example" onClick={getExamlist} onChange={(e) => { updateSubcategoryHandler(e.target.value); categorySelected() }}>
-                                                                <option value={""}>Select</option>
+                                                            <select className="form-select form-select mb-2" aria-label="Default select example" onClick={getQuestionlist} onChange={(e) => { updateSubcategoryHandler(e.target.value); categorySelected() }}>
+                                                                <option>Select</option>
                                                                 {
                                                                     getcategory.map((item) =>
                                                                         <>
@@ -1085,16 +944,27 @@ const Tournamentadd = () => {
                                                         </div>
                                                         <div className="col-sm-4">
                                                             <p><b>Title</b><span className="required text-danger">*</span></p>
-                                                            <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Tournament title" onChange={(e) => { setTitle(e.target.value); titleSelected() }}></input>
+                                                            <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Battle title" onChange={(e) => { setTitle(e.target.value); titleSelected() }}></input>
                                                             {/* {<div><p className="ErrorMessage">{title === "" ? (titileErr) : ("")}</p></div>} */}
                                                             <div><p className="titleError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
                                                         </div>
                                                         <div className="col-sm-4">
-                                                            <p><b>Video length</b></p>
-                                                            <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Video length" onChange={(e) => { setvideoAdLength(e.target.valueAsNumber || e.target.value); }}></input>
-                                                            {/* <div><p className="studentlimitError" style={{ color: "red", fontWeight: 'bold' }}></p></div> */}
+                                                            <p><b>Student limit</b><span className="required text-danger">*</span></p>
+                                                            <input
+                                                                type="number"
+                                                                className="form-control"
+                                                                id="exampleFormControlInput1"
+                                                                value={studentLimit}  // Static value of 2
+                                                                readOnly
+                                                                onChange={(e) => { 
+                                                                    // This won't update the student limit value as input is readonly
+                                                                    setStudentLimit(e.target.valueAsNumber || e.target.value);
+                                                                }}
+                                                            />
+                                                            <div>
+                                                                <p className="studentlimitError" style={{ color: "red", fontWeight: 'bold' }}></p>
+                                                            </div>
                                                         </div>
-                                                    
                                                         {/* <div className="col-sm-3">
                                                             <p><b>Start time</b><span className="required text-danger">*</span></p>
                                                             <input type="datetime-local" name="end_time" id="end_time" className="form-control valid" aria-invalid="false" onChange={(e) => { setStartTime(e.target.value) }} />
@@ -1246,7 +1116,6 @@ const Tournamentadd = () => {
                                                                         <option value={9}>9</option>
                                                                         <option value={10}>10</option>
                                                                     </select> */}
-                                                                <div><p className="joinDelayError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1256,10 +1125,22 @@ const Tournamentadd = () => {
                                                             </Multiselect>
                                                             <div><p className="examcityError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
                                                         </div>
-                                                        <div className="col-sm-4">
-                                                            <p><b>Student limit</b><span className="required text-danger">*</span></p>
-                                                            <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Student limit" onChange={(e) => { setStudentLimit(e.target.valueAsNumber || e.target.value); studentlimitSelected() }}></input>
-                                                            <div><p className="studentlimitError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
+                                                        <div className="col-12 col-sm-4">
+                                                            <div className="form-group">
+                                                                <div className="controls">
+                                                                    <p><b>Number of Questions</b></p>
+                                                                    <input
+                                                                        placeholder="Enter number of questions to select"
+                                                                        className="form-control valid"
+                                                                        name="number_of_question"
+                                                                        type="number"
+                                                                        value={numberOfQuestion}
+                                                                        onChange={handleNumberOfQuestionsChange} // Update state and select/deselect questions
+                                                                        min="0"
+                                                                        max={question.length}  // Ensure it doesn't exceed the number of available questions
+                                                                    />
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -1277,12 +1158,12 @@ const Tournamentadd = () => {
                                                         {/* <div><p className="descriptionError" style={{ color: "red", fontWeight: 'bold' }}></p></div> */}
                                                     </div>
                                                     <div className="mb-4">
-                                                        <p><b>Exams</b></p>
+                                                        <p><b>Questions</b></p>
                                                         <div className="option-section">
-                                                            {/* <div className="form-row mb-4">
-                                                                <div className="col-sm">
+                                                            <div className="form-row mb-4">
+                                                                {/* <div className="col-sm">
                                                                     <p><b>Category</b></p>
-                                                                    <select className="form-select form-select mb-2" aria-label="Default select example" onClick={getExamlist} onChange={(e) => { updateSubcategoryHandler(e.target.value) }}>
+                                                                    <select className="form-select form-select mb-2" aria-label="Default select example" onClick={getQuestionlist} onChange={(e) => { updateSubcategoryHandler(e.target.value) }}>
                                                                         <option value={""}>Select category</option>
                                                                         {
                                                                             getcategory.map((item) =>
@@ -1292,10 +1173,10 @@ const Tournamentadd = () => {
                                                                             )
                                                                         }
                                                                     </select>
-                                                                </div>
+                                                                </div> */}
                                                                 <div className="col-sm">
                                                                     <p><b>Sub-Category</b></p>
-                                                                    <select className="form-select form-select mb-2" aria-label="Default select example" onClick={getExamlist} onChange={(e) => { setFilterSubCategory(e.target.value) }}>
+                                                                    <select className="form-select form-select mb-2" aria-label="Default select example" onClick={getQuestionlist} onChange={(e) => { setFilterSubCategory(e.target.value) }}>
                                                                         <option value={""}>Select sub-category</option>
                                                                         {
                                                                             getsubcategory.map((item, index) =>
@@ -1309,19 +1190,22 @@ const Tournamentadd = () => {
 
                                                                 <div className="col-sm">
                                                                     <p><b>Start date of Creation</b></p>
-                                                                    <input type="datetime-local" name="end_time" id="end_time" className="form-control valid" aria-invalid="false" onClick={getExamlist} onChange={(e) => { setFilteStartDate(e.target.value) }} />
+                                                                    <input type="datetime-local" name="end_time" id="end_time" className="form-control valid" aria-invalid="false" onClick={getQuestionlist} onChange={(e) => { setFilteStartDate(e.target.value) }} />
                                                                 </div>
 
                                                                 <div className="col-sm">
                                                                     <p><b>End date of Creation</b></p>
-                                                                    <input type="datetime-local" name="end_time" id="end_time" className="form-control valid" aria-invalid="false" onClick={getExamlist} onChange={(e) => { setFilteEndDate(e.target.value) }} />
+                                                                    <input type="datetime-local" name="end_time" id="end_time" className="form-control valid" aria-invalid="false" onClick={getQuestionlist} onChange={(e) => { setFilteEndDate(e.target.value) }} />
+
                                                                 </div>
 
                                                                 <div className="col-sm">
                                                                     <div className="form-group">
                                                                         <div className="controls">
                                                                             <p><b>Usage count</b></p>
-                                                                            <select className="form-select form-select mb-2" aria-label="Default select example" onClick={getExamlist} onChange={(e) => { setFilteUsageCount(e.target.value) }}>
+                                                                            {/* <input placeholder="Usage count" max="10" className="form-control valid" name="total_winning_price" type="number" id="total_winning_price" aria-invalid="false" /> */}
+                                                                            {/* <input placeholder="Join delay" className="form-control valid" name="join_delay" type="number" id="join_delay" aria-invalid="false" /> */}
+                                                                            <select className="form-select form-select mb-2" aria-label="Default select example" onClick={getQuestionlist} onChange={(e) => { setFilteUsageCount(e.target.value) }}>
                                                                                 <option value={""}>Select</option>
                                                                                 <option value={1}>1</option>
                                                                                 <option value={2}>2</option>
@@ -1337,7 +1221,11 @@ const Tournamentadd = () => {
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div> */}
+                                                                {/* <div className="col-sm">
+                                                                    <button onClick={handleClear}> clear
+                                                                    </button>
+                                                                </div> */}
+                                                            </div>
 
                                                             <div className="table-responsive mt-3">
                                                                 <div className="col">
@@ -1366,58 +1254,67 @@ const Tournamentadd = () => {
                                                                             <thead className="thead-light">
                                                                                 <tr>
                                                                                     <th>Sl.no</th>
-                                                                                    <th>Exam id</th>
-                                                                                    <th>Exam name</th>
-                                                                                    <th>Category</th>
-                                                                                    <th>Status</th>
+                                                                                    <th>Question</th>
+                                                                                    <th>Sub category</th>
+                                                                                    <th>Options</th>
                                                                                     <th>Selected</th>
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody>
                                                                                 {
-                                                                                    examList.length > 0 ? examList.map((item, index) =>
+                                                                                    question.length > 0 ? question.map((item, index) =>
                                                                                         <tr key={index}>
                                                                                             <td>{index + 1}</td>
-                                                                                            <td>{item.identifier}</td>
-                                                                                            <td>{item.title}</td>
-                                                                                            <td>{item.categoryName}</td>
-                                                                                            <td>{item.status}</td>
+                                                                                            <td><Zoom><div dangerouslySetInnerHTML={{ __html: item.title }} ></div></Zoom></td>
+                                                                                            <td>{item?.questionSubCategory?.label}</td>
+                                                                                            <td>
+                                                                                                {item.options?.map(obj => {
+                                                                                                    return obj.isCorrect ? <span className="badge bg-success me-1 mr-1"><b>{obj.key}</b>.{obj.text}<br></br>
+                                                                                                        {
+                                                                                                            obj.image && <Zoom><img src={obj.image} className="Questionimage"></img></Zoom>
+                                                                                                        }
+                                                                                                    </span>
+                                                                                                        : <span className="badge bg-dark me-1 mr-1"><b>{obj.key}</b>.{obj.text}<br />
+                                                                                                            {
+                                                                                                                obj.image && <Zoom> <img src={obj.image} className="Questionimage"></img></Zoom>
+                                                                                                            }
+                                                                                                        </span>
+                                                                                                })}
+                                                                                            </td>
                                                                                             <td>
                                                                                                 <div className="form-check form-switch">
                                                                                                     <input
                                                                                                         type="checkbox"
                                                                                                         className="form-check-input"
                                                                                                         onChange={(e) => {
-                                                                                                            const ExamList = [...examList];
-                                                                                                            ExamList[index].checked = e.target.checked;
-                                                                                                            setExamList(ExamList);
-                                                                                                            // console.warn(examList,"List after set the setQuestion on checkbox part")
+                                                                                                            const questionList = [...question];
+                                                                                                            questionList[index].checked = e.target.checked;
+                                                                                                            setQuestion(questionList);
                                                                                                             if (e.target.checked) {
-                                                                                                                tournamentExams.push({ examUUID: item.uuid, serialNo: index + 1 })
-                                                                                                                // console.warn(tournamentExams, "Inside checked property e.target checked************* &&& *****")
+                                                                                                                questionListitem.push({questionUUID:item.uuid})
                                                                                                             } else {
-                                                                                                                const idx = tournamentExams.indexOf((obj) => obj.examUUID === item.uuid) > -1;
-                                                                                                                // console.warn(idx, "Inside splice************** method")
-                                                                                                                tournamentExams.splice(idx, 1);
+                                                                                                                const idx = questionListitem.indexOf((obj) => obj.questionUUID === item.uuid);
+                                                                                                                questionListitem.splice(idx, 1);
                                                                                                             }
-                                                                                                            // console.warn(tournamentExams, "after splice and set the final examUUID*** %%% *****")
-                                                                                                            // setExamQuestionList(ExamList)
-                                                                                                            //After submit call these two rows
-                                                                                                            // tournamentExams.push({ examUUID: item.uuid })
-                                                                                                            // setExamQuestion(tournamentExams);
+                                                                                                            // setQuestionList(questionList);
+                                                                                                            // ExamQuestion.push({questionUUID:item.uuid})
+                                                                                                            // setExamQuestion(ExamQuestion);
                                                                                                         }}
                                                                                                         checked={item.checked}
                                                                                                     />
-                                                                                                    {/* value {JSON.stringify(item.checked)} {JSON.stringify(item.uuid)} */}
+                                                                                                    {/* value {JSON.stringify(item.checked)} */}
                                                                                                 </div>
                                                                                             </td>
+                                                                                            {/* <td>
+                                                                                        {item.status ? <span class="badge bg-success"> Active </span> : <span class="badge bg-danger"> Inactive </span>}
+                                                                                    </td> */}
                                                                                         </tr>
                                                                                     )
                                                                                         : (
                                                                                             <tr>
                                                                                                 <td></td>
                                                                                                 <td></td>
-                                                                                                <td>No-Exam Found</td>
+                                                                                                <td>No-Question Found</td>
                                                                                                 <td></td>
                                                                                                 <td></td>
                                                                                             </tr>
@@ -1499,6 +1396,7 @@ const Tournamentadd = () => {
                                                                         <tr>
                                                                             <th>Rank</th>
                                                                             <th>Price</th>
+
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -1506,34 +1404,7 @@ const Tournamentadd = () => {
                                                                             <td><input type="number" className="form-control" disabled onChange={(e) => { setPrizeNumber0(parseInt(e.target.value)) }} value={prizeNumber0}></input></td>
                                                                             <td><input type="number" name="exam_ranking_factor_point[]" className="form-control" placeholder="Price" onChange={(e) => { setPrizeAmount0(parseInt(e.target.value)) }} value={prizeAmount0} /></td>
                                                                         </tr>
-                                                                        <tr className="exam-ranking-factor-tr-3">
-                                                                            <td><input type="number" className="form-control" disabled onChange={(e) => { setPrizeNumber1(parseInt(e.target.value)) }} value={prizeNumber1}></input></td>
-                                                                            <td><input type="number" name="exam_ranking_factor_point[]" className="form-control" placeholder="Price" onChange={(e) => { setPrizeAmount1(parseInt(e.target.value)) }} value={prizeAmount1} /></td>
-                                                                        </tr>
-                                                                        <tr className="exam-ranking-factor-tr-3">
-                                                                            <td><input type="number" className="form-control" disabled onChange={(e) => { setPrizeNumber2(parseInt(e.target.value)) }} value={prizeNumber2}></input></td>
-                                                                            <td><input type="number" name="exam_ranking_factor_point[]" className="form-control" placeholder="Price" onChange={(e) => { setPrizeAmount2(parseInt(e.target.value)) }} value={prizeAmount2} /></td>
-                                                                        </tr>
-                                                                        <tr className="exam-ranking-factor-tr-3">
-                                                                            <td><input type="number" className="form-control" disabled onChange={(e) => { setPrizeNumber3(parseInt(e.target.value)) }} value={prizeNumber3}></input></td>
-                                                                            <td><input type="number" name="exam_ranking_factor_point[]" className="form-control" placeholder="Price" onChange={(e) => { setPrizeAmount3(parseInt(e.target.value)) }} value={prizeAmount3} /></td>
-                                                                        </tr>
-                                                                        <tr className="exam-ranking-factor-tr-3">
-                                                                            <td><input type="number" className="form-control" disabled onChange={(e) => { setPrizeNumber4(parseInt(e.target.value)) }} value={prizeNumber4}></input></td>
-                                                                            <td><input type="number" name="exam_ranking_factor_point[]" className="form-control" placeholder="Price" onChange={(e) => { setPrizeAmount4(parseInt(e.target.value)) }} value={prizeAmount4} /></td>
-                                                                        </tr>
-                                                                        <tr className="exam-ranking-factor-tr-3">
-                                                                            <td><input type="number" className="form-control" disabled onChange={(e) => { setPrizeNumber5(parseInt(e.target.value)) }} value={prizeNumber5}></input></td>
-                                                                            <td><input type="number" name="exam_ranking_factor_point[]" className="form-control" placeholder="Price" onChange={(e) => { setPrizeAmount5(parseInt(e.target.value)) }} value={prizeAmount5} /></td></tr>
-                                                                        <tr className="exam-ranking-factor-tr-3">
-                                                                            <td><input type="number" className="form-control" disabled onChange={(e) => { setPrizeNumber6(parseInt(e.target.value)) }} value={prizeNumber6}></input></td>
-                                                                            <td><input type="number" name="exam_ranking_factor_point[]" className="form-control" placeholder="Price" onChange={(e) => { setPrizeAmount6(parseInt(e.target.value)) }} value={prizeAmount6} /></td></tr>
-                                                                        <tr className="exam-ranking-factor-tr-3">
-                                                                            <td><input type="number" className="form-control" disabled onChange={(e) => { setPrizeNumber7(parseInt(e.target.value)) }} value={prizeNumber7}></input></td>
-                                                                            <td><input type="number" name="exam_ranking_factor_point[]" className="form-control" placeholder="Price" onChange={(e) => { setPrizeAmount7(parseInt(e.target.value)) }} value={prizeAmount7} /></td></tr>
-                                                                        <tr className="exam-ranking-factor-tr-3">
-                                                                            <td><input type="number" className="form-control" disabled onChange={(e) => { setPrizeNumber8(parseInt(e.target.value)) }} value={prizeNumber8}></input></td>
-                                                                            <td><input type="number" name="exam_ranking_factor_point[]" className="form-control" placeholder="Price" onChange={(e) => { setPrizeAmount8(parseInt(e.target.value)) }} value={prizeAmount8} /></td> </tr>
+
                                                                     </tbody>
 
                                                                 </table>
@@ -1568,9 +1439,9 @@ const Tournamentadd = () => {
                                                                     </fieldset>
                                                                 );
                                                             })}
-                                                            <button type="button" className="btn btn-warning mt-2" onClick={addRank}>
+                                                            {/* <button type="button" className="btn btn-warning mt-2" onClick={addRank}>
                                                                 Add Rank
-                                                            </button>
+                                                            </button> */}
                                                         </form>
                                                     </div>
                                                     {/* <div className="mb-4">
@@ -1681,11 +1552,11 @@ const Tournamentadd = () => {
                                                                                 {/* <option value={"PRIMARY"}>Primary</option>
                                                                                 <option value={"SECONDARY"}>Secondary</option> */}
                                                                                 {
-                                                                                    allowPrimarySelection && <option value={"PRIMARY"}>Primary</option>
+                                                                                    allowPrimarySelection === 'true' && <option value={"PRIMARY"}>Primary</option>
                                                                                 }
                                                                                 {
 
-                                                                                    allowSecondarySelection && <option value={"SECONDARY"}>Secondary</option>
+                                                                                    allowSecondarySelection === 'true' && <option value={"SECONDARY"}>Secondary</option>
                                                                                 }
                                                                             </select>
                                                                         </div>
@@ -1723,7 +1594,7 @@ const Tournamentadd = () => {
                                                     </form>
                                                     <div className="button mt-3">
                                                         <div onChange={allfieldSelected}><p className="allfieldError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
-                                                        <button type="button" className="btn btn-success savebtn" onClick={AddTournament} disabled={startExamDisable}>
+                                                        <button type="button" className="btn btn-success savebtn" onClick={() => Addexam()} disabled={startExamDisable}>
                                                             {showLoaderShow ?
                                                                 (
                                                                     <span className="spinner-border spinner-border-sm spinnerLoader mr-1" style={{ width: "0.9rem", height: "0.9rem" }} role="status" aria-hidden="true"></span>
@@ -1753,4 +1624,4 @@ const Tournamentadd = () => {
     );
 }
 
-export default Tournamentadd
+export default Battleadd

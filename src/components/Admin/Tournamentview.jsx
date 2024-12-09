@@ -149,7 +149,6 @@ function Tournamentview() {
                 }
             });
         result = await result.json();
-        // console.warn("view", result.payload.response)
 
         setTitle(result.payload.response.title)
         setgetStartTime(result.payload.response.startTime)
@@ -554,10 +553,6 @@ function Tournamentview() {
                                                                                 onChange={(e) => {
                                                                                     setStartDate(moment(e.target.value).set({ hour: 23, minute: 59 }).format('YYYY-MM-DD HH:mm'));
                                                                                     starttimeSelected()
-                                                                                    // starttimeSelected();
-                                                                                    // onChangeStartDate(e.target.value);
-                                                                                    // console.log(setStartDate(moment((e.target.value)).format('YYYY-MM-DD')), "DATAEEEE")
-                                                                                    // console.log(moment(e.target.value).set({ hour: 23, minute: 59 }).format('YYYY-MM-DD HH:mm'), "DATAEEEE")
                                                                                 }} />
 
                                                                             <div>
@@ -570,71 +565,7 @@ function Tournamentview() {
                                                             </div>
 
                                                             <div className="row d-flex flex-row justify-content-center align-items-center">
-                                                                {/* {
-                                                                    examTime === "FULL_DAY" ?
-                                                                        <>
-                                                                            <div className="col-sm-6">
-                                                                                <p className='mb-0'><b>Start Time</b><span className="required text-danger">*</span></p>
-                                                                                <input type="date"
-                                                                                    placeholder="YYYY-MM-DD"
-                                                                                    min={minDate}
-                                                                                    name="time"
-                                                                                    className="form-control timezone"
-                                                                                    onChange={(e) => {
-                                                                                        setStartTime(moment((e.target.value)).set({ hour: 0, minute: 0 }).format('YYYY-MM-DD HH:mm'));
-                                                                                        // starttimeSelected();
-                                                                                        onChangeStartDate(e.target.value)
-                                                                                    }}
-                                                                                />
-                                                                                <div><p className="starttimeError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
-                                                                            </div>
-
-                                                                            <div className="col-sm-6">
-                                                                                <p className='mb-0'><b>End Time</b><span className="required text-danger">*</span></p>
-                                                                                <input type="date"
-                                                                                    placeholder="YYYY-MM-DD"
-                                                                                    min={minDate}
-                                                                                    className="form-control"
-                                                                                    onChange={(e) => {
-                                                                                        setEndTime(moment((e.target.value)).set({ hour: 23, minute: 59 }).format('YYYY-MM-DD HH:mm'));
-                                                                                        // endtimeSelected() 
-                                                                                    }}
-                                                                                    disabled={!startTime}
-                                                                                />
-                                                                                <div>
-                                                                                    <p className="endtimeError" style={{ color: "red", fontWeight: 'bold' }}></p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </>
-                                                                        :
-                                                                        <>
-                                                                            <div className="col-sm-6">
-                                                                                <p className='mb-0'><b>Start Time</b><span className="required text-danger">*</span></p>
-                                                                                <input type="datetime-local"
-                                                                                    placeholder="YYYY-MM-DD"
-                                                                                    min={minDate}
-                                                                                    name="time"
-                                                                                    className="form-control timezone"
-                                                                                    onChange={(e) => { setStartTime(moment((e.target.value)).format('YYYY-MM-DD HH:mm')); starttimeSelected(); onChangeStartDate(e.target.value) }}
-                                                                                />
-                                                                                <div><p className="starttimeError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
-                                                                            </div>
-
-                                                                            <div className="col-sm-6">
-                                                                                <p className='mb-0'><b>End Time</b><span className="required text-danger">*</span></p>
-                                                                                <input type="datetime-local"
-                                                                                    placeholder="YYYY-MM-DD"
-                                                                                    min={minDate}
-                                                                                    className="form-control"
-                                                                                    onChange={(e) => { setEndTime(moment((e.target.value)).format('YYYY-MM-DD HH:mm')); endtimeSelected() }}
-                                                                                    disabled={!startTime}
-                                                                                />
-                                                                                <div>
-                                                                                    <p className="endtimeError" style={{ color: "red", fontWeight: 'bold' }}></p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </>
-                                                                } */}
+                                                             
                                                                 {/* <div className="col text-center mt-2">
                                                                     <input type="button" className="btn btn-sm btn-success mt-2" onClick={() => ScheduleExam()} value="Submit" />
                                                                 </div> */}
@@ -1272,7 +1203,7 @@ function Tournamentview() {
                                                                                             <tr>
                                                                                                 <th>Sl.no</th>
                                                                                                 <th>Exam Title</th>
-                                                                                                <th>Action</th>
+                                                                                                {/* <th>Action</th> */}
                                                                                             </tr>
                                                                                         </thead>
                                                                                         <tbody>

@@ -20,38 +20,6 @@ const ExamNew = () => {
     const [imgPreview, setImgPreview] = useState(null);
     const [error, setError] = useState(false);
 
-
-
-
-    // const [inputList, setInputList] = useState([{ toValue: '1', fromValue: '', price: '1' }]);
-
-    // handle input change
-    // const handleInputChange = (e, index) => {
-    //     const { name, value } = e.target;
-    //     const list = [...inputList];
-    //     list[index][name] = value;
-    //     setInputList(list);
-
-    // };
-
-    // handle click event of the Remove button
-    // const handleRemoveClick = index => {
-    //     const list = [...inputList];
-    //     list.splice(index, 1);
-    //     setInputList(list);
-    //     alert("Wants To Remove");
-    // };
-
-    // handle click event of the Add button
-    // const handleAddClick = (e) => {
-    //     e.preventDefault();
-    //     // setInputList([...inputList,{}]);
-    //     setInputList([...inputList, { toValue: (toValue), fromValue: '', price: (price) }]);
-    //     setExamPrice(inputList)
-
-    // };
-    // console.warn(inputList, "inputLiist")
-
     const [banner, setBanner] = useState();
 
     const handleImageChange = (e) => {
@@ -90,32 +58,32 @@ const ExamNew = () => {
         }
     };
 
-
-
-    // const [formValues, setFormValues] = useState([{ type: 'ON_CORRECT_ANSWER', title: '1', time: '1', point: '1' }])
-    // let handleChange = (i, e) => {
-    //     let newFormValues = [...formValues];
-    //     newFormValues[i][e.target.name] = e.target.value;
-    //     setFormValues(newFormValues);
-    // }
-
-    // let addFormFields = () => {
-    //     setFormValues([...formValues, { type: (questionType), title: (titile), time: (time), point: (points) }])
-    //     setExamRankingFactor(formValues)
-    // }
-
-    // console.warn(ExamRankingFactor, "formvalues")
-
-    // let removeFormFields = (i) => {
-    //     let newFormValues = [...formValues];
-    //     newFormValues.splice(i, 1);
-    //     setFormValues(newFormValues);
-    //     alert("Wants To Delete");
-    // }
-    // let handleSubmit = (event) => {
-    //     event.preventDefault();
-    //     alert(JSON.stringify(formValues));
-    // }
+    const [videoPreviewId, setVideoPreviewId] = useState(null);
+    const [error2, setError2] = useState(false);
+    const handleVideoChangeId = (e) => {
+        setError2(false);
+        const selected = e.target.files[0];
+        const ALLOWED_TYPES = ["video/mp4", "video/webm", "video/ogg"];
+        if (selected && ALLOWED_TYPES.includes(selected.type)) {
+            let reader = new FileReader();
+            reader.onloadend = () => {
+                setVideoPreviewId(reader.result);
+            };
+            reader.readAsDataURL(selected);
+    
+            // Get video duration in seconds
+            const videoElement = document.createElement("video");
+            videoElement.src = URL.createObjectURL(selected);
+            videoElement.onloadedmetadata = () => {
+                const videoDuration = videoElement.duration;  // Duration in seconds
+                console.log("Video duration: ", videoDuration, "seconds");
+                setVideoDuration(videoDuration); // Store video duration in state
+            };
+        } else {
+            setError2(true);
+            console.log("File not supported");
+        }
+    };
 
     const navigate = useNavigate()
     const [show, setShow] = useState(false);
@@ -126,8 +94,8 @@ const ExamNew = () => {
 
     const [title, setTitle] = useState('');
     const [studentLimit, setStudentLimit] = useState('')
-    // const [starttime, setStartTime] = useState('')
-    // const [endtime, setEndTime] = useState('')
+    const [adViewDuration, setVideoDuration] = useState(null);
+    const [videoAdLength, setvideoAdLength] = useState(null);
     const [isFree, setIsFree] = useState(false)
     const [joinFee, setJoinFee] = useState(0)
     const [marksPerQuestion, setMarksPerQuestion] = useState('')
@@ -138,19 +106,18 @@ const ExamNew = () => {
     const [allowPrimarySelection, setAllowPrimarySelection] = useState('')
     const [allowSecondarySelection, setAllowSecondarySelection] = useState('')
     const [joinDelay, setJoinDelay] = useState(0)
+    const [numberOfQuestion, setNumberOfQuestion] = useState(0)
     const [ExamKeyword, setExamKeyword] = useState([])
     const [description, setDescription] = useState('')
     const [categoryUUID, setcategoryUUID] = useState('');
     const [ExamBanner, setExamBanner] = useState('');
     const [phoneBanner, setphoneBanner] = useState('');
+    const [videoAdUrl, setvideoAdUrl] = useState('');
     const [ExamQuestion, setExamQuestion] = useState([]);
     const [city, setCity] = useState([]);
     const [ExamCity, setExamCity] = useState([]);
     const [type, setType] = useState("EXAM")
 
-    // const [toValue, settoValue] = useState('');
-    // const [fromValue, setFromValue] = useState('');
-    // const [price, setPrice] = useState('');
 
     const [questionType, setQuestionType] = useState()
     const [titile, setTitile] = useState()
@@ -169,6 +136,9 @@ const ExamNew = () => {
     const [checked1, setChecked1] = useState(false);
     const [text1, setText1] = useState("");
 
+    const [checked2, setChecked2] = useState(false);
+    const [text2, setText2] = useState("");
+
     const [filterCategory, setFilterCategory] = useState('')
     const [filtersubCategory, setFilterSubCategory] = useState('')
     const [filterstartDate, setFilteStartDate] = useState('')
@@ -182,6 +152,7 @@ const ExamNew = () => {
     const [categoryUUIDErr, setcategoryUUIDErr] = useState('');
     const [isFeaturedErr, setIsFeaturedErr] = useState('');
     const [marksPerQuestionErr, setMarksPerQuestionErr] = useState('');
+    const [enableAd, setenableAd] = useState(false)
 
 
     //new winning price
@@ -250,19 +221,9 @@ const ExamNew = () => {
             }
         });
         result = await result.json();
-        // if(result.payload.hasOwnProperty("cities"))
-        // setCity(result.payload.cities.map(obj=>obj.uuid))
         setCity(result.payload.cities)
 
     }
-    // console.warn(city, "CityUUID")
-    // console.warn(ExamQuestion, "examQuestion")
-
-    // let options = keyword.map((item)=>
-    // return<option value={item.uuid}>{item.city}</option>
-    // )
-
-    // console.warn(ExamRankingFactor)
 
     //Get Category.................
     const getCategory = async () => {
@@ -312,7 +273,6 @@ const ExamNew = () => {
         setKeyword(result.payload.lists.rows)
     }
 
-    //Questions Get
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [totalPage, setTotalPage] = useState(0)
@@ -323,8 +283,6 @@ const ExamNew = () => {
 
     const [question, setQuestion] = useState([]);
     const [questionListitem, setQuestionList] = useState([]);
-
-    // const [optionss, setOptionss] = useState('')
 
     useEffect(() => {
         getQuestionlist(currentPage);
@@ -350,7 +308,7 @@ const ExamNew = () => {
         setQuestion(list);
         setTotalPage(Math.ceil(result.payload.count / itemsPerPage));
         setTotalcount(result.payload.count);
-        setTotalLength(result.payload.students.rows.length);
+        // setTotalLength(result.payload.students.rows.length);
     }
 
     const handlePageChange = async (data) => {
@@ -358,6 +316,28 @@ const ExamNew = () => {
         const questionFromServer = await getQuestionlist(data.selected + 1);
         setItems(questionFromServer);
     }
+
+    const handleNumberOfQuestionsChange = (e) => {
+        const value = e.target.valueAsNumber || 0;
+        setNumberOfQuestion(value);
+        const updatedQuestions = [...question];
+        let selectedCount = 0;
+
+        updatedQuestions.forEach((q, idx) => {
+            if (selectedCount < value) {
+                updatedQuestions[idx].checked = true;
+                selectedCount++;
+            } else {
+                updatedQuestions[idx].checked = false;
+            }
+        });
+
+        setQuestion(updatedQuestions); 
+
+        const selectedQuestions = updatedQuestions.slice(0, value).map(q => ({ questionUUID: q.uuid }));
+        setQuestionList(selectedQuestions);
+    };
+
 
     const paginationCount = () => {
         if (question.length === 0) {
@@ -389,8 +369,6 @@ const ExamNew = () => {
             + (totalcount ? totalcount : 0).toString();
     }
 
-
-    //Search Handler(debounce) and search Table start... 
     const searchHandler = (event) => {
         handler(event);
     };
@@ -413,10 +391,6 @@ const ExamNew = () => {
             setTotalLength(result.payload.list.length);
         }
     }
-
-    // console.warn("Updated ExamKEyword",ExamKeyword)
-
-
 
     const Addexam = async () => {
         if (ExamBanner === '') {
@@ -626,26 +600,12 @@ const ExamNew = () => {
             setShowLoaderShow(false);
         }, 5000);
 
-        // const ExamQuestion = question
-        // .filter((item) => item.checked)
-        // .map((item) => item.uuid);
-
-        // questionListitem.map((item, key) => {
-        //     item.checked &&
-        //         ExamQuestion.push({ questionUUID: item.uuid })
-        //     setExamQuestion(ExamQuestion);
-        // }
-        // )
-
-        // console.warn(questionListitem,"Property check in add exam")
-
-        //post call start here
         const catdata = await fetch(`${Environment.server_url}/exams/addexam`, {
             method: "POST",
             body: description ?
-                JSON.stringify({ type, ExamBanner, phoneBanner, title, categoryUUID, description, allowPrimarySelection, allowSecondarySelection, isFeatured, marksPerQuestion, studentLimit, isFree, joinFee, marksPerQuestion, timePerQuestion, totalWinningPrize, joinDelay, ExamKeyword, ExamCity, ExamQuestion : questionListitem, ExamPrice: dataBundle, ExamRankingFactor: dataBundle1 })
+                JSON.stringify({ adViewDuration,videoAdLength,videoAdUrl,type, ExamBanner, phoneBanner,videoAdUrl, title, categoryUUID, description, allowPrimarySelection, allowSecondarySelection, isFeatured, marksPerQuestion, studentLimit, isFree,enableAd, joinFee, marksPerQuestion, timePerQuestion, totalWinningPrize, joinDelay, ExamKeyword, ExamCity, ExamQuestion : questionListitem, ExamPrice: dataBundle, ExamRankingFactor: dataBundle1 })
                 :
-                JSON.stringify({ type, ExamBanner, phoneBanner, title, categoryUUID, allowPrimarySelection, allowSecondarySelection, isFeatured, marksPerQuestion, studentLimit, isFree, joinFee, marksPerQuestion, timePerQuestion, totalWinningPrize, joinDelay, ExamKeyword, ExamCity, ExamQuestion : questionListitem, ExamPrice: dataBundle, ExamRankingFactor: dataBundle1 }),
+                JSON.stringify({ adViewDuration,videoAdLength,videoAdUrl,type, ExamBanner, phoneBanner,videoAdUrl, title, categoryUUID, allowPrimarySelection, allowSecondarySelection, isFeatured, marksPerQuestion, studentLimit, isFree, joinFee,enableAd, marksPerQuestion, timePerQuestion, totalWinningPrize, joinDelay, ExamKeyword, ExamCity, ExamQuestion : questionListitem, ExamPrice: dataBundle, ExamRankingFactor: dataBundle1 }),
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
@@ -672,8 +632,6 @@ const ExamNew = () => {
         // setQuestionList([])
     }
 
-    // console.warn(questionListitem,"QuestioListitem")
-
     const bannerSelected = () => {
         document.getElementsByClassName('bannerError')[0].innerText = ""
     }
@@ -694,10 +652,6 @@ const ExamNew = () => {
     }
     const cityselected = (list, item) => {
         setExamCity(list)
-        // if (list.length === 0)
-        //     document.getElementsByClassName('examcityError')[0].innerText = "This field is Required"
-        // else
-        //     document.getElementsByClassName('examcityError')[0].innerText = ""
     }
     const keywordselected = (list, item) => {
         setExamKeyword(list)
@@ -718,7 +672,6 @@ const ExamNew = () => {
     const allfieldSelected = () => {
         document.getElementsByClassName('allfieldError')[0].innerText = ""
     }
-
 
     //add or remove the winning price
     const [indexes, setIndexes] = React.useState([]);
@@ -844,54 +797,53 @@ const ExamNew = () => {
         // } catch { }
     }
 
+    async function uploadVideo(file) {
+        // try {
+        const fileObj = file.target.files[0];
+        const fileName = fileObj.name;
+        console.log(fileName)
+        const fileExtensionMatch = fileName.match(/\.([a-zA-Z0-9]{2,4})$/i); 
 
-    // const handlecheck = (e) => {
-    //     if (e.target.checked) {
-    //         setExamQuestion([...ExamQuestion, { questionUUID:(e.target.value) }]);
-    //     } else {
-    //         const index = ExamQuestion.findIndex((id) => id === e.target.value);
-    //         const updatedArray = ExamQuestion.splice(index, 1);
-    //         setExamQuestion(updatedArray);
-    //         console.warn("QuestionUUID", ExamQuestion)
-    //     }
-    // };
+        
+        const fileExtension = fileExtensionMatch[1]; 
+            
+        const response = await fetch(`${Environment.server_url}/common/filesupload`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            },
+            body: JSON.stringify({
+                "for": "Superadmin",
+                "files": [
+                    {
+                        "extension": fileExtension,
+                        "contentType": "video",
+                        "fileName": fileName
+                    }
+                ]
+            })
 
-    // const handlecheck = (e, index) => {
-    //     question[index].status = false;
-    //     setQuestion(question);
-    //     if (e.target.checked) {
-    //         setExamQuestion([...ExamQuestion, { questionUUID: e.target.value }]);
-    //     } else {
-    //         // setQuestionChecked(false)
-    //         setExamQuestion(ExamQuestion.filter((id) => id !== e.target.value))
-    //         const updatedArray = ExamQuestion.splice(ExamQuestion, 1)
-    //         setExamQuestion(updatedArray)
-    //     }
-    // };
+        });
 
-    // const handlecheck = React.useCallback((e, index)=>{
-    //     question[index].status = false;
-    //     setQuestion(question);
-    // })
+        const result = await response.json();
 
+        const { signedUrl, fileUrl } = result.payload.signedUrls[0];
 
-    // console.warn(ExamCity,"ExamCity")
+        setvideoAdUrl(fileUrl);
 
 
-
-
-    // function handleShortlist(event) {
-    //     var updatedList = [...listId];
-    //     if (event.target.checked) {
-    //       updatedList.push(event.target.value);
-    //     } else {
-    //       updatedList.splice(listId.indexOf(event.target.value), 1);
-    //     }
-    //     setListId(updatedList);
-    //   }
-
-    // console.warn("Keyword", keywords)
-    // console.warn("QuestionUUID Outside", ExamQuestion)
+        await fetch(signedUrl, {
+            method: "PUT",
+            // headers: {
+            //     "Content-Type": "application/json",
+            //     Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            // },
+            body: fileObj,
+        });
+        console.log("file url", fileUrl)
+        // } catch { }
+    }
 
     function handleDisabledCheck() {
         if (joinFee > 0) {
@@ -958,7 +910,7 @@ const ExamNew = () => {
                                                                 <button className="popupbtn2">Upload from Banner gallery</button>
                                                             </div>
                                                         </Popup> */}
-                                                        <div className="col-12 col-sm-6 imgageupload">
+                                                        <div className="col-12 col-sm-4 imgageupload">
                                                             <p><b>Exam Banner</b><span className="required text-danger">*</span></p>
                                                             <div className="container-exam">
                                                                 {error && <p className="errorMsg">File not supported</p>}
@@ -998,7 +950,7 @@ const ExamNew = () => {
                                                             {/* {<div><p className="ErrorMessage">{ExamBanner === "" ? (ExamBannerErr) : ("")}</p></div>} */}
                                                             <div><p className="bannerError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
                                                         </div>
-                                                        <div className="col-12 col-sm-6 imgageupload">
+                                                        <div className="col-12 col-sm-4 imgageupload">
                                                             <p><b>Phone Banner</b><span className="required text-danger">*</span></p>
                                                             <div className="container-exam">
                                                                 {error1 && <p className="errorMsg">File not supported</p>}
@@ -1032,6 +984,36 @@ const ExamNew = () => {
                                                             </div>
                                                             <div><p className="phonebannerError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
                                                         </div>
+                                                        <div className="col-12 col-sm-4 imgageupload">
+                                                            <p><b>Video Upload</b></p>
+                                                            <div className="container-exam">
+                                                                {error2 && <p className="errorMsg">File not supported</p>}
+                                                                <div className="imgPreview" style={{ background: videoPreviewId ? `url("${videoPreviewId}") no-repeat center/cover` : "#c2c7d0"}}>
+                                                                    {!videoPreviewId ? (
+                                                                        <>
+                                                                            <label htmlFor="videoUpload" className="customFileUpload">
+                                                                                Choose Video
+                                                                            </label>
+                                                                            <input type="file" id="videoUpload" accept="video/*" // Ensures only video files can be selected
+                                                                                onChange={(e) => {
+                                                                                    handleVideoChangeId(e);
+                                                                                    uploadVideo(e); // Make sure this is called after validation in handleVideoChangeId
+
+                                                                                }}
+                                                                            />
+                                                                        </>
+                                                                    ) : (
+                                                                        <video width="100%" controls>
+                                                                            <source src={videoPreviewId} type="video/mp4" />
+                                                                            Your browser does not support the video tag.
+                                                                        </video>
+                                                                    )}
+                                                                </div>
+                                                                    {videoPreviewId && (
+                                                                        <button className="btn-exam" onClick={() => setVideoPreviewId(null)}>Remove</button>
+                                                                    )}
+                                                                </div>
+                                                        </div>
                                                     </div>
 
                                                     <div className="form-row mb-4">
@@ -1056,22 +1038,15 @@ const ExamNew = () => {
                                                             {/* {<div><p className="ErrorMessage">{title === "" ? (titileErr) : ("")}</p></div>} */}
                                                             <div><p className="titleError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
                                                         </div>
+                                                       
                                                         <div className="col-sm-4">
-                                                            <p><b>Student limit</b><span className="required text-danger">*</span></p>
-                                                            <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Student limit" onChange={(e) => { setStudentLimit(e.target.valueAsNumber || e.target.value); studentlimitSelected() }}></input>
-                                                            <div><p className="studentlimitError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
+                                                            <p><b>Video length</b></p>
+                                                            <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Video length" onChange={(e) => { setvideoAdLength(e.target.valueAsNumber || e.target.value); }}></input>
+                                                            {/* <div><p className="studentlimitError" style={{ color: "red", fontWeight: 'bold' }}></p></div> */}
                                                         </div>
-                                                        {/* <div className="col-sm-3">
-                                                            <p><b>Start time</b><span className="required text-danger">*</span></p>
-                                                            <input type="datetime-local" name="end_time" id="end_time" className="form-control valid" aria-invalid="false" onChange={(e) => { setStartTime(e.target.value) }} />
-                                                        </div> */}
                                                     </div>
 
                                                     <div className="form-row mb-4">
-                                                        {/* <div className="col-12 col-sm-4">
-                                                            <p><b>End time</b><span className="required text-danger">*</span></p>
-                                                            <input type="datetime-local" name="end_time" id="end_time" className="form-control valid" aria-invalid="false" onChange={(e) => { setEndTime(e.target.value) }} />
-                                                        </div> */}
                                                         <div className="col-12 col-sm-4">
                                                             <p><b>Is free?</b></p>
                                                             <div className="input-group">
@@ -1123,28 +1098,6 @@ const ExamNew = () => {
 
 
                                                     <div className="form-row mb-4">
-                                                        {/* <div className="col-12 col-sm-4 column">
-                                                            <p><b>Per question time-limit in seconds?</b></p>
-                                                            <div className="input-group">
-                                                                <div className="input-group-prepend">
-                                                                    <div className="input-group-text">
-                                                                        <input name="marksper_question" type="checkbox" id="marksper_question" checked={checked}
-                                                                            onChange={(e) => {
-                                                                                setPerQuestionLimitCheck(e.target.checked)
-                                                                                if (checked) {
-                                                                                    setText('')
-                                                                                }
-                                                                                setChecked(!checked)
-                                                                            }
-                                                                            } />
-                                                                    </div>
-                                                                </div>
-                                                                <input id="marks_perquestion" placeholder="Time limit" className="form-control" name="marks_perquestion" type="text" disabled={!checked}
-                                                                    onChange={(e) => { setPerQuestionTimeLimit(e.target.value) }} />
-                                                            </div>
-                                                        </div> */}
-
-
                                                         <div className="col-12 col-sm-4">
                                                             <div className="form-group">
                                                                 <div className="controls">
@@ -1161,7 +1114,6 @@ const ExamNew = () => {
                                                                 <option value={true}>Yes</option>
                                                                 <option value={false}>No</option>
                                                             </select>
-                                                            {/* {<div><p className="ErrorMessage">{isFeatured === "" ? (isFeaturedErr) : ("")}</p></div>} */}
                                                             <div><p className="isfeaturedError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
                                                         </div>
                                                         <div className="col-12 col-sm-4 column">
@@ -1171,18 +1123,10 @@ const ExamNew = () => {
                                                                 <option value={true}>Yes</option>
                                                                 <option value={false}>No</option>
                                                             </select>
-                                                            {/* {<div><p className="ErrorMessage">{allowPrimarySelection === "" ? (allowPrimarySelectionErr) : ("")}</p></div>} */}
                                                             <div><p className="allowprimaryselectionError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
                                                         </div>
                                                     </div>
                                                     <div className="form-row mb-4">
-                                                        {/* <div className="col-12 col-sm-4 column">
-                                                            <p><b>Allow to select primary?</b><span className="required text-danger">*</span></p>
-                                                            <select className="form-select form-select mb-2" aria-label="Default select example" onChange={(e) => { setAllowPrimarySelection(e.target.value) }}>
-                                                                <option value={true}>Yes</option>
-                                                                <option value={false}>No</option>
-                                                            </select>
-                                                        </div> */}
                                                         {
                                                             allowPrimarySelection === 'true' &&
                                                             <div className="col-12 col-sm-4 column">
@@ -1199,19 +1143,6 @@ const ExamNew = () => {
                                                                 <div className="controls">
                                                                     <p><b>Join delay</b></p>
                                                                     <input placeholder="Delay in seconds" className="form-control valid" name="join_delay" type="number" id="join_delay" aria-invalid="false" onChange={(e) => { setJoinDelay(e.target.valueAsNumber || e.target.value) }} />
-                                                                    {/* <select className="form-select form-select mb-2" aria-label="Default select example" onChange={(e) => { setJoinDelay(e.target.value) }}>
-                                                                        <option>Select</option>
-                                                                        <option value={1}>1</option>
-                                                                        <option value={2}>2</option>
-                                                                        <option value={3}>3</option>
-                                                                        <option value={4}>4</option>
-                                                                        <option value={5}>5</option>
-                                                                        <option value={6}>6</option>
-                                                                        <option value={7}>7</option>
-                                                                        <option value={8}>8</option>
-                                                                        <option value={9}>9</option>
-                                                                        <option value={10}>10</option>
-                                                                    </select> */}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1221,6 +1152,29 @@ const ExamNew = () => {
                                                             </Multiselect>
                                                             <div><p className="examcityError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
                                                         </div>
+                                                        {/* <div className="col-12 col-sm-4"> */}
+                                                        <div className="col-12 col-sm-4">
+                                                            <div className="form-group">
+                                                                <div className="controls">
+                                                                    <p><b>Number of Questions</b></p>
+                                                                    <input
+                                                                        placeholder="Enter number of questions to select"
+                                                                        className="form-control valid"
+                                                                        name="number_of_question"
+                                                                        type="number"
+                                                                        value={numberOfQuestion}
+                                                                        onChange={handleNumberOfQuestionsChange} // Update state and select/deselect questions
+                                                                        min="0"
+                                                                        max={question.length}  // Ensure it doesn't exceed the number of available questions
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <p><b>Student limit</b><span className="required text-danger">*</span></p>
+                                                        <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Student limit" onChange={(e) => { setStudentLimit(e.target.valueAsNumber || e.target.value); studentlimitSelected() }}></input>
+                                                        <div><p className="studentlimitError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
                                                     </div>
 
                                                     <div className="form-row mb-4">
@@ -1233,26 +1187,11 @@ const ExamNew = () => {
                                                     <div className="form-row mb-4">
                                                         <p><b>Description</b></p>
                                                         <textarea className="form-control" id="exampleFormControlTextarea1" rows="4" onChange={(e) => { setDescription(e.target.value) }}></textarea>
-                                                        {/* {<div><p className="ErrorMessage">{description === "" ? (descriptionErr) : ("")}</p></div>} */}
-                                                        {/* <div><p className="descriptionError" style={{ color: "red", fontWeight: 'bold' }}></p></div> */}
                                                     </div>
                                                     <div className="mb-4">
                                                         <p><b>Questions</b></p>
                                                         <div className="option-section">
                                                             <div className="form-row mb-4">
-                                                                {/* <div className="col-sm">
-                                                                    <p><b>Category</b></p>
-                                                                    <select className="form-select form-select mb-2" aria-label="Default select example" onClick={getQuestionlist} onChange={(e) => { updateSubcategoryHandler(e.target.value) }}>
-                                                                        <option value={""}>Select category</option>
-                                                                        {
-                                                                            getcategory.map((item) =>
-                                                                                <>
-                                                                                    <option value={item.uuid}>{item.label}</option>
-                                                                                </>
-                                                                            )
-                                                                        }
-                                                                    </select>
-                                                                </div> */}
                                                                 <div className="col-sm">
                                                                     <p><b>Sub-Category</b></p>
                                                                     <select className="form-select form-select mb-2" aria-label="Default select example" onClick={getQuestionlist} onChange={(e) => { setFilterSubCategory(e.target.value) }}>
@@ -1439,26 +1378,7 @@ const ExamNew = () => {
                                                                                     activeClassName="active"
                                                                                 />
                                                                             </div>
-                                                                            {/* <div className="col-sm-2">
-                                                                    <div className="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
-                                                                        <ul className="pagination pagination-rounded">
-                                                                            <li className="paginate_button page-item previous disabled" id="DataTables_Table_0_previous">
-                                                                                <a aria-controls="DataTables_Table_0" data-dt-idx="0" tabIndex="0" className="page-link">
-                                                                                    <i className="mdi mdi-chevron-left" />
-                                                                                </a>
-                                                                            </li>
-                                                                            <li className="paginate_button page-item active">
-                                                                                <a aria-controls="DataTables_Table_0" data-dt-idx="1" tabIndex="0" className="page-link">1</a>
-                                                                            </li>
-                                                                            <li className="paginate_button page-item ">
-                                                                                <a aria-controls="DataTables_Table_0" data-dt-idx="2" tabIndex="0" className="page-link">2</a>
-                                                                            </li>
-                                                                            <li className="paginate_button page-item next" id="DataTables_Table_0_next">
-                                                                                <a aria-controls="DataTables_Table_0" data-dt-idx="3" tabIndex="0" className="page-link"><i className="mdi mdi-chevron-right" /></a>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div> */}
+                                                                      
 
                                                                         </div>
                                                                     )
@@ -1466,7 +1386,6 @@ const ExamNew = () => {
 
                                                         </div>
                                                     </div>
-
                                                     <div className="mb-4">
                                                         <p><b>Winning Price</b></p>
                                                         <div className="form-group">
@@ -1551,99 +1470,8 @@ const ExamNew = () => {
                                                             </button>
                                                         </form>
                                                     </div>
-                                                    {/* <div className="mb-4">
-                                                        <p><b>Winning Price</b></p>
-
-                                                        <div className="form-group">
-                                                            <div className="table-responsive controls">
-                                                                <table className="table table-centered datatable dt-responsive nowrap" style={{ borderCollapse: 'collapse', borderSpacing: 0, width: '100%' }}>
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>Rank</th>
-                                                                            <th>Price</th>
-                                                                            <th>Action</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    {inputList.map((_x, i) => {
-                                                                        return (
-                                                                            <tbody>
-                                                                                <tr className="exam-ranking-factor-tr-3">
-                                                                                    <td><input type="number" placeholder="Rank" className="form-control" onChange={(e) => { settoValue(e.target.value) }}></input></td>
-                                                                                    <td><input type="number" name="exam_ranking_factor_point[]" className="form-control" placeholder="Price" onChange={(e) => { setPrice(e.target.value) }} /></td>
-                                                                                    <td>
-                                                                                        {inputList.length !== 1 && <button type="button" className="btn btn-danger btn-sm"
-                                                                                            onClick={() => handleRemoveClick(i)}>x</button>}
-                                                                                    </td>
-
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        );
-                                                                    })}
-                                                                    {
-                                                                        <button className="btn btn-warning" onChange={handleInputChange} onClick={handleAddClick}>Add Winning Price</button>
-                                                                    }
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div> */}
-
-                                                    {/* <form onSubmit={handleSubmit}>
-                                                        <div className="form-inline">
-                                                            <table className="table table-centered datatable dt-responsive " style={{ borderCollapse: 'collapse', borderSpacing: 0, width: '100%' }}>
-                                                                <thead className="thead-light">
-                                                                    <tr>
-                                                                        <th>Type</th>
-                                                                        <th>Title</th>
-                                                                        <th>Time</th>
-                                                                        <th>Points</th>
-                                                                        <th>Action</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    {formValues.map((_element, index) => (
-                                                                        <tr key={index} >
-                                                                            <td>
-                                                                                <select className="form-select form-control" aria-label="Default select example" onChange={(e) => { setQuestionType(e.target.value) }}>
-                                                                                    <option value={"ON_CORRECT_ANSWER"}>On answer correct</option>
-                                                                                    <option value={"ON_INCORRECT_ANSWER"}>On answer In-correct</option>
-                                                                                    <option value={"TIME_LIMIT"}>Time limit</option>
-                                                                                    <option value={"SECONDARY"}>Primary</option>
-                                                                                    <option value={"PRIMARY"}>Secondary</option>
-                                                                                </select>
-                                                                            </td>
-                                                                            <td>
-                                                                                <div className="form-group">
-                                                                                    <input type="name" className="form-control" id="exampleFormControlInput1" placeholder="Title" onChange={(e) => { setTitle(e.target.value) }}></input>
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>
-                                                                                <div className="form-group">
-                                                                                    <div className="controls">
-                                                                                        <input placeholder="Time(i.e 10)" min="0" className="form-control valid" name="total_winning_price" type="number" id="total_winning_price" aria-invalid="false" onChange={(e) => { setTime(e.target.value) }} />
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>
-                                                                                <div className="form-group">
-                                                                                    <div className="controls">
-                                                                                        <input placeholder="Point" min="0" className="form-control valid" name="point" type="number" id="total_winning_price" aria-invalid="false" onChange={(e) => { setPoints(e.target.value) }} />
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                            {
-                                                                                index ?
-                                                                                    <td id="tooltip-container2"><a className=" text-danger" data-bs-container="#tooltip-container2" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" onClick={() => removeFormFields(index)}><button className="btn btn-danger btn-sm">x</button></a></td>
-                                                                                    : null
-                                                                            }
-                                                                        </tr>
-                                                                    ))}
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-
-                                                        <button className="btn btn-dark" type="button" onClick={() => addFormFields()}>Add Ranking Factor</button>
-                                                    </form> */}
-
+                                                    
+                                                    
                                                     <form onSubmit={handleSubmit(onSubmit)}>
                                                         {indexes1.map(index => {
                                                             const fieldName = `friends[${index}]`;
@@ -1656,8 +1484,6 @@ const ExamNew = () => {
                                                                                 <option value={"ON_CORRECT_ANSWER"}>On answer correct</option>
                                                                                 <option value={"ON_INCORRECT_ANSWER"}>On answer In-correct</option>
                                                                                 <option value={"TIME_LIMIT"}>Time limit</option>
-                                                                                {/* <option value={"PRIMARY"}>Primary</option>
-                                                                                <option value={"SECONDARY"}>Secondary</option> */}
                                                                                 {
                                                                                     allowPrimarySelection === 'true' && <option value={"PRIMARY"}>Primary</option>
                                                                                 }

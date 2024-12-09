@@ -44,118 +44,73 @@ function Login() {
 
 
   async function Login() {
-    setStartExamDisable(true)
-    setShowLoaderShow(true)
-    setTimeout(() => {
-      setStartExamDisable(false);
-      setShowLoaderShow(false);
-    }, 5000);
+    setStartExamDisable(true);
+    setShowLoaderShow(true);
+
+    // Clear previous error messages
+    setEmailerr('');
+    setPasserr('');
+    setErrorMessage('');
+
+    let hasError = false;
 
     if (email === '') {
-      document.getElementsByClassName('emailError')[0].innerText = "Email is required"
-      document.getElementsByClassName('statusError')[0].innerText = ""
-    }
-    else {
-      document.getElementsByClassName('emailError')[0].innerText = ""
+        setEmailerr("Email is required");
+        hasError = true; // Set error flag
     }
 
     if (password === '') {
-      document.getElementsByClassName('passError')[0].innerText = "Password is required"
-      document.getElementsByClassName('statusError')[0].innerText = ""
-    }
-    else {
-      document.getElementsByClassName('passError')[0].innerText = ""
+        setPasserr("Password is required");
+        hasError = true; // Set error flag
     }
 
-    // let item = { email, password }
-    if (email !== "" && password !== "") {
-      let result = await fetch(`${Environment.server_url}/sessions/admin/auth`, {
+    if (hasError) {
+        setShowLoaderShow(false);
+        setStartExamDisable(false);
+        return; // Stop execution if there are errors
+    }
+
+    // Proceed with the login API call if both fields are filled
+    let result = await fetch(`${Environment.server_url}/sessions/admin/auth`, {
         method: 'POST',
         body: JSON.stringify({ email, password }),
         headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
+            "Content-Type": "application/json",
+            "Accept": "application/json"
         },
-      })
-        .then((result) => {
-          if (result.status === 200) {
-            setShowSuccess(true);
-            return (result.json());
-          }
-          else {
-            setShow(true);
-            document.getElementsByClassName('statusError')[0].innerText = "Username or password is incorrect"
-            return (result.json());
-          }
-        }).then((result) => {
-          console.log(result)
-          setErrorMessage(result.message)
-          localStorage.setItem("user", JSON.stringify(email))
-          localStorage.setItem("token", JSON.stringify(result.payload.token))
-          dispatch({ type: "setRole", value: result.payload.role });
-          {
-            result.payload.role === "SUPER_ADMIN" &&
-            setTimeout(() => {
-              navigate("/Dashboard")
-            }, 1000);
-          }
-          {
-            result.payload.role === "ADMIN" &&
-            setTimeout(() => {
-              navigate("/Dashboard")
-            }, 1000);
-          }
-          {
-            result.payload.role === "EXAM_CREATOR" &&
-            setTimeout(() => {
-              navigate("/Exam")
-            }, 1000);
-          }
-          {
-            result.payload.role === "QUESTION_CREATOR" &&
-            setTimeout(() => {
-              navigate("/Question")
-            }, 1000);
-          }
-          
-        })
+    });
 
-      // result = await result.json();
-      // console.warn("Login Result", result)
+    if (result.status === 200) {
+        const data = await result.json();
+        setShowSuccess(true);
+        localStorage.setItem("user", JSON.stringify(email));
+        localStorage.setItem("token", JSON.stringify(data.payload.token));
+        localStorage.setItem("role", JSON.stringify(data.payload.role));
 
-
-
-
-
-      // if (email !== '') {
-      //   //check other conditions
-      //   if (email === 'admin@gmail.com') {
-      //     if (password === 'admin123') {
-      //       localStorage.setItem("user", JSON.stringify(item))
-      //       localStorage.setItem("token", JSON.stringify(result.payload.token))
-      //       navigate("/Dashboard")
-      //     } else {
-      //       setPasserr(emailerr)
-      //     }
-      //   } else {
-      //     setEmailerr("email or password is incorrect")
-      //   }
-      // } else {
-      //   setEmailerr(result.payload.email.message)
-      // }
-
-      // if (password !== '') {
-      //   if (password.length < 4) {
-      //     console.warn(password.length)
-      //     setPasserr = "Password must be more than 4 characters";
-      //   } else if (password.length > 10) {
-      //     setPasserr = "Password cannot exceed more than 10 characters";
-      //   }
-      // } else {
-      //   setEmailerr("useremail or password is incorrect")
-      // }
+        // localStorage.setItem("role",JSON.stringify(data.payload))
+        dispatch({ type: "setRole", value: data.payload.role });
+        // navigate(data.payload.role === "SUPER_ADMIN" || data.payload.role === "ADMIN" ? "/Dashboard" : "/Exam");
+        navigate(
+          data.payload.role === "SUPER_ADMIN" || data.payload.role === "ADMIN" 
+            ? "/Dashboard" 
+            : data.payload.role === "QUESTION_CREATOR" 
+              ? "/Question" 
+              : "/Exam"
+        );
+        
+    } else {
+        setShow(true);
+        const errorData = await result.json();
+        setErrorMessage(errorData.message);
+        if (errorData.payload.password) {
+          setPasserr(errorData.payload.password.message); // Set password error message
+        }
     }
-  }
+
+    setShowLoaderShow(false);
+    setStartExamDisable(false);
+}
+
 
   const emailSelected = () => {
     document.getElementsByClassName('emailError')[0].innerText = ""
@@ -223,57 +178,68 @@ function Login() {
                           <p className="text-muted">Sign in to continue</p>
                         </div>
                         <div className="p-2 mt-2">
-                          <form onSubmit={onFormSubmit}>
-                            <div className="mb-3 auth-form-group-custom mb-4">
+                        <form onSubmit={(e) => { e.preventDefault(); Login(); }}>
+                          <div className="auth-form-group-custom">
                               <i className="ri-user-2-line auti-custom-input-icon"></i>
-                              <input type="text" class="form-control" name="userName" id="username" placeHolder="Enter email" onChange={(e) => { setEmail(e.target.value); emailSelected() }}
+                              <input
+                                  type="text"
+                                  className="form-control"
+                                  name="userName"
+                                  id="username"
+                                  placeholder="Enter email"
+                                  onChange={(e) => { setEmail(e.target.value); setEmailerr(''); }}
                               />
-                            </div>
-                            <div><p className="emailError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
-                            {/* {emailerr && <div className="validation">{emailerr}</div>} */}
-                            <div className="auth-form-group-custom">
+                          </div>
+                          <p className="emailError" style={{ color: "red", fontWeight: 'bold' }}>{emailerr}</p>
+
+                          <div className="auth-form-group-custom">
                               <i className="ri-lock-2-line auti-custom-input-icon"></i>
                               <i
-                                className={
-                                  passwordShown ? "fas fa-eye-slash" : "fa fa-eye"
-                                }
-                                onClick={togglePassword}
-                                style={{
-                                  position: "absolute",
-                                  right: "30px",
-                                  top: "10px",
-                                  color: "#ced4da",
-                                  fontSize: "20px",
-                                  cursor: "pointer",
-                                }}
+                                  className={passwordShown ? "fas fa-eye-slash" : "fa fa-eye"}
+                                  onClick={togglePassword}
+                                  style={{
+                                      position: "absolute",
+                                      right: "30px",
+                                      top: "10px",
+                                      color: "#ced4da",
+                                      fontSize: "20px",
+                                      cursor: "pointer",
+                                  }}
                               />
-                              <input type={passwordShown ? "text" : "password"} class="form-control" name="password" id="userpassword" placeHolder="Enter password" onChange={(e) => { setPassword(e.target.value); passSelected() }}
+                              <input
+                                  type={passwordShown ? "text" : "password"}
+                                  className="form-control"
+                                  name="password"
+                                  id="userpassword"
+                                  placeholder="Enter password"
+                                  onChange={(e) => { setPassword(e.target.value); setPasserr(''); }}
                               />
-                            </div>
-                            <div><p className="passError" style={{ color: "red", fontWeight: 'bold' }}></p></div>
-                            {/* {passerr && <div className="validation1">{passerr}</div>} */}
-                            <div className="mt-5 text-center">
-                              <button class="btn btn-primary w-md waves-effect waves-light" type="submit" onClick={Login} disabled={startExamDisable}>
-                                {showLoaderShow ?
-                                  (
-                                    <span class="btn-primary">
-                                      <span class="spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span>
-                                      Loading...
-                                    </span>
-                                    // <span style={{textAlign:"center"}}>Loading<span className="spinner-border spinner-border-sm spinnerLoader ml-1 mr-1" style={{ width: "0.9rem", height: "0.9rem",textAlign:"center" }} role="status" aria-hidden="true"></span></span>
-                                  )
-                                  :
-                                  (
-                                    "Login"
-                                  )
-                                }
+                          </div>
+                          <p className="passError" style={{ color: "red", fontWeight: 'bold' }}>{passerr}</p>
+
+                          <div className="mt-4 text-center">
+                              <button
+                                  className="btn btn-primary w-md waves-effect waves-light"
+                                  type="submit"
+                                  disabled={startExamDisable}
+                              >
+                                  {showLoaderShow ? (
+                                      <span className="btn-primary">
+                                          <span className="spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span>
+                                          Loading...
+                                      </span>
+                                  ) : (
+                                      "Login"
+                                  )}
                               </button>
-                              {/* <input class="submit_on_enter" type="text" name="q" placeholder="Search..."></input> */}
-                            </div>
-                            <div className="mt-4 text-center">
-                              <Link to="/ForgotPassword"><a href="auth-recoverpw.html" className="text-muted"><i class="mdi mdi-lock me-1"></i> Forgot your password?</a></Link>
-                            </div>
-                          </form>
+                          </div>
+                          <div className="mt-4 text-center">
+                              <Link to="/ForgotPassword" className="text-muted">
+                                  <i className="mdi mdi-lock me-1"></i> Forgot your password?
+                              </Link>
+                          </div>
+                        </form>
+
                         </div>
                         {/* <div className="mt-3 text-center">
                           <p>Don't have an account ? <Link to="/Signup"><a href="auth-register.html" className="fw-medium text-primary"> Register </a></Link> </p>
